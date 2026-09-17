@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>مقایسه عملکرد بخش‌ها | ریاست دانشگاه</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page president-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar president-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                مقایسه واحدهای سازمانی
+            </span>
+
+            <h1>
+                عملکرد بخش‌های دانشگاه
+            </h1>
+
+            <p>
+                مقایسه نرخ حضور، کارکرد، تأخیر و خروج زودهنگام
+            </p>
+        </div>
+
+        <div class="portal-role-box">
+            <strong th:text="${departmentCount}">0</strong>
+            <span>واحد</span>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/president-nav :: presidentNav('departments')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <form method="get"
+              th:action="@{/president/departments}"
+              class="portal-filter">
+
+            <div class="portal-field">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate"
+                       type="date"
+                       name="fromDate"
+                       th:value="${fromDate}"
+                       required>
+            </div>
+
+            <div class="portal-field">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate"
+                       type="date"
+                       name="toDate"
+                       th:value="${toDate}"
+                       required>
+            </div>
+
+            <div class="portal-filter-actions">
+                <button class="portal-button primary"
+                        type="submit">
+                    مقایسه واحدها
+                </button>
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>جدول مقایسه عملکرد</h2>
+                <p>
+                    بازه:
+                    <b th:text="${fromDate}">-</b>
+                    تا
+                    <b th:text="${toDate}">-</b>
+                </p>
+            </div>
+        </div>
+
+        <div class="portal-table-wrapper">
+
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>واحد</th>
+                    <th>کارکنان</th>
+                    <th>حضور</th>
+                    <th>غیبت</th>
+                    <th>ناقص</th>
+                    <th>مرخصی</th>
+                    <th>مأموریت</th>
+                    <th>نرخ حضور</th>
+                    <th>کارکرد</th>
+                    <th>تأخیر</th>
+                    <th>تعجیل</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row : ${departmentRows}">
+
+                    <td>
+                        <strong th:text="${row.departmentName}">
+                            واحد
+                        </strong>
+                        <small class="portal-block"
+                               th:text="${row.departmentCode}">
+                            CODE
+                        </small>
+                    </td>
+
+                    <td th:text="${row.employeeCount}">0</td>
+                    <td th:text="${row.presentDays}">0</td>
+                    <td th:text="${row.absentDays}">0</td>
+                    <td th:text="${row.incompleteDays}">0</td>
+                    <td th:text="${row.leaveDays}">0</td>
+                    <td th:text="${row.missionDays}">0</td>
+
+                    <td>
+                        <span class="portal-badge success"
+                              th:text="|${#numbers.formatDecimal(row.attendanceRate, 1, 1)}%|">
+                            0%
+                        </span>
+                    </td>
+
+                    <td th:text="|${row.workedHours}:${#numbers.formatInteger(row.workedRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                    <td th:text="|${row.lateHours}:${#numbers.formatInteger(row.lateRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                    <td th:text="|${row.earlyLeaveHours}:${#numbers.formatInteger(row.earlyLeaveRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                </tr>
+
+                <tr th:if="${departmentRows == null or departmentRows.isEmpty()}">
+                    <td colspan="11"
+                        class="portal-empty">
+                        اطلاعاتی برای مقایسه وجود ندارد.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

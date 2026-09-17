@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        گزارش روزانه حضور و غیاب | SUTECH
+    </title>
+
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=27"
+          th:href="@{/css/admin-dashboard.css(v=27)}">
+
+
+    <style>
+
+        /*
+         * ==========================================
+         * کارت‌های آماری
+         * 8 کارت در یک ردیف دسکتاپ
+         * ==========================================
+         */
+
+        .report-summary-grid {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                    repeat(
+                            8,
+                            minmax(
+                                    0,
+                                    1fr
+                            )
+                    );
+
+            gap: 12px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .report-summary-grid .summary-card {
+
+            min-width: 0;
+
+            min-height: 102px;
+
+            padding: 17px 15px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+        }
+
+
+        .report-summary-grid .summary-title {
+
+            font-size: 11px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        .report-summary-grid .summary-value {
+
+            font-size: 24px;
+        }
+
+
+        .summary-leave {
+
+            border-top:
+                    4px solid #0284c7;
+        }
+
+
+        .summary-mission {
+
+            border-top:
+                    4px solid #7c3aed;
+        }
+
+
+        .summary-holiday {
+
+            border-top:
+                    4px solid #db2777;
+        }
+
+
+        .summary-no-shift {
+
+            border-top:
+                    4px solid #64748b;
+        }
+
+
+        /*
+         * ==========================================
+         * فرم فیلتر
+         * ==========================================
+         */
+
+        .report-filter-form {
+
+            width: 100%;
+
+            display: grid !important;
+
+            grid-template-columns:
+                    minmax(165px, 1fr)
+                    minmax(165px, 1fr)
+                    minmax(230px, 1.35fr)
+                    minmax(180px, 1fr)
+                    auto;
+
+            align-items: end !important;
+
+            column-gap: 18px !important;
+
+            row-gap: 16px !important;
+        }
+
+
+        /*
+         * ==========================================
+         * فیلدها
+         * ==========================================
+         */
+
+        .report-filter-form .form-group {
+
+            min-width: 0;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-end;
+
+            align-self: end;
+        }
+
+
+        .report-filter-form .form-group label {
+
+            margin: 0 0 9px;
+
+            display: block;
+
+            color: #244c4f;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+
+        /*
+         * ==========================================
+         * Input / Select
+         * ==========================================
+         */
+
+        .report-filter-form input,
+        .report-filter-form select {
+
+            width: 100%;
+
+            height: 54px !important;
+
+            min-height: 54px !important;
+
+            margin: 0 !important;
+
+            padding: 0 14px;
+
+            color: #1e4144;
+
+            background: #ffffff;
+
+            border:
+                    1px solid
+                    #bdd2d4;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            transition:
+                    border-color 0.18s ease,
+                    box-shadow 0.18s ease;
+        }
+
+
+        .report-filter-form input:focus,
+        .report-filter-form select:focus {
+
+            border-color: #126467;
+
+            box-shadow:
+                    0 0 0 3px
+                    rgba(
+                            18,
+                            100,
+                            103,
+                            0.12
+                    );
+        }
+
+
+        /*
+         * ==========================================
+         * وضعیت
+         * ==========================================
+         */
+
+        .status-filter-group {
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+            align-self: end !important;
+        }
+
+
+        .status-filter-group select {
+
+            margin: 0 !important;
+
+            font-weight: 600;
+        }
+
+
+        /*
+         * ==========================================
+         * دکمه‌های فیلتر
+         * ==========================================
+         */
+
+        .report-filter-actions {
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+            display: flex !important;
+
+            align-items: flex-end !important;
+
+            justify-content: flex-start !important;
+
+            align-self: end !important;
+
+            flex-wrap: nowrap !important;
+
+            gap: 9px !important;
+
+            grid-column: auto !important;
+        }
+
+
+        .report-filter-actions .button {
+
+            height: 54px !important;
+
+            min-height: 54px !important;
+
+            margin: 0 !important;
+
+            padding:
+                    0 18px !important;
+
+            display:
+                    inline-flex !important;
+
+            align-items:
+                    center !important;
+
+            justify-content:
+                    center !important;
+
+            border-radius: 11px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-family: inherit;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            text-decoration: none;
+
+            white-space: nowrap;
+
+            transition:
+                    transform 0.15s ease,
+                    opacity 0.15s ease,
+                    box-shadow 0.15s ease;
+        }
+
+
+        .report-filter-actions .button:hover {
+
+            transform:
+                    translateY(-1px);
+        }
+
+
+        .report-filter-actions .search-button {
+
+            color: #ffffff;
+
+            background: #126467;
+        }
+
+
+        .report-filter-actions .search-button:hover {
+
+            background: #0e5558;
+        }
+
+
+        .report-filter-actions .excel-button {
+
+            color: #173d3f;
+
+            background: #e9c64f;
+        }
+
+
+        .report-filter-actions .excel-button:hover {
+
+            background: #dfbb3d;
+        }
+
+
+        .report-filter-actions .reset-button {
+
+            color: #126467;
+
+            background: #edf7f7;
+
+            border:
+                    1px solid
+                    #bddadb;
+        }
+
+
+        .report-filter-actions .reset-button:hover {
+
+            background: #e2f2f2;
+        }
+
+
+        /*
+         * ==========================================
+         * فیلتر فعال
+         * ==========================================
+         */
+
+        .active-filter-info {
+
+            margin-bottom: 18px;
+
+            padding: 12px 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 12px;
+
+            color: #164e63;
+
+            background:
+                    rgba(
+                            236,
+                            254,
+                            255,
+                            0.96
+                    );
+
+            border:
+                    1px solid
+                    #a5f3fc;
+
+            border-radius: 12px;
+
+            font-size: 12px;
+        }
+
+
+        .active-filter-info strong {
+
+            color: #126467;
+        }
+
+
+        /*
+         * ==========================================
+         * وضعیت‌ها
+         * ==========================================
+         */
+
+        .status-badge {
+
+            min-width: 90px;
+
+            padding: 6px 10px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        .present-status {
+
+            color: #166534;
+
+            background: #dcfce7;
+        }
+
+
+        .absent-status {
+
+            color: #991b1b;
+
+            background: #fee2e2;
+        }
+
+
+        .incomplete-status {
+
+            color: #92400e;
+
+            background: #fef3c7;
+        }
+
+
+        .leave-status {
+
+            color: #075985;
+
+            background: #e0f2fe;
+        }
+
+
+        .mission-status {
+
+            color: #6b21a8;
+
+            background: #f3e8ff;
+        }
+
+
+        .holiday-status {
+
+            color: #9d174d;
+
+            background: #fce7f3;
+        }
+
+
+        .no-shift-status {
+
+            color: #475569;
+
+            background: #e2e8f0;
+        }
+
+
+        /*
+         * ==========================================
+         * مقادیر زمان
+         * ==========================================
+         */
+
+        .time-value {
+
+            white-space: nowrap;
+
+            font-weight: 600;
+        }
+
+
+        .late-value {
+
+            color: #b45309;
+        }
+
+
+        .early-leave-value {
+
+            color: #be123c;
+        }
+
+
+        .overtime-value {
+
+            color: #0369a1;
+        }
+
+
+        /*
+         * ==========================================
+         * جدول
+         * ==========================================
+         */
+
+        .report-table-wrapper {
+
+            overflow-x: auto;
+        }
+
+
+        .report-data-table {
+
+            min-width: 1500px;
+        }
+
+
+        /*
+         * ==========================================
+         * Responsive فرم
+         * ==========================================
+         */
+
+        @media (
+                max-width: 1450px
+        ) {
+
+            .report-filter-form {
+
+                grid-template-columns:
+                        minmax(150px, 1fr)
+                        minmax(150px, 1fr)
+                        minmax(210px, 1.2fr)
+                        minmax(165px, 1fr)
+                        auto;
+
+                gap: 12px !important;
+            }
+
+
+            .report-filter-actions .button {
+
+                padding:
+                        0 13px !important;
+            }
+
+        }
+
+
+        /*
+         * کارت‌ها تا عرض 1250
+         * چهار تایی می‌شوند
+         */
+
+        @media (
+                max-width: 1250px
+        ) {
+
+            .report-filter-form {
+
+                grid-template-columns:
+                        repeat(
+                                2,
+                                minmax(
+                                        220px,
+                                        1fr
+                                )
+                        );
+            }
+
+
+            .report-filter-actions {
+
+                grid-column:
+                        1 / -1 !important;
+            }
+
+
+            .report-summary-grid {
+
+                grid-template-columns:
+                        repeat(
+                                4,
+                                minmax(
+                                        0,
+                                        1fr
+                                )
+                        );
+            }
+
+        }
+
+
+        /*
+         * تبلت
+         */
+
+        @media (
+                max-width: 850px
+        ) {
+
+            .report-summary-grid {
+
+                grid-template-columns:
+                        repeat(
+                                2,
+                                minmax(
+                                        0,
+                                        1fr
+                                )
+                        );
+            }
+
+        }
+
+
+        /*
+         * موبایل
+         */
+
+        @media (
+                max-width: 700px
+        ) {
+
+            .report-filter-form {
+
+                grid-template-columns:
+                        1fr;
+            }
+
+
+            .report-filter-actions {
+
+                grid-column:
+                        auto !important;
+
+                flex-direction:
+                        column;
+
+                align-items:
+                        stretch !important;
+            }
+
+
+            .report-filter-actions .button {
+
+                width: 100%;
+            }
+
+
+            .active-filter-info {
+
+                align-items:
+                        flex-start;
+
+                flex-direction:
+                        column;
+            }
+
+        }
+
+
+        @media (
+                max-width: 520px
+        ) {
+
+            .report-summary-grid {
+
+                grid-template-columns:
+                        1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="section-ui-page daily-report-page">
+
+
+<main class="page-container">
+
+
+    <!-- ==========================================
+         Header
+         ========================================== -->
+
+    <header class="page-header section-page-header">
+
+
+        <div>
+
+            <h1>
+                گزارش روزانه حضور و غیاب
+            </h1>
+
+            <p>
+                بررسی وضعیت حضور، غیبت، مرخصی، مأموریت،
+                ورود، خروج و کارکرد کارکنان
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+
+            <a class="header-link"
+               th:href="@{/admin/attendance}">
+
+                مدیریت ترددها
+
+            </a>
+
+
+            <a class="header-link"
+               th:href="@{/admin/reports/attendance-summary}">
+
+                خلاصه کارکرد
+
+            </a>
+
+
+            <a class="header-link"
+               th:href="@{/admin/dashboard}">
+
+                بازگشت به داشبورد
+
+            </a>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==========================================
+         خطا
+         ========================================== -->
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger section-alert">
+
+
+        <span class="alert-icon">
+            !
+        </span>
+
+
+        <span th:text="${errorMessage}">
+
+            دریافت گزارش ممکن نشد.
+
+        </span>
+
+
+    </div>
+
+
+    <!-- ==========================================
+         فیلتر گزارش
+         ========================================== -->
+
+    <section class="filter-card report-filter-card">
+
+
+        <div class="table-title">
+
+
+            <div>
+
+                <h2>
+                    فیلتر گزارش
+                </h2>
+
+                <p>
+                    تاریخ، کارمند و وضعیت حضور موردنظر را انتخاب کنید.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <form th:action="@{/admin/reports/daily-attendance}"
+              method="get"
+              class="report-filter-form filter-form">
+
+
+            <!-- از تاریخ -->
+
+            <div class="form-group">
+
+
+                <label for="fromDate">
+                    از تاریخ
+                </label>
+
+
+                <input type="date"
+                       id="fromDate"
+                       name="fromDate"
+                       th:value="${fromDate}"
+                       required>
+
+
+            </div>
+
+
+            <!-- تا تاریخ -->
+
+            <div class="form-group">
+
+
+                <label for="toDate">
+                    تا تاریخ
+                </label>
+
+
+                <input type="date"
+                       id="toDate"
+                       name="toDate"
+                       th:value="${toDate}"
+                       required>
+
+
+            </div>
+
+
+            <!-- کارمند -->
+
+            <div class="form-group">
+
+
+                <label for="employeeId">
+                    کارمند
+                </label>
+
+
+                <select id="employeeId"
+                        name="employeeId">
+
+
+                    <option value="">
+                        همه کارکنان
+                    </option>
+
+
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:selected="${selectedEmployeeId != null
+                            and selectedEmployeeId == employee.id}"
+                            th:text="|${employee.firstName} ${employee.lastName} - ${employee.personnelCode}|">
+
+                        علی رضایی - EMP-1001
+
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+            <!-- وضعیت -->
+
+            <div class="form-group status-filter-group">
+
+
+                <label for="status">
+                    وضعیت
+                </label>
+
+
+                <select id="status"
+                        name="status">
+
+
+                    <option value="ALL"
+                            th:selected="${selectedStatus == null
+                            or selectedStatus == 'ALL'}">
+
+                        همه وضعیت‌ها
+
+                    </option>
+
+
+                    <option th:each="statusItem : ${statuses}"
+                            th:value="${statusItem.name()}"
+                            th:selected="${selectedStatus == statusItem.name()}"
+                            th:text="${statusItem.title}">
+
+                        حاضر
+
+                    </option>
+
+
+                </select>
+
+
+            </div>
+
+
+            <!-- عملیات -->
+
+            <div class="report-filter-actions form-actions">
+
+
+                <button type="submit"
+                        class="button search-button">
+
+                    نمایش گزارش
+
+                </button>
+
+
+                <button type="submit"
+                        class="button excel-button"
+                        th:formaction="@{/admin/reports/daily-attendance/excel}">
+
+                    دریافت فایل Excel
+
+                </button>
+
+
+                <a th:href="@{/admin/reports/daily-attendance}"
+                   class="button reset-button">
+
+                    پاک‌کردن فیلتر
+
+                </a>
+
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         وضعیت فیلتر فعال
+         ========================================== -->
+
+    <div th:if="${selectedStatus != null
+    and selectedStatus != 'ALL'}"
+         class="active-filter-info">
+
+
+        <span>
+
+            فیلتر فعال:
+
+            <strong th:switch="${selectedStatus}">
+
+
+                <span th:case="'PRESENT'">
+                    فقط کارکنان حاضر
+                </span>
+
+
+                <span th:case="'ABSENT'">
+                    فقط کارکنان غایب
+                </span>
+
+
+                <span th:case="'INCOMPLETE'">
+                    فقط ترددهای ناقص
+                </span>
+
+
+                <span th:case="'LEAVE'">
+                    فقط کارکنان دارای مرخصی
+                </span>
+
+
+                <span th:case="'MISSION'">
+                    فقط کارکنان مأموریت
+                </span>
+
+
+                <span th:case="'HOLIDAY'">
+                    فقط تعطیلی رسمی
+                </span>
+
+
+                <span th:case="'NO_SHIFT'">
+                    فقط کارکنان بدون شیفت
+                </span>
+
+
+            </strong>
+
+        </span>
+
+
+        <span>
+
+            تعداد نتیجه:
+
+            <strong th:text="${rowCount != null
+            ? rowCount
+            : 0}">
+
+                0
+
+            </strong>
+
+        </span>
+
+
+    </div>
+
+
+    <!-- ==========================================
+         کارت‌های آماری
+         ========================================== -->
+
+    <section class="report-summary-grid summary-grid">
+
+
+        <!-- ردیف‌های نمایش داده شده -->
+
+        <article class="summary-card">
+
+
+            <span class="summary-label summary-title">
+                ردیف‌های نمایش‌داده‌شده
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${rowCount != null
+                    ? rowCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- حاضر -->
+
+        <article class="summary-card summary-present present-card">
+
+
+            <span class="summary-label summary-title">
+                حاضر
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${presentCount != null
+                    ? presentCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- غایب -->
+
+        <article class="summary-card summary-absent absent-card">
+
+
+            <span class="summary-label summary-title">
+                غایب
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${absentCount != null
+                    ? absentCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- تردد ناقص -->
+
+        <article class="summary-card summary-incomplete incomplete-card">
+
+
+            <span class="summary-label summary-title">
+                تردد ناقص
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${incompleteCount != null
+                    ? incompleteCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- مرخصی -->
+
+        <article class="summary-card summary-leave">
+
+
+            <span class="summary-label summary-title">
+                مرخصی
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${leaveCount != null
+                    ? leaveCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- مأموریت -->
+
+        <article class="summary-card summary-mission">
+
+
+            <span class="summary-label summary-title">
+                مأموریت
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${missionCount != null
+                    ? missionCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- تعطیل رسمی -->
+
+        <article class="summary-card summary-holiday">
+
+
+            <span class="summary-label summary-title">
+                تعطیل رسمی
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${holidayCount != null
+                    ? holidayCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+        <!-- بدون شیفت -->
+
+        <article class="summary-card summary-no-shift">
+
+
+            <span class="summary-label summary-title">
+                بدون شیفت
+            </span>
+
+
+            <strong class="summary-value"
+                    th:text="${noShiftCount != null
+                    ? noShiftCount
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         جدول گزارش
+         ========================================== -->
+
+    <section class="table-card report-table-card">
+
+
+        <div class="table-title">
+
+
+            <div>
+
+
+                <h2>
+                    نتیجه گزارش
+                </h2>
+
+
+                <p th:if="${fromDate != null
+                and toDate != null}">
+
+                    بازه انتخاب‌شده:
+
+                    <strong th:text="${fromDate}">
+                        2026-08-08
+                    </strong>
+
+                    تا
+
+                    <strong th:text="${toDate}">
+                        2026-08-08
+                    </strong>
+
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ======================================
+             بدون نتیجه
+             ====================================== -->
+
+        <div th:if="${reportRows == null
+        or reportRows.isEmpty()}"
+             class="empty-state">
+
+
+            <div class="empty-state-icon">
+                ▤
+            </div>
+
+
+            <h3>
+                گزارشی با فیلتر انتخاب‌شده وجود ندارد
+            </h3>
+
+
+            <p>
+                تاریخ، کارمند یا وضعیت دیگری را انتخاب کنید.
+            </p>
+
+
+        </div>
+
+
+        <!-- ======================================
+             جدول
+             ====================================== -->
+
+        <div th:unless="${reportRows == null
+        or reportRows.isEmpty()}"
+             class="table-wrapper report-table-wrapper">
+
+
+            <table class="report-data-table">
+
+
+                <thead>
+
+
+                <tr>
+
+                    <th>
+                        ردیف
+                    </th>
+
+                    <th>
+                        تاریخ
+                    </th>
+
+                    <th>
+                        کارمند
+                    </th>
+
+                    <th>
+                        کد پرسنلی
+                    </th>
+
+                    <th>
+                        واحد سازمانی
+                    </th>
+
+                    <th>
+                        شیفت
+                    </th>
+
+                    <th>
+                        شروع شیفت
+                    </th>
+
+                    <th>
+                        پایان شیفت
+                    </th>
+
+                    <th>
+                        اولین ورود
+                    </th>
+
+                    <th>
+                        آخرین خروج
+                    </th>
+
+                    <th>
+                        کارکرد خالص
+                    </th>
+
+                    <th>
+                        استراحت / مرخصی ساعتی
+                    </th>
+
+                    <th>
+                        اضافه‌کاری
+                    </th>
+
+                    <th>
+                        تأخیر
+                    </th>
+
+                    <th>
+                        خروج زودهنگام
+                    </th>
+
+                    <th>
+                        وضعیت
+                    </th>
+
+                </tr>
+
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="row, iteration : ${reportRows}">
+
+
+                    <!-- ردیف -->
+
+                    <td th:text="${iteration.count}">
+                        1
+                    </td>
+
+
+                    <!-- تاریخ -->
+
+                    <td th:text="${#temporals.format(
+                    row.reportDate,
+                    'yyyy/MM/dd'
+                    )}">
+
+                        2026/08/08
+
+                    </td>
+
+
+                    <!-- کارمند -->
+
+                    <td>
+
+
+                        <div>
+
+
+                            <strong th:text="|${row.employee.firstName} ${row.employee.lastName}|">
+
+                                علی رضایی
+
+                            </strong>
+
+
+                            <br>
+
+
+                            <small th:text="${row.employee.employeeType != null
+                            ? row.employee.employeeType.displayName
+                            : '—'}">
+
+                                اداری
+
+                            </small>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                    <!-- کد پرسنلی -->
+
+                    <td th:text="${row.employee.personnelCode}">
+
+                        EMP-1001
+
+                    </td>
+
+
+                    <!-- واحد -->
+
+                    <td th:text="${row.employee.department != null
+                    ? row.employee.department.name
+                    : '—'}">
+
+                        امور اداری
+
+                    </td>
+
+
+                    <!-- شیفت -->
+
+                    <td th:text="${row.shift != null
+                    ? row.shift.name
+                    : (
+                    row.employee.employeeType != null
+                    and row.employee.employeeType.name() == 'ADMINISTRATIVE'
+                    ? 'اداری ثابت'
+                    : '—'
+                    )}">
+
+                        اداری ثابت
+
+                    </td>
+
+
+                    <!-- شروع شیفت -->
+
+                    <td th:text="${row.scheduledStart != null
+                    ? #temporals.format(
+                    row.scheduledStart,
+                    'HH:mm'
+                    )
+                    : '—'}">
+
+                        08:00
+
+                    </td>
+
+
+                    <!-- پایان شیفت -->
+
+                    <td th:text="${row.scheduledEnd != null
+                    ? #temporals.format(
+                    row.scheduledEnd,
+                    'HH:mm'
+                    )
+                    : '—'}">
+
+                        15:00
+
+                    </td>
+
+
+                    <!-- اولین ورود -->
+
+                    <td th:text="${row.firstCheckIn != null
+                    ? #temporals.format(
+                    row.firstCheckIn,
+                    'HH:mm'
+                    )
+                    : '—'}">
+
+                        08:00
+
+                    </td>
+
+
+                    <!-- آخرین خروج -->
+
+                    <td th:text="${row.lastCheckOut != null
+                    ? #temporals.format(
+                    row.lastCheckOut,
+                    'HH:mm'
+                    )
+                    : '—'}">
+
+                        15:00
+
+                    </td>
+
+
+                    <!-- کارکرد خالص -->
+
+                    <td>
+
+
+                        <span th:if="${row.hasCheckIn()
+                        and row.hasCheckOut()}"
+                              th:text="${row.workedTimeTitle}">
+
+                            7 ساعت
+
+                        </span>
+
+
+                        <span th:unless="${row.hasCheckIn()
+                        and row.hasCheckOut()}">
+
+                            —
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- استراحت / مرخصی ساعتی -->
+
+                    <td th:text="|${row.breakMinutes} دقیقه|">
+
+                        0 دقیقه
+
+                    </td>
+
+
+                    <!-- اضافه کاری -->
+
+                    <td>
+
+
+                        <span th:if="${row.overtimeMinutes > 0}"
+                              class="time-value overtime-value"
+                              th:text="${row.overtimeTimeTitle}">
+
+                            1 ساعت
+
+                        </span>
+
+
+                        <span th:unless="${row.overtimeMinutes > 0}">
+
+                            —
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- تأخیر -->
+
+                    <td>
+
+
+                        <span th:if="${row.lateMinutes > 0}"
+                              class="time-value late-value"
+                              th:text="|${row.lateMinutes} دقیقه|">
+
+                            10 دقیقه
+
+                        </span>
+
+
+                        <span th:unless="${row.lateMinutes > 0}">
+
+                            —
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- خروج زودهنگام -->
+
+                    <td>
+
+
+                        <span th:if="${row.earlyLeaveMinutes > 0}"
+                              class="time-value early-leave-value"
+                              th:text="|${row.earlyLeaveMinutes} دقیقه|">
+
+                            15 دقیقه
+
+                        </span>
+
+
+                        <span th:unless="${row.earlyLeaveMinutes > 0}">
+
+                            —
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- وضعیت -->
+
+                    <td>
+
+
+                        <span th:if="${row.status.name() == 'PRESENT'}"
+                              class="status-badge present-status">
+
+                            حاضر
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'ABSENT'}"
+                              class="status-badge absent-status">
+
+                            غایب
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'INCOMPLETE'}"
+                              class="status-badge incomplete-status">
+
+                            تردد ناقص
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'LEAVE'}"
+                              class="status-badge leave-status">
+
+                            مرخصی
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'MISSION'}"
+                              class="status-badge mission-status">
+
+                            مأموریت
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'HOLIDAY'}"
+                              class="status-badge holiday-status">
+
+                            تعطیل رسمی
+
+                        </span>
+
+
+                        <span th:if="${row.status.name() == 'NO_SHIFT'}"
+                              class="status-badge no-shift-status">
+
+                            بدون شیفت
+
+                        </span>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+    /*
+     * ==========================================
+     * جلوگیری از انتخاب پایان قبل از شروع
+     * ==========================================
+     */
+
+    const fromDateInput =
+        document.getElementById(
+            "fromDate"
+        );
+
+
+    const toDateInput =
+        document.getElementById(
+            "toDate"
+        );
+
+
+    if (
+        fromDateInput
+        &&
+        toDateInput
+    ) {
+
+        if (
+            fromDateInput.value
+        ) {
+
+            toDateInput.min =
+                fromDateInput.value;
+        }
+
+
+        fromDateInput.addEventListener(
+            "change",
+            function () {
+
+                toDateInput.min =
+                    fromDateInput.value;
+
+
+                if (
+                    toDateInput.value
+                    &&
+                    toDateInput.value
+                    <
+                    fromDateInput.value
+                ) {
+
+                    toDateInput.value =
+                        fromDateInput.value;
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کاربران و سطح دسترسی | SUTECH</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-dashboard.css(v=14)}">
+</head>
+
+<body class="section-ui-page users-page">
+
+<main>
+
+    <!-- هدر تصویری -->
+    <header class="section-page-header">
+        <div>
+            <h1>کاربران و سطح دسترسی</h1>
+            <p>ساخت حساب و تعیین دسترسی مدیران و کارکنان</p>
+        </div>
+
+        <div class="header-actions">
+            <a th:href="@{/admin/dashboard}" class="dashboard-link">
+                بازگشت به داشبورد
+            </a>
+            <a th:href="@{/admin/users/new}" class="add-shift-button">
+                + ساخت حساب جدید
+            </a>
+        </div>
+    </header>
+
+    <!-- پیام‌ها -->
+    <div th:if="${successMessage}"
+         class="success-message"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="error-message"
+         th:text="${errorMessage}">
+    </div>
+
+    <!-- خلاصه -->
+    <section class="users-summary">
+        <div class="users-count">
+            <strong th:text="${accountCount}">0</strong>
+            <span>تعداد حساب‌های ثبت‌شده</span>
+        </div>
+    </section>
+
+    <!-- جدول -->
+    <section class="table-card">
+
+        <div class="table-heading">
+            <h2>فهرست حساب‌های کاربری</h2>
+            <a th:href="@{/admin/dashboard}" class="dashboard-link">
+                بازگشت به داشبورد
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="users-table">
+                <thead>
+                <tr>
+                    <th>نام کاربری</th>
+                    <th>نام و نام خانوادگی</th>
+                    <th>سطح دسترسی</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="account : ${accounts}">
+
+                    <td th:text="${account.username}">admin</td>
+
+                    <td th:text="${account.employee != null
+                        ? account.employee.firstName + ' ' + account.employee.lastName
+                        : '—'}">
+                        —
+                    </td>
+
+                    <td th:text="${account.role != null
+                        ? account.role.displayName
+                        : '—'}">
+                        مدیر امور اداری
+                    </td>
+
+                    <td>
+                        <span th:if="${account.active}"
+                              class="status-badge status-active">
+                            فعال
+                        </span>
+                        <span th:unless="${account.active}"
+                              class="status-badge status-inactive">
+                            غیرفعال
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="employee-actions">
+                            <a th:href="@{/admin/users/{id}/edit(id=${account.id})}"
+                               class="edit-button">
+                                ویرایش
+                            </a>
+
+                            <form th:if="${account.active}"
+                                  th:action="@{/admin/users/{id}/status(id=${account.id})}"
+                                  method="post"
+                                  class="status-form">
+                                <input type="hidden" name="active" value="false">
+                                <button type="submit" class="deactivate-button">
+                                    غیرفعال‌کردن
+                                </button>
+                            </form>
+
+                            <form th:unless="${account.active}"
+                                  th:action="@{/admin/users/{id}/status(id=${account.id})}"
+                                  method="post"
+                                  class="status-form">
+                                <input type="hidden" name="active" value="true">
+                                <button type="submit" class="activate-button">
+                                    فعال‌کردن
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(accounts)}" class="empty-row">
+                    <td colspan="5">
+                        هنوز هیچ حساب کاربری ثبت نشده است.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

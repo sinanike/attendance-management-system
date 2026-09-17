@@ -1,0 +1,6571 @@
+:root {
+    --primary: #126467;
+    --primary-dark: #0c4e50;
+    --primary-light: #e4f2f2;
+    --background: #f3f6f7;
+    --surface: #ffffff;
+    --text: #183335;
+    --muted: #718386;
+    --border: #dde7e8;
+    --success: #1f8a55;
+    --warning: #d68a15;
+    --danger: #c94646;
+    --sidebar-width: 270px;
+
+    --navy: #021f55;
+    --navy-dark: #01122e;
+    --teal: #0d7375;
+    --teal-dark: #0a5c5e;
+    --gold: #d6ad45;
+    --card-color: rgba(255, 255, 255, 0.97);
+    --card-shadow: 0 14px 36px rgba(3, 30, 55, 0.14);
+    --border-color: #d6e4e6;
+    --muted-color: #6b8185;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    background: var(--background);
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+button,
+a {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid rgba(18, 100, 103, 0.3);
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   داشبورد مدیر امور اداری
+   ========================================================= */
+
+.admin-dashboard-page {
+    min-width: 320px;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+.admin-dashboard-page .layout {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    direction: rtl;
+}
+
+.admin-dashboard-page .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    min-height: 100vh;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    background: linear-gradient(180deg, #113f45, #0b3035);
+}
+
+.admin-dashboard-page .brand {
+    padding: 4px 8px 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-dashboard-page .brand-logo {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-weight: bold;
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--primary);
+}
+
+.admin-dashboard-page .brand-title {
+    margin: 0 0 5px;
+    font-size: 15px;
+}
+
+.admin-dashboard-page .brand-subtitle {
+    color: #aac8ca;
+    font-size: 12px;
+    direction: ltr;
+}
+
+.admin-dashboard-page .nav-title,
+.admin-dashboard-page .nav-group-label {
+    margin: 22px 12px 8px;
+    color: #8fb5b8;
+    font-size: 11px;
+}
+
+.admin-dashboard-page .navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-dashboard-page .nav-item {
+    min-height: 45px;
+    padding: 11px 13px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #d3e4e5;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.admin-dashboard-page .nav-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.admin-dashboard-page .nav-item.active {
+    color: #ffffff;
+    background: var(--primary);
+}
+
+.admin-dashboard-page .nav-icon {
+    width: 22px;
+    height: 22px;
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 22px;
+}
+
+.admin-dashboard-page .nav-icon svg,
+.admin-dashboard-page .stat-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: currentColor;
+}
+
+.admin-dashboard-page .nav-item-disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-dashboard-page .nav-item-disabled:hover {
+    color: #d3e4e5;
+    background: transparent;
+}
+
+.admin-dashboard-page .coming-soon {
+    margin-right: auto;
+    padding: 3px 6px;
+    color: #d8e9ea;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-size: 9px;
+    white-space: nowrap;
+}
+
+.admin-dashboard-page .sidebar-footer {
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.admin-dashboard-page .logout-button {
+    width: 100%;
+    padding: 12px;
+    color: #ffffff;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+    background: transparent;
+}
+
+.admin-dashboard-page .logout-button:hover {
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.admin-dashboard-page .main-content {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    padding: 28px;
+    direction: rtl;
+}
+
+.admin-dashboard-page .topbar {
+    min-width: 0;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-dashboard-page .topbar-heading,
+.admin-dashboard-page .topbar-meta {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.admin-dashboard-page .page-title {
+    margin: 0 0 6px;
+    font-size: 25px;
+}
+
+.admin-dashboard-page .page-description {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.admin-dashboard-page .date-box {
+    min-width: 210px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.admin-dashboard-page .date-label {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.admin-dashboard-page .date-box strong {
+    font-size: 12px;
+}
+
+.admin-dashboard-page .menu-toggle,
+.admin-dashboard-page .sidebar-overlay {
+    display: none;
+}
+
+/* کارت‌های آماری */
+.admin-dashboard-page .stats-grid {
+    width: 100%;
+    margin-bottom: 22px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-dashboard-page .stat-card {
+    min-width: 0;
+    min-height: 126px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(19, 48, 50, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-dashboard-page .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(19, 48, 50, 0.09);
+}
+
+.admin-dashboard-page .stat-card > div:last-child {
+    min-width: 0;
+}
+
+.admin-dashboard-page .stat-icon {
+    width: 46px;
+    height: 46px;
+    padding: 11px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 46px;
+    border-radius: 13px;
+}
+
+.admin-dashboard-page .stat-card.workforce .stat-icon {
+    color: #3566b8;
+    background: #e9f0fc;
+}
+
+.admin-dashboard-page .stat-card.present .stat-icon {
+    color: var(--success);
+    background: #e5f6ed;
+}
+
+.admin-dashboard-page .stat-card.absent .stat-icon {
+    color: var(--danger);
+    background: #fdeaea;
+}
+
+.admin-dashboard-page .stat-card.late .stat-icon {
+    color: var(--warning);
+    background: #fff4df;
+}
+
+.admin-dashboard-page .stat-card.incomplete .stat-icon {
+    color: #7b58b5;
+    background: #f0eafd;
+}
+
+.admin-dashboard-page .stat-title {
+    margin: 0 0 7px;
+    color: var(--muted);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.admin-dashboard-page .stat-value {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.admin-dashboard-page .stat-note {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    overflow-wrap: anywhere;
+}
+
+/* نمودارها */
+.admin-dashboard-page .charts-grid {
+    width: 100%;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.admin-dashboard-page .chart-panel {
+    min-width: 0;
+    min-height: 360px;
+    padding: 21px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(19, 48, 50, 0.04);
+}
+
+.admin-dashboard-page .chart-header {
+    margin-bottom: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.admin-dashboard-page .panel-title {
+    margin: 0;
+    font-size: 16px;
+}
+
+.admin-dashboard-page .chart-description,
+.admin-dashboard-page .panel-subtitle {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.admin-dashboard-page .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin-dashboard-page .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.admin-dashboard-page .legend-color,
+.admin-dashboard-page .legend-dot {
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.admin-dashboard-page .present-color,
+.admin-dashboard-page .present-bar,
+.admin-dashboard-page .present-dot {
+    background: var(--success);
+}
+
+.admin-dashboard-page .absent-color,
+.admin-dashboard-page .absent-bar,
+.admin-dashboard-page .absent-dot {
+    background: var(--danger);
+}
+
+.admin-dashboard-page .late-color,
+.admin-dashboard-page .late-bar,
+.admin-dashboard-page .late-dot {
+    background: var(--warning);
+}
+
+.admin-dashboard-page .incomplete-color,
+.admin-dashboard-page .incomplete-bar,
+.admin-dashboard-page .incomplete-dot {
+    background: #7b58b5;
+}
+
+.admin-dashboard-page .chart-scroll {
+    width: 100%;
+    padding: 24px 0 4px;
+    overflow-x: auto;
+}
+
+.admin-dashboard-page .bar-chart {
+    min-width: 560px;
+    height: 245px;
+    padding: 0 8px;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(65px, 1fr));
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-dashboard-page .chart-day,
+.admin-dashboard-page .chart-group {
+    min-width: 0;
+    height: 244px;
+    display: grid;
+    grid-template-rows: 190px 25px 20px;
+    align-items: end;
+    text-align: center;
+}
+
+.admin-dashboard-page .chart-bars {
+    height: 175px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 7px;
+}
+
+.admin-dashboard-page .chart-bar-column {
+    width: 22px;
+    height: 175px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.admin-dashboard-page .chart-value {
+    position: static;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: bold;
+    transform: none;
+}
+
+.admin-dashboard-page .chart-bar-track {
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: #edf2f2;
+    border-radius: 6px 6px 2px 2px;
+}
+
+.admin-dashboard-page .chart-bar {
+    width: 100%;
+    min-height: 2px;
+    position: static;
+    display: block;
+    border-radius: 6px 6px 2px 2px;
+}
+
+.admin-dashboard-page .chart-day-name,
+.admin-dashboard-page .chart-day {
+    align-self: center;
+    font-size: 10px;
+}
+
+.admin-dashboard-page .chart-date {
+    align-self: center;
+    color: var(--muted);
+    direction: ltr;
+    font-size: 9px;
+}
+
+.admin-dashboard-page .chart-empty {
+    min-height: 245px;
+    padding: 30px;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    background: #f8fafa;
+    font-size: 12px;
+}
+
+.admin-dashboard-page .chart-empty-success {
+    color: var(--success);
+    background: #f0faf5;
+    border-color: #bfe3cf;
+}
+
+/* پنل‌های پایین */
+.admin-dashboard-page .content-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(290px, 1fr);
+    gap: 20px;
+}
+
+.admin-dashboard-page .panel {
+    min-width: 0;
+    padding: 21px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(19, 48, 50, 0.04);
+}
+
+.admin-dashboard-page .panel-header {
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-dashboard-page .panel-link {
+    color: var(--primary);
+    font-size: 12px;
+}
+
+.admin-dashboard-page .panel-caption {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.admin-dashboard-page .table-wrapper {
+    overflow-x: auto;
+}
+
+.admin-dashboard-page table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.admin-dashboard-page th,
+.admin-dashboard-page td {
+    padding: 13px 10px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.admin-dashboard-page th {
+    color: var(--muted);
+    font-weight: normal;
+    background: #f8fafa;
+}
+
+.admin-dashboard-page .status {
+    padding: 5px 9px;
+    display: inline-block;
+    border-radius: 20px;
+    font-size: 11px;
+}
+
+.admin-dashboard-page .status.success {
+    color: var(--success);
+    background: #e6f6ed;
+}
+
+.admin-dashboard-page .status.warning {
+    color: #a86908;
+    background: #fff2d9;
+}
+
+.admin-dashboard-page .status.danger {
+    color: var(--danger);
+    background: #fde8e8;
+}
+
+.admin-dashboard-page .attention-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-dashboard-page .attention-item {
+    min-height: 62px;
+    padding: 11px 12px;
+    display: grid;
+    grid-template-columns: 9px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafa;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+}
+
+.admin-dashboard-page .attention-marker {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.admin-dashboard-page .attention-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.admin-dashboard-page .attention-copy strong {
+    color: var(--text);
+    font-size: 12px;
+}
+
+.admin-dashboard-page .attention-copy small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.admin-dashboard-page .attention-item.danger {
+    color: var(--danger);
+}
+
+.admin-dashboard-page .attention-item.warning {
+    color: var(--warning);
+}
+
+.admin-dashboard-page .attention-item.info {
+    color: var(--primary);
+}
+
+.admin-dashboard-page .attention-item.resolved {
+    opacity: 0.58;
+}
+
+.admin-dashboard-page .attention-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    display: block;
+    color: var(--primary);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+}
+
+.admin-dashboard-page .demo-note {
+    margin: 25px 0 0;
+    color: var(--muted);
+    text-align: center;
+    font-size: 11px;
+}
+
+/* ریسپانسیو داشبورد */
+@media (max-width: 1350px) {
+    .admin-dashboard-page .stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1050px) {
+    .admin-dashboard-page .charts-grid,
+    .admin-dashboard-page .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-page .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-dashboard-page .layout {
+        display: block;
+    }
+
+    .admin-dashboard-page .sidebar {
+        width: min(290px, 86vw);
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        height: 100vh;
+        transform: translateX(105%);
+        transition: transform 0.25s ease;
+    }
+
+    .admin-dashboard-page.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    .admin-dashboard-page .sidebar-overlay {
+        position: fixed;
+        z-index: 999;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        cursor: pointer;
+        border: 0;
+        background: rgba(7, 27, 30, 0.5);
+    }
+
+    .admin-dashboard-page.sidebar-open .sidebar-overlay {
+        display: block;
+    }
+
+    .admin-dashboard-page .menu-toggle {
+        width: 42px;
+        height: 42px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        flex: 0 0 42px;
+        cursor: pointer;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+    }
+
+    .admin-dashboard-page .menu-toggle span {
+        width: 100%;
+        height: 2px;
+        display: block;
+        background: var(--text);
+        border-radius: 2px;
+    }
+
+    .admin-dashboard-page .main-content {
+        padding: 18px;
+    }
+
+    .admin-dashboard-page .topbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-dashboard-page .topbar-meta,
+    .admin-dashboard-page .date-box {
+        width: 100%;
+    }
+
+    .admin-dashboard-page .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-page .stat-card {
+        min-height: 105px;
+    }
+
+    .admin-dashboard-page .page-title {
+        font-size: 21px;
+    }
+
+    .admin-dashboard-page .panel {
+        padding: 16px;
+    }
+
+    .admin-dashboard-page .chart-header {
+        flex-direction: column;
+    }
+
+    .admin-dashboard-page .chart-legend {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 560px) {
+    .admin-dashboard-page .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   صفحات اصلی با پس‌زمینه تصویری دانشگاه
+   (مدیریت تردد، شیفت، گزارش‌ها و ...)
+   ========================================================= */
+
+body.section-ui-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background-color: #031a3a;
+    background-image:
+        linear-gradient(
+            160deg,
+            rgba(2, 18, 48, 0.82) 0%,
+            rgba(3, 28, 70, 0.72) 45%,
+            rgba(2, 20, 52, 0.88) 100%
+        ),
+        url("/css/karim-khan-citadel.webp"),
+        url("/css/eram-garden.webp");
+    background-repeat: no-repeat;
+    background-position: center, left center, right center;
+    background-size: cover, 52% 100%, 52% 100%;
+    background-attachment: fixed;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+}
+
+body.section-ui-page > main {
+    width: min(100% - 40px, 1480px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+/* هدر صفحات اصلی */
+body.section-ui-page .section-page-header {
+    min-height: 160px;
+    margin-bottom: 24px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.88) 0%,
+            rgba(2, 31, 85, 0.78) 50%,
+            rgba(1, 18, 48, 0.92) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid rgba(214, 171, 55, 0.45);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 42px rgba(2, 31, 85, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+body.section-ui-page .section-page-header::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 120px;
+    height: 120px;
+    border-top: 2px solid rgba(241, 216, 94, 0.5);
+    border-right: 2px solid rgba(241, 216, 94, 0.5);
+    border-radius: 0 18px 0 0;
+    pointer-events: none;
+}
+
+body.section-ui-page .section-page-header h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+body.section-ui-page .section-page-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+body.section-ui-page .shift-header-actions,
+body.section-ui-page .attendance-header-actions,
+body.section-ui-page .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+body.section-ui-page .section-page-header .shift-back-button,
+body.section-ui-page .section-page-header .dashboard-link,
+body.section-ui-page .section-page-header .header-link,
+body.section-ui-page .section-page-header .raw-report-link {
+    min-height: 42px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    border-radius: 11px !important;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+body.section-ui-page .section-page-header .shift-back-button:hover,
+body.section-ui-page .section-page-header .dashboard-link:hover,
+body.section-ui-page .section-page-header .header-link:hover,
+body.section-ui-page .section-page-header .raw-report-link:hover {
+    color: var(--navy-dark) !important;
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+body.section-ui-page .section-page-header .add-shift-button {
+    min-height: 45px;
+    padding: 10px 18px;
+    color: #062f36 !important;
+    background: linear-gradient(135deg, #f6df8b, #d6ad45) !important;
+    border: 1px solid #f5df8d !important;
+    border-radius: 11px !important;
+    font-size: 13px;
+    font-weight: 900;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* کارت‌های مشترک */
+body.section-ui-page .attendance-summary,
+body.section-ui-page .shift-summary-card,
+body.section-ui-page .report-filter-card,
+body.section-ui-page .filter-card,
+body.section-ui-page .month-navigation,
+body.section-ui-page .attendance-table-card,
+body.section-ui-page .shift-table-card,
+body.section-ui-page .table-card {
+    background: var(--card-color) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+body.section-ui-page .form-group {
+    min-width: 0;
+}
+
+body.section-ui-page .form-group label {
+    margin-bottom: 7px;
+    display: block;
+    color: #24484c !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+}
+
+body.section-ui-page .form-group input,
+body.section-ui-page .form-group select,
+body.section-ui-page .attendance-search {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    color: #173b3f;
+    background: #fbfdfd;
+    border: 1px solid #bdd0d2 !important;
+    border-radius: 11px !important;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+}
+
+body.section-ui-page .form-group input:focus,
+body.section-ui-page .form-group select:focus,
+body.section-ui-page .attendance-search:focus {
+    background: #ffffff;
+    border-color: var(--teal) !important;
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14);
+}
+
+body.section-ui-page input[type="date"] {
+    direction: ltr;
+    text-align: left;
+}
+
+/* مدیریت ترددها */
+body.attendance-management-page .attendance-summary {
+    margin-bottom: 22px !important;
+    padding: 22px 25px !important;
+    display: grid !important;
+    grid-template-columns: minmax(210px, 1fr) minmax(280px, 440px);
+    align-items: center;
+    gap: 24px;
+}
+
+body.attendance-management-page .attendance-count strong {
+    margin-bottom: 4px;
+    display: block;
+    color: var(--teal-dark) !important;
+    font-size: 34px !important;
+    font-weight: 900 !important;
+}
+
+body.attendance-management-page .attendance-count span {
+    color: var(--muted-color) !important;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* عنوان جدول */
+body.section-ui-page .table-heading {
+    min-height: 72px;
+    padding: 17px 23px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    background: linear-gradient(180deg, #ffffff, #f7fbfb) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+body.section-ui-page .table-heading h2,
+body.section-ui-page .table-title h2 {
+    margin: 0;
+    color: #0a3439 !important;
+    font-size: 20px !important;
+    font-weight: 900 !important;
+}
+
+body.section-ui-page .table-heading .dashboard-link {
+    min-height: 40px;
+    padding: 8px 14px;
+    color: var(--teal-dark) !important;
+    background: #edf7f7 !important;
+    border: 1px solid #bcd8d9 !important;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+/* جدول‌ها */
+body.section-ui-page .attendance-table-card,
+body.section-ui-page .shift-table-card,
+body.section-ui-page .table-card {
+    overflow: hidden;
+}
+
+body.section-ui-page .attendance-table-wrapper,
+body.section-ui-page .shift-table-wrapper,
+body.section-ui-page .table-wrapper {
+    overflow-x: auto;
+}
+
+body.section-ui-page .attendance-table,
+body.section-ui-page .shift-table,
+body.section-ui-page .table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+body.section-ui-page .attendance-table {
+    min-width: 1180px;
+}
+
+body.section-ui-page .shift-table {
+    min-width: 1120px;
+}
+
+body.section-ui-page .table-card table {
+    min-width: 1220px;
+}
+
+body.section-ui-page .attendance-table th,
+body.section-ui-page .attendance-table td,
+body.section-ui-page .shift-table th,
+body.section-ui-page .shift-table td,
+body.section-ui-page .table-card table th,
+body.section-ui-page .table-card table td {
+    padding: 15px 16px !important;
+    text-align: right !important;
+    vertical-align: middle;
+    border-bottom: 1px solid #e1eaeb !important;
+}
+
+body.section-ui-page .attendance-table th,
+body.section-ui-page .shift-table th,
+body.section-ui-page .table-card table th {
+    color: #496b6f !important;
+    background: #f0f6f6 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+}
+
+body.section-ui-page .attendance-table td,
+body.section-ui-page .shift-table td,
+body.section-ui-page .table-card table td {
+    color: #17383c !important;
+    font-size: 13px !important;
+    font-weight: 600;
+}
+
+body.section-ui-page .attendance-table tbody tr:nth-child(even),
+body.section-ui-page .shift-table tbody tr:nth-child(even),
+body.section-ui-page .table-card table tbody tr:nth-child(even) {
+    background: #fbfdfd;
+}
+
+body.section-ui-page .attendance-table tbody tr:hover,
+body.section-ui-page .shift-table tbody tr:hover,
+body.section-ui-page .table-card table tbody tr:hover {
+    background: #edf8f8 !important;
+}
+
+/* وضعیت‌ها و بج‌ها */
+body.section-ui-page .attendance-badge,
+body.section-ui-page .status-badge,
+body.section-ui-page .count-badge {
+    min-width: 76px;
+    padding: 5px 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+body.section-ui-page .check-in-badge,
+body.section-ui-page .present-status,
+body.section-ui-page .present-badge {
+    color: #0b7044 !important;
+    background: #e0f6e9 !important;
+    border: 1px solid #b8e5cb !important;
+}
+
+body.section-ui-page .check-out-badge,
+body.section-ui-page .absent-status,
+body.section-ui-page .absent-badge {
+    color: #aa3037 !important;
+    background: #fdebed !important;
+    border: 1px solid #f0c3c6 !important;
+}
+
+body.section-ui-page .incomplete-status,
+body.section-ui-page .incomplete-badge {
+    color: #8b5a0d !important;
+    background: #fff5dc !important;
+    border: 1px solid #efd59f !important;
+}
+
+body.section-ui-page .no-shift-status,
+body.section-ui-page .no-shift-badge {
+    color: #50666a !important;
+    background: #eaf0f2 !important;
+    border: 1px solid #d3dfe2 !important;
+}
+
+body.section-ui-page .delete-attendance-button {
+    min-height: 36px;
+    padding: 7px 13px;
+    color: #a82f36 !important;
+    background: #fff0f1 !important;
+    border: 1px solid #edb9bd !important;
+    border-radius: 9px !important;
+    font: inherit;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    cursor: pointer;
+}
+
+body.section-ui-page .delete-attendance-button:hover {
+    color: #ffffff !important;
+    background: #c83e45 !important;
+    border-color: #c83e45 !important;
+}
+
+/* مدیریت شیفت‌ها */
+body.shift-management-page .shift-summary-card {
+    margin-bottom: 22px !important;
+    padding: 20px 24px !important;
+}
+
+body.shift-management-page .shift-summary-card div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+body.shift-management-page .shift-summary-card span {
+    color: var(--muted-color) !important;
+    font-size: 14px !important;
+    font-weight: 800;
+}
+
+body.shift-management-page .shift-summary-card strong {
+    color: var(--teal-dark) !important;
+    font-size: 32px !important;
+    font-weight: 900 !important;
+}
+
+body.shift-management-page .shift-code {
+    padding: 5px 10px;
+    color: #075b5e !important;
+    background: #e4f3f3 !important;
+    border: 1px solid #c8e2e3;
+    border-radius: 8px;
+    direction: ltr;
+    font-family: monospace;
+    font-weight: 800;
+}
+
+body.shift-management-page .shift-type-badge,
+body.shift-management-page .shift-status-badge {
+    min-width: 70px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+body.shift-management-page .shift-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.shift-management-page .shift-actions form {
+    margin: 0;
+}
+
+/* فیلتر گزارش‌ها */
+body.attendance-report-page .report-filter-card,
+body.daily-report-page .filter-card,
+body.summary-report-page .filter-card {
+    margin-bottom: 22px !important;
+    padding: 24px !important;
+}
+
+body.attendance-report-page .report-filter-form,
+body.daily-report-page .filter-form,
+body.summary-report-page .filter-form {
+    display: grid !important;
+    grid-template-columns:
+        minmax(170px, 1fr)
+        minmax(170px, 1fr)
+        minmax(240px, 1.35fr)
+        auto !important;
+    align-items: end !important;
+    gap: 17px !important;
+}
+
+body.attendance-report-page .save-attendance-button,
+body.section-ui-page .search-button,
+body.section-ui-page .excel-button,
+body.section-ui-page .reset-button {
+    min-height: 48px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px !important;
+    font: inherit;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+body.attendance-report-page .save-attendance-button,
+body.section-ui-page .search-button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+    border: 1px solid var(--teal-dark) !important;
+}
+
+body.section-ui-page .excel-button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #24925d, #11633e) !important;
+    border: 1px solid #11633e !important;
+}
+
+body.section-ui-page .reset-button {
+    color: #52666a !important;
+    background: #e9eff0 !important;
+    border: 1px solid #d5e0e2 !important;
+}
+
+body.section-ui-page .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+/* کارت‌های آماری گزارش */
+body.attendance-report-page .report-summary-grid {
+    margin-bottom: 22px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+}
+
+body.attendance-report-page .report-summary-card {
+    min-height: 126px;
+    padding: 20px 22px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 17px !important;
+    box-shadow: 0 12px 28px rgba(3, 30, 55, 0.17) !important;
+}
+
+body.attendance-report-page .report-summary-card strong {
+    font-size: 34px !important;
+    font-weight: 900 !important;
+}
+
+body.attendance-report-page .report-summary-card span {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* گزارش روزانه و خلاصه */
+body.daily-report-page .summary-grid,
+body.summary-report-page .summary-grid {
+    margin-bottom: 22px !important;
+    display: grid !important;
+    gap: 14px !important;
+}
+
+body.daily-report-page .summary-grid {
+    grid-template-columns: repeat(7, minmax(135px, 1fr)) !important;
+}
+
+body.summary-report-page .summary-grid {
+    grid-template-columns: repeat(4, minmax(180px, 1fr)) !important;
+}
+
+body.section-ui-page .summary-card {
+    min-height: 118px !important;
+    padding: 18px 17px !important;
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    border-right-width: 1px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 28px rgba(3, 30, 55, 0.16) !important;
+}
+
+body.summary-report-page .summary-card {
+    min-height: 90px !important;
+    padding: 11px 15px !important;
+}
+
+body.section-ui-page .summary-title {
+    margin-bottom: 10px !important;
+    display: block;
+    color: #627b7f !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+body.summary-report-page .summary-title {
+    margin-bottom: 4px !important;
+}
+
+body.section-ui-page .summary-value {
+    color: #102f33 !important;
+    font-size: clamp(23px, 2vw, 31px) !important;
+    font-weight: 900 !important;
+    line-height: 1.4;
+}
+
+body.section-ui-page .table-title {
+    min-height: 72px;
+    padding: 18px 24px !important;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(180deg, #ffffff, #f7fbfb) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* انتخاب ماه */
+body.summary-report-page .month-navigation {
+    margin-bottom: 20px !important;
+    padding: 14px 16px !important;
+}
+
+body.summary-report-page .month-button {
+    min-height: 44px;
+    padding: 9px 16px;
+    color: var(--teal-dark) !important;
+    background: #edf7f7 !important;
+    border: 1px solid #c1dbdc !important;
+    border-radius: 10px !important;
+    font-size: 13px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+body.summary-report-page .current-month-button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+    border-color: var(--teal-dark) !important;
+}
+
+/* پیام‌ها */
+body.section-ui-page .success-message,
+body.section-ui-page .success-alert,
+body.section-ui-page .error-message,
+body.section-ui-page .form-error-message,
+body.section-ui-page .report-error {
+    margin-bottom: 20px !important;
+    padding: 13px 17px !important;
+    border-radius: 11px !important;
+    box-shadow: 0 10px 24px rgba(3, 30, 55, 0.16);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+body.section-ui-page .empty-row td {
+    padding: 42px 18px !important;
+    color: #71878a !important;
+    text-align: center !important;
+    font-weight: 800;
+}
+
+/* ریسپانسیو صفحات تصویری */
+@media (max-width: 1180px) {
+    body.attendance-report-page .report-filter-form,
+    body.daily-report-page .filter-form,
+    body.summary-report-page .filter-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    body.section-ui-page .form-actions {
+        flex-wrap: wrap;
+    }
+
+    body.daily-report-page .summary-grid {
+        grid-template-columns: repeat(4, minmax(135px, 1fr)) !important;
+    }
+
+    body.summary-report-page .summary-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 820px) {
+    body.section-ui-page {
+        background-attachment: scroll !important;
+        background-size: cover, 100% 100%, 0 0;
+    }
+
+    body.section-ui-page > main {
+        width: min(100% - 26px, 1480px) !important;
+        padding: 18px 0 42px !important;
+    }
+
+    body.section-ui-page .section-page-header {
+        min-height: auto;
+        padding: 20px !important;
+        align-items: stretch !important;
+        flex-direction: column !important;
+    }
+
+    body.section-ui-page .section-page-header h1 {
+        font-size: 27px !important;
+    }
+
+    body.section-ui-page .shift-header-actions,
+    body.section-ui-page .attendance-header-actions,
+    body.section-ui-page .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    body.section-ui-page .shift-header-actions > *,
+    body.section-ui-page .attendance-header-actions > *,
+    body.section-ui-page .header-actions > *,
+    body.section-ui-page .section-page-header > a {
+        flex: 1 1 170px;
+    }
+
+    body.attendance-management-page .attendance-summary {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.attendance-report-page .report-summary-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.daily-report-page .summary-grid {
+        grid-template-columns: repeat(2, minmax(130px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 560px) {
+    body.attendance-report-page .report-filter-form,
+    body.daily-report-page .filter-form,
+    body.summary-report-page .filter-form,
+    body.summary-report-page .summary-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.section-ui-page .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    body.section-ui-page .form-actions > * {
+        width: 100%;
+    }
+
+    body.section-ui-page .table-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    body.summary-report-page .month-navigation {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    body.summary-report-page .month-button {
+        width: 100%;
+        justify-self: stretch !important;
+    }
+}
+
+/* =========================================================
+   صفحه ورود (تخت جمشید)
+   ========================================================= */
+
+body.login-page {
+    min-height: 100vh;
+    margin: 0;
+    padding: clamp(18px, 4vw, 56px);
+    display: grid;
+    place-items: center;
+    overflow-x: hidden;
+    color: #17263d;
+    background-color: #021f55;
+    background-image:
+        linear-gradient(
+            115deg,
+            rgba(1, 17, 46, 0.80) 0%,
+            rgba(2, 31, 85, 0.54) 46%,
+            rgba(1, 18, 50, 0.75) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+body.login-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(1, 16, 42, 0.06), rgba(1, 16, 42, 0.40));
+}
+
+.login-page-content {
+    width: min(100%, 470px);
+    position: relative;
+    z-index: 1;
+}
+
+.login-page .login-card {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: clamp(28px, 4vw, 44px);
+    color: #17263d;
+    background: rgba(255, 255, 255, 0.93);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 24px;
+    box-shadow:
+        0 30px 85px rgba(0, 11, 35, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.login-brand {
+    margin-bottom: 34px;
+    padding-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid rgba(2, 31, 85, 0.12);
+}
+
+.login-logo {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: #021f55;
+    background: linear-gradient(145deg, #f8e8a7, #d6ab37);
+    border: 2px solid rgba(2, 31, 85, 0.16);
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(2, 31, 85, 0.17);
+    font-size: 18px;
+    font-weight: 900;
+    direction: ltr;
+}
+
+.login-university {
+    margin: 0 0 5px;
+    color: #021f55;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.login-university-en {
+    margin: 0;
+    color: #718096;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.55px;
+    direction: ltr;
+}
+
+.login-heading {
+    margin-bottom: 25px;
+}
+
+.login-eyebrow {
+    margin-bottom: 10px;
+    display: inline-block;
+    color: #99702c;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.login-page .login-card h1 {
+    margin: 0 0 11px;
+    color: #021f55;
+    text-align: right;
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 900;
+    line-height: 1.55;
+}
+
+.login-heading p {
+    margin: 0;
+    color: #66758a;
+    font-size: 12px;
+    line-height: 1.9;
+}
+
+.login-page .login-card label {
+    margin: 15px 0 7px;
+    display: block;
+    color: #243a59;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.login-page .login-card input {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    color: #17263d;
+    background: rgba(248, 250, 253, 0.96);
+    border: 1px solid #c9d3e1;
+    border-radius: 11px;
+    outline: none;
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.login-page .login-card input:focus {
+    background: #ffffff;
+    border-color: #0b3976;
+    box-shadow: 0 0 0 4px rgba(11, 57, 118, 0.13);
+}
+
+.login-page .login-card button {
+    width: 100%;
+    min-height: 50px;
+    margin-top: 24px;
+    color: #ffffff;
+    cursor: pointer;
+    background: linear-gradient(135deg, #16498b, #021f55);
+    border: 1px solid #021f55;
+    border-radius: 11px;
+    box-shadow: 0 10px 24px rgba(2, 31, 85, 0.25);
+    font: inherit;
+    font-weight: 900;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-page .login-card button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(2, 31, 85, 0.33);
+}
+
+.login-page .message {
+    margin-bottom: 17px;
+    padding: 11px 13px;
+    text-align: right;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.login-page .message.error {
+    color: #8a1d1d;
+    background: #ffe8e8;
+    border: 1px solid #efbcbc;
+}
+
+.login-page .message.success {
+    color: #17613a;
+    background: #e5f7eb;
+    border: 1px solid #b9e5cd;
+}
+
+@media (max-width: 760px) {
+    body.login-page {
+        padding: 15px;
+        background-position: 60% center;
+        background-attachment: scroll;
+    }
+
+    .login-page .login-card {
+        padding: 26px 20px;
+        border-radius: 19px;
+    }
+
+    .login-brand {
+        margin-bottom: 25px;
+    }
+}
+/* =========================================================
+   رفع مشکل صفحه کارکنان + خوانایی گزارش حضور و غیاب
+   ========================================================= */
+
+/* ---------- صفحه مدیریت کارکنان ---------- */
+body.employee-page,
+body.section-ui-page.employee-page,
+.employee-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background-color: #031a3a;
+    background-image:
+        linear-gradient(
+            160deg,
+            rgba(2, 18, 48, 0.84) 0%,
+            rgba(3, 28, 70, 0.74) 45%,
+            rgba(2, 20, 52, 0.90) 100%
+        ),
+        url("/css/karim-khan-citadel.webp"),
+        url("/css/eram-garden.webp");
+    background-repeat: no-repeat;
+    background-position: center, left center, right center;
+    background-size: cover, 52% 100%, 52% 100%;
+    background-attachment: fixed;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+}
+
+/* اگر صفحه کارکنان داخل main است */
+body.employee-page > main,
+.employee-page > main,
+body.section-ui-page.employee-page > main {
+    width: min(100% - 40px, 1480px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+/* هدر صفحه کارکنان (مثل بقیه صفحات) */
+.employee-page .employee-header,
+body.employee-page .employee-header,
+body.section-ui-page .employee-header {
+    min-height: 150px;
+    margin-bottom: 24px;
+    padding: 26px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.90) 0%,
+            rgba(2, 31, 85, 0.80) 50%,
+            rgba(1, 18, 48, 0.93) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid rgba(214, 171, 55, 0.45);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 42px rgba(2, 31, 85, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.employee-page .employee-header::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 110px;
+    height: 110px;
+    border-top: 2px solid rgba(241, 216, 94, 0.5);
+    border-right: 2px solid rgba(241, 216, 94, 0.5);
+    border-radius: 0 16px 0 0;
+    pointer-events: none;
+}
+
+.employee-page .employee-header h1 {
+    margin: 0 0 8px;
+    color: #ffffff !important;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 900;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.employee-page .employee-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.employee-page .add-employee-button {
+    min-height: 46px;
+    padding: 12px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #062f36 !important;
+    background: linear-gradient(135deg, #f6df8b, #d6ad45) !important;
+    border: 1px solid #f5df8d !important;
+    border-radius: 12px !important;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.employee-page .add-employee-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(214, 173, 69, 0.35);
+}
+
+/* کارت خلاصه + جستجو */
+.employee-page .employee-summary {
+    margin-bottom: 20px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--card-color) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+.employee-page .employee-count strong {
+    margin-bottom: 4px;
+    display: block;
+    color: var(--teal-dark) !important;
+    font-size: 30px !important;
+    font-weight: 900 !important;
+}
+
+.employee-page .employee-count span {
+    color: var(--muted-color) !important;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.employee-page .employee-search {
+    width: 320px;
+    max-width: 100%;
+    min-height: 46px;
+    padding: 12px 16px;
+    color: #173b3f;
+    background: #fbfdfd;
+    border: 1px solid #bdd0d2 !important;
+    border-radius: 11px !important;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+}
+
+.employee-page .employee-search:focus {
+    border-color: var(--teal) !important;
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14);
+}
+
+/* جدول کارکنان */
+.employee-page .employee-table-card {
+    overflow: hidden;
+    background: var(--card-color) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+.employee-page .table-heading {
+    min-height: 68px;
+    padding: 16px 22px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: linear-gradient(180deg, #ffffff, #f7fbfb) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.employee-page .table-heading h2 {
+    margin: 0;
+    color: #0a3439 !important;
+    font-size: 19px !important;
+    font-weight: 900 !important;
+}
+
+.employee-page .dashboard-link {
+    min-height: 38px;
+    padding: 8px 14px;
+    color: var(--teal-dark) !important;
+    background: #edf7f7 !important;
+    border: 1px solid #bcd8d9 !important;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.employee-page .employee-table-wrapper {
+    overflow-x: auto;
+}
+
+.employee-page .employee-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.employee-page .employee-table th,
+.employee-page .employee-table td {
+    padding: 15px 16px !important;
+    text-align: right !important;
+    vertical-align: middle;
+    border-bottom: 1px solid #e1eaeb !important;
+}
+
+.employee-page .employee-table th {
+    color: #496b6f !important;
+    background: #f0f6f6 !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+}
+
+.employee-page .employee-table td {
+    color: #17383c !important;
+    font-size: 13px !important;
+    font-weight: 600;
+}
+
+.employee-page .employee-table tbody tr:nth-child(even) {
+    background: #fbfdfd;
+}
+
+.employee-page .employee-table tbody tr:hover {
+    background: #edf8f8 !important;
+}
+
+.employee-page .employee-name {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.employee-page .status-badge {
+    padding: 6px 12px;
+    display: inline-block;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.employee-page .status-active {
+    color: var(--success);
+    background: #e1f6eb;
+}
+
+.employee-page .status-inactive {
+    color: var(--danger);
+    background: #fde8e8;
+}
+
+.employee-page .employee-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.employee-page .edit-button {
+    padding: 7px 13px;
+    color: var(--primary);
+    background: var(--primary-light);
+    border: 1px solid #b9dddd;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.employee-page .edit-button:hover {
+    color: #ffffff;
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.employee-page .deactivate-button {
+    padding: 7px 13px;
+    color: var(--danger);
+    background: #fde8e8;
+    border: 1px solid #efbcbc;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.employee-page .deactivate-button:hover {
+    color: #ffffff;
+    background: var(--danger);
+    border-color: var(--danger);
+}
+
+.employee-page .activate-button {
+    padding: 7px 13px;
+    color: var(--success);
+    background: #e1f6eb;
+    border: 1px solid #b9e5cd;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.employee-page .activate-button:hover {
+    color: #ffffff;
+    background: var(--success);
+    border-color: var(--success);
+}
+
+.employee-page .empty-row td {
+    padding: 42px 18px !important;
+    color: #71878a !important;
+    text-align: center !important;
+    font-weight: 800;
+}
+
+/* ریسپانسیو صفحه کارکنان */
+@media (max-width: 750px) {
+    body.employee-page,
+    .employee-page {
+        background-attachment: scroll;
+        background-size: cover, 100% 100%, 0 0;
+    }
+
+    .employee-page .employee-header,
+    .employee-page .employee-summary {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .employee-page .employee-header h1 {
+        font-size: 24px;
+    }
+
+    .employee-page .employee-search,
+    .employee-page .add-employee-button {
+        width: 100%;
+    }
+
+    .employee-page .table-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .employee-page .employee-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .employee-page .employee-actions .edit-button,
+    .employee-page .status-toggle-button,
+    .employee-page .deactivate-button,
+    .employee-page .activate-button {
+        width: 100%;
+    }
+}
+
+/* ---------- رفع خوانایی کارت‌های آماری گزارش ---------- */
+body.attendance-report-page .report-summary-grid,
+body.section-ui-page .report-summary-grid {
+    margin-bottom: 22px !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+}
+
+body.attendance-report-page .report-summary-card,
+body.section-ui-page .report-summary-card {
+    min-height: 120px;
+    padding: 20px 22px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    border-radius: 17px !important;
+    box-shadow: 0 12px 28px rgba(3, 30, 55, 0.20) !important;
+    color: #102f33 !important;
+}
+
+body.attendance-report-page .report-summary-card strong,
+body.section-ui-page .report-summary-card strong {
+    font-size: 32px !important;
+    font-weight: 900 !important;
+    color: #0a3439 !important;
+}
+
+body.attendance-report-page .report-summary-card span,
+body.section-ui-page .report-summary-card span {
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: #496b6f !important;
+}
+
+/* اگر کارت‌ها کلاس‌های رنگی دارند */
+body.attendance-report-page .report-summary-card.total,
+body.attendance-report-page .report-summary-card.entries,
+body.attendance-report-page .report-summary-card.exits {
+    background: rgba(255, 255, 255, 0.97) !important;
+}
+
+/* اطمینان از خوانایی فیلتر و جدول گزارش */
+body.attendance-report-page .report-filter-card {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 0 12px 28px rgba(3, 30, 55, 0.16) !important;
+}
+
+body.attendance-report-page .attendance-table-card,
+body.attendance-report-page .table-card {
+    background: rgba(255, 255, 255, 0.98) !important;
+}
+
+/* اگر هنوز متنی روی پس‌زمینه تاریک کم‌رنگ است */
+body.section-ui-page .section-page-header h1,
+body.section-ui-page .section-page-header p {
+    color: #ffffff !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+}
+
+body.section-ui-page .section-page-header .dashboard-link,
+body.section-ui-page .section-page-header .shift-back-button,
+body.section-ui-page .section-page-header .header-link {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+/* ---------- برند سایدبار با لوگوی دانشگاه ---------- */
+
+.admin-dashboard-page .brand,
+.sidebar .brand {
+    padding: 4px 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.admin-dashboard-page .brand-logo,
+.sidebar .brand-logo {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.admin-dashboard-page .brand-logo img,
+.sidebar .brand-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 4px;
+}
+
+.admin-dashboard-page .brand-text,
+.sidebar .brand-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.admin-dashboard-page .brand-title,
+.sidebar .brand-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.45;
+    white-space: nowrap;
+}
+
+.admin-dashboard-page .brand-subtitle,
+.sidebar .brand-subtitle {
+    margin: 0;
+    color: #aac8ca;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* اگر قبلاً متن SUT داخل brand-logo بود، آن را مخفی می‌کنیم */
+.admin-dashboard-page .brand-logo:not(:has(img)),
+.sidebar .brand-logo:not(:has(img)) {
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 900;
+}
+/* ===== User account management ===== */
+
+.primary-button,
+.secondary-button,
+.danger-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.primary-button {
+    background-color: #1d4ed8;
+    color: #ffffff;
+}
+
+.primary-button:hover {
+    background-color: #1e40af;
+    transform: translateY(-1px);
+}
+
+.secondary-button {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
+.secondary-button:hover {
+    background-color: #cbd5e1;
+}
+
+.danger-button {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.danger-button:hover {
+    background-color: #fecaca;
+}
+
+.alert {
+    margin-bottom: 20px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.alert p {
+    margin: 0;
+}
+
+.alert-success {
+    border: 1px solid #86efac;
+    background-color: #f0fdf4;
+    color: #166534;
+}
+
+.alert-error {
+    border: 1px solid #fca5a5;
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.summary-card {
+    margin-bottom: 22px;
+    padding: 20px 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.summary-card div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.summary-card span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.summary-card strong {
+    color: #1d4ed8;
+    font-size: 28px;
+}
+
+.content-card {
+    padding: 24px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.data-table th,
+.data-table td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.data-table th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.data-table td {
+    color: #334155;
+    font-size: 14px;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.table-actions .primary-button,
+.table-actions .secondary-button,
+.table-actions .danger-button {
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.empty-state {
+    padding: 40px 20px !important;
+    color: #64748b !important;
+    text-align: center !important;
+}
+
+.form-card {
+    max-width: 900px;
+}
+
+.account-form {
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background-color: #ffffff;
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-group small {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.field-error {
+    margin: 0;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 24px;
+}
+
+.checkbox-group input {
+    width: 17px;
+    height: 17px;
+    accent-color: #2563eb;
+}
+
+.checkbox-group label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .page-header > .primary-button,
+    .page-header > .secondary-button {
+        width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-card {
+        padding: 18px;
+    }
+
+    .table-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .table-actions a,
+    .table-actions form,
+    .table-actions button {
+        width: 100%;
+    }
+
+    .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .form-actions a,
+    .form-actions button {
+        width: 100%;
+    }
+}
+/* =========================================================
+   صفحه کاربران و سطح دسترسی
+   فقط یک عکس پس‌زمینه
+   ========================================================= */
+
+body.users-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background-color: #031a3a;
+    background-image:
+        linear-gradient(
+            160deg,
+            rgba(2, 18, 48, 0.86) 0%,
+            rgba(3, 28, 70, 0.76) 50%,
+            rgba(2, 20, 52, 0.90) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+}
+
+body.users-page > main {
+    width: min(100% - 40px, 1200px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+/* هدر */
+body.users-page .section-page-header {
+    min-height: 150px;
+    margin-bottom: 24px;
+    padding: 26px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.90) 0%,
+            rgba(2, 31, 85, 0.82) 55%,
+            rgba(1, 18, 48, 0.93) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid rgba(214, 171, 55, 0.45);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 42px rgba(2, 31, 85, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+body.users-page .section-page-header h1 {
+    margin: 0 0 8px;
+    color: #ffffff !important;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 900;
+}
+
+body.users-page .section-page-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 14px;
+}
+
+body.users-page .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* کارت خلاصه */
+body.users-page .users-summary {
+    margin-bottom: 20px;
+    padding: 20px 24px;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    box-shadow: 0 14px 36px rgba(3, 30, 55, 0.14);
+}
+
+body.users-page .users-count strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--teal-dark);
+    font-size: 32px;
+    font-weight: 900;
+}
+
+body.users-page .users-count span {
+    color: var(--muted-color);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* جدول */
+body.users-page .table-card {
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    box-shadow: 0 14px 36px rgba(3, 30, 55, 0.14);
+}
+
+body.users-page .users-table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+body.users-page .users-table th,
+body.users-page .users-table td {
+    padding: 15px 16px;
+    text-align: right;
+    border-bottom: 1px solid #e1eaeb;
+    font-size: 13px;
+}
+
+body.users-page .users-table th {
+    color: #496b6f;
+    background: #f0f6f6;
+    font-weight: 900;
+}
+
+body.users-page .users-table tbody tr:hover {
+    background: #edf8f8;
+}
+
+body.users-page .status-active {
+    color: var(--success);
+    background: #e1f6eb;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+body.users-page .status-inactive {
+    color: var(--danger);
+    background: #fde8e8;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* ریسپانسیو */
+@media (max-width: 820px) {
+    body.users-page {
+        background-attachment: scroll;
+    }
+
+    body.users-page > main {
+        width: min(100% - 26px, 1200px);
+        padding: 18px 0 42px;
+    }
+
+    body.users-page .section-page-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 22px 20px;
+    }
+
+    body.users-page .header-actions {
+        width: 100%;
+    }
+
+    body.users-page .header-actions a {
+        flex: 1 1 140px;
+        text-align: center;
+    }
+}
+/* =========================================================
+   فرم ساخت / ویرایش حساب کاربری
+   ========================================================= */
+
+body.users-form-page .form-card {
+    padding: 28px 30px;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    box-shadow: 0 14px 36px rgba(3, 30, 55, 0.14);
+}
+
+body.users-form-page .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+body.users-form-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+body.users-form-page .form-group label {
+    color: #24484c;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+body.users-form-page .form-group input,
+body.users-form-page .form-group select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    color: #173b3f;
+    background: #fbfdfd;
+    border: 1px solid #bdd0d2;
+    border-radius: 11px;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+}
+
+body.users-form-page .form-group input:focus,
+body.users-form-page .form-group select:focus {
+    background: #ffffff;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14);
+}
+
+body.users-form-page .field-help {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+body.users-form-page .field-error {
+    margin: 0;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+body.users-form-page .required-mark {
+    color: #dc2626;
+}
+
+body.users-form-page .checkbox-group {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.users-form-page .checkbox-group input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--teal);
+}
+
+body.users-form-page .checkbox-group label {
+    color: #24484c;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+body.users-form-page .form-actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.users-form-page .shift-submit-button {
+    min-width: 140px;
+    min-height: 46px;
+    padding: 10px 18px;
+    color: #ffffff;
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+body.users-form-page .shift-submit-button:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+body.users-form-page .shift-cancel-button {
+    min-width: 120px;
+    min-height: 46px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+body.users-form-page .shift-cancel-button:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+body.users-form-page .error-message {
+    margin-bottom: 18px;
+    padding: 13px 17px;
+    color: #8a1d1d;
+    background: #ffe8e8;
+    border: 1px solid #efbcbc;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+@media (max-width: 700px) {
+    body.users-form-page .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.users-form-page .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.users-form-page .shift-submit-button,
+    body.users-form-page .shift-cancel-button {
+        width: 100%;
+    }
+}
+/* =========================================================
+   پهن‌تر کردن کارت سفید صفحه کاربران (لیست + فرم)
+   ========================================================= */
+
+body.users-page > main {
+    width: min(100% - 32px, 1480px) !important;
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+/* هدر هم هم‌عرض محتوا */
+body.users-page .section-page-header {
+    width: 100%;
+}
+
+/* کارت فرم — تمام عرض */
+body.users-form-page .form-card {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 32px 36px;
+}
+
+/* گرید فرم کمی جادارتر */
+body.users-form-page .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 28px;
+}
+
+/* کارت جدول لیست کاربران — تمام عرض */
+body.users-page .table-card,
+body.users-page .users-summary {
+    width: 100%;
+    max-width: none;
+}
+
+/* موبایل */
+@media (max-width: 820px) {
+    body.users-page > main {
+        width: min(100% - 20px, 1480px) !important;
+        padding: 18px 0 40px;
+    }
+
+    body.users-form-page .form-card {
+        padding: 22px 18px;
+    }
+
+    body.users-form-page .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+}
+/* =========================================================
+   دکمه‌های عملیات جدول کاربران
+   ========================================================= */
+
+body.users-page .employee-actions,
+body.users-page .table-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+body.users-page .employee-actions form,
+body.users-page .table-actions form,
+body.users-page .status-form {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+
+/* دکمه ویرایش */
+body.users-page .edit-button,
+body.users-page a.edit-button {
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary) !important;
+    background: var(--primary-light) !important;
+    border: 1px solid #b9dddd !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+body.users-page .edit-button:hover,
+body.users-page a.edit-button:hover {
+    color: #ffffff !important;
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+/* دکمه غیرفعال‌کردن */
+body.users-page .deactivate-button {
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--danger) !important;
+    background: #fde8e8 !important;
+    border: 1px solid #efbcbc !important;
+    border-radius: 8px !important;
+    font: inherit;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+body.users-page .deactivate-button:hover {
+    color: #ffffff !important;
+    background: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+
+/* دکمه فعال‌کردن */
+body.users-page .activate-button {
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--success) !important;
+    background: #e1f6eb !important;
+    border: 1px solid #b9e5cd !important;
+    border-radius: 8px !important;
+    font: inherit;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+body.users-page .activate-button:hover {
+    color: #ffffff !important;
+    background: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+@media (max-width: 750px) {
+    body.users-page .employee-actions,
+    body.users-page .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.users-page .edit-button,
+    body.users-page .deactivate-button,
+    body.users-page .activate-button {
+        width: 100%;
+    }
+}
+/* =========================================================
+   دکمه‌های عملیات شیفت
+   ========================================================= */
+
+body.shift-management-page .shift-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+body.shift-management-page .shift-actions form {
+    margin: 0;
+}
+
+body.shift-management-page .shift-edit-button {
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary) !important;
+    background: var(--primary-light) !important;
+    border: 1px solid #b9dddd !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+body.shift-management-page .shift-edit-button:hover {
+    color: #ffffff !important;
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+body.shift-management-page .shift-status-button {
+    min-height: 34px;
+    padding: 7px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px !important;
+    font: inherit;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+body.shift-management-page .shift-status-button.deactivate {
+    color: var(--danger) !important;
+    background: #fde8e8 !important;
+    border: 1px solid #efbcbc !important;
+}
+
+body.shift-management-page .shift-status-button.deactivate:hover {
+    color: #ffffff !important;
+    background: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+
+body.shift-management-page .shift-status-button.activate {
+    color: var(--success) !important;
+    background: #e1f6eb !important;
+    border: 1px solid #b9e5cd !important;
+}
+
+body.shift-management-page .shift-status-button.activate:hover {
+    color: #ffffff !important;
+    background: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+/* =========================================================
+   فرم شیفت و فرم کارمند — یک عکس + کارت قوی
+   ========================================================= */
+
+body.shift-entry-page,
+body.employee-entry-page,
+body.form-ui-page {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background-color: #031a3a;
+    background-image:
+        linear-gradient(
+            160deg,
+            rgba(2, 18, 48, 0.86) 0%,
+            rgba(3, 28, 70, 0.76) 50%,
+            rgba(2, 20, 52, 0.90) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: Tahoma, Arial, sans-serif;
+    direction: rtl;
+}
+
+body.shift-entry-page > main,
+body.employee-entry-page > main,
+body.form-ui-page > main {
+    width: min(100% - 32px, 1100px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+body.shift-entry-page .section-page-header,
+body.employee-entry-page .section-page-header,
+body.shift-entry-page .shift-form-header,
+body.employee-entry-page .employee-form-header {
+    min-height: 140px;
+    margin-bottom: 22px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.90) 0%,
+            rgba(2, 31, 85, 0.82) 55%,
+            rgba(1, 18, 48, 0.93) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid rgba(214, 171, 55, 0.45);
+    border-radius: 22px;
+    box-shadow: 0 18px 42px rgba(2, 31, 85, 0.28);
+}
+
+body.shift-entry-page .section-page-header h1,
+body.employee-entry-page .section-page-header h1,
+body.shift-entry-page .shift-form-header h1,
+body.employee-entry-page .employee-form-header h1 {
+    margin: 0 0 8px;
+    color: #ffffff !important;
+    font-size: clamp(24px, 3vw, 30px);
+    font-weight: 900;
+}
+
+body.shift-entry-page .section-page-header p,
+body.employee-entry-page .section-page-header p,
+body.shift-entry-page .shift-form-header p,
+body.employee-entry-page .employee-form-header p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 14px;
+}
+
+body.shift-entry-page .shift-back-button,
+body.employee-entry-page .back-link,
+body.employee-entry-page .header-link {
+    min-height: 42px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 11px !important;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none !important;
+}
+
+body.shift-entry-page .shift-form-card,
+body.employee-entry-page .employee-form-card,
+body.form-ui-page .form-ui-card {
+    width: 100%;
+    padding: 30px 32px;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    box-shadow: 0 14px 36px rgba(3, 30, 55, 0.16);
+}
+
+body.shift-entry-page .shift-form-grid,
+body.employee-entry-page .employee-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 24px;
+}
+
+body.shift-entry-page .shift-field label,
+body.employee-entry-page .form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #24484c;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+body.shift-entry-page .shift-field input,
+body.employee-entry-page .form-group input,
+body.employee-entry-page .form-group select,
+body.shift-entry-page .shift-field select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px;
+    color: #173b3f;
+    background: #fbfdfd;
+    border: 1px solid #bdd0d2;
+    border-radius: 11px;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+}
+
+body.shift-entry-page .shift-field input:focus,
+body.employee-entry-page .form-group input:focus,
+body.employee-entry-page .form-group select:focus {
+    background: #ffffff;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14);
+}
+
+body.shift-entry-page .shift-form-actions,
+body.employee-entry-page .form-actions {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.shift-entry-page .shift-submit-button,
+body.employee-entry-page .submit-button,
+body.employee-entry-page button[type="submit"] {
+    min-width: 140px;
+    min-height: 46px;
+    padding: 10px 18px;
+    color: #ffffff !important;
+    background: var(--primary) !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: 10px !important;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+body.shift-entry-page .shift-cancel-button,
+body.employee-entry-page .cancel-button {
+    min-width: 120px;
+    min-height: 46px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none !important;
+}
+
+@media (max-width: 700px) {
+    body.shift-entry-page .shift-form-grid,
+    body.employee-entry-page .employee-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.shift-entry-page .section-page-header,
+    body.employee-entry-page .section-page-header,
+    body.shift-entry-page .shift-form-header,
+    body.employee-entry-page .employee-form-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.shift-entry-page .shift-form-actions,
+    body.employee-entry-page .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+/* =========================================================
+   فرم افزودن / ویرایش کارمند
+   پس‌زمینه تک‌عکس + هدر و کارت قوی
+   ========================================================= */
+
+body.employee-entry-page {
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #173b3f !important;
+    background-color: #031a3a !important;
+    background-image:
+        linear-gradient(
+            160deg,
+            rgba(2, 18, 48, 0.86) 0%,
+            rgba(3, 28, 70, 0.76) 50%,
+            rgba(2, 20, 52, 0.90) 100%
+        ),
+        url("/css/persepolis-login.webp") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    font-family: Tahoma, Arial, sans-serif !important;
+    direction: rtl !important;
+}
+
+body.employee-entry-page .employee-form-page {
+    width: min(100% - 32px, 1100px) !important;
+    margin: 0 auto !important;
+    padding: 28px 0 50px !important;
+}
+
+body.employee-entry-page .employee-form-header {
+    min-height: 140px !important;
+    margin: 0 0 22px !important;
+    padding: 24px 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+    color: #ffffff !important;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.90) 0%,
+            rgba(2, 31, 85, 0.82) 55%,
+            rgba(1, 18, 48, 0.93) 100%
+        ),
+        url("/css/persepolis-login.webp") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    border: 1px solid rgba(214, 171, 55, 0.45) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 18px 42px rgba(2, 31, 85, 0.28) !important;
+    backdrop-filter: none !important;
+}
+
+body.employee-entry-page .employee-form-header h1 {
+    margin: 0 0 8px !important;
+    color: #ffffff !important;
+    font-size: clamp(24px, 3vw, 30px) !important;
+    font-weight: 900 !important;
+    line-height: 1.35 !important;
+}
+
+body.employee-entry-page .employee-form-header p {
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+}
+
+body.employee-entry-page .employee-form-header .back-link,
+body.employee-entry-page .header-link {
+    min-height: 42px !important;
+    padding: 10px 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 11px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+body.employee-entry-page .employee-form-card,
+body.employee-entry-page .form-ui-card {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 30px 32px !important;
+    background: rgba(255, 255, 255, 0.97) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 14px 36px rgba(3, 30, 55, 0.16) !important;
+}
+
+body.employee-entry-page .employee-form-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px 24px !important;
+}
+
+body.employee-entry-page .form-group label {
+    display: block !important;
+    margin-bottom: 7px !important;
+    color: #24484c !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+}
+
+body.employee-entry-page .form-group input,
+body.employee-entry-page .form-group select,
+body.employee-entry-page .form-input {
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 10px 14px !important;
+    color: #173b3f !important;
+    background: #fbfdfd !important;
+    border: 1px solid #bdd0d2 !important;
+    border-radius: 11px !important;
+    outline: none !important;
+    font: inherit !important;
+    font-size: 14px !important;
+}
+
+body.employee-entry-page .form-group input:focus,
+body.employee-entry-page .form-group select:focus,
+body.employee-entry-page .form-input:focus {
+    background: #ffffff !important;
+    border-color: var(--teal) !important;
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14) !important;
+}
+
+body.employee-entry-page .form-actions {
+    margin-top: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+body.employee-entry-page button[type="submit"],
+body.employee-entry-page .submit-button {
+    min-width: 140px !important;
+    min-height: 46px !important;
+    padding: 10px 18px !important;
+    color: #ffffff !important;
+    background: var(--primary) !important;
+    border: 1px solid var(--primary) !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    cursor: pointer !important;
+}
+
+body.employee-entry-page .cancel-button,
+body.employee-entry-page a.cancel-button {
+    min-width: 120px !important;
+    min-height: 46px !important;
+    padding: 10px 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #475569 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+@media (max-width: 700px) {
+    body.employee-entry-page .employee-form-page {
+        width: min(100% - 20px, 1100px) !important;
+        padding: 18px 0 40px !important;
+    }
+
+    body.employee-entry-page .employee-form-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        min-height: auto !important;
+        padding: 20px !important;
+    }
+
+    body.employee-entry-page .employee-form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.employee-entry-page .form-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    body.employee-entry-page button[type="submit"],
+    body.employee-entry-page .cancel-button {
+        width: 100% !important;
+    }
+}
+/* ========================================
+   Shift Form - Work Days
+======================================== */
+
+.shift-work-days {
+    margin-top: 24px;
+    padding: 22px;
+    border: 1px solid #dbe3ee;
+    border-radius: 14px;
+    background-color: #f8fafc;
+}
+
+.work-days-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.work-days-heading > label {
+    color: #172033;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.work-days-heading .field-help {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.work-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(90px, 1fr));
+    gap: 10px;
+}
+
+.work-day-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    color: #334155;
+    background-color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.work-day-option:hover {
+    border-color: #2563eb;
+    color: #1d4ed8;
+    background-color: #eff6ff;
+    transform: translateY(-1px);
+}
+
+.work-day-option input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.work-day-option:has(input[type="checkbox"]:checked) {
+    border-color: #2563eb;
+    color: #ffffff;
+    background-color: #2563eb;
+    box-shadow: 0 6px 14px rgb(37 99 235 / 20%);
+}
+
+.work-day-option:has(input[type="checkbox"]:focus-visible) {
+    outline: 3px solid rgb(37 99 235 / 25%);
+    outline-offset: 2px;
+}
+
+.work-day-option span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.shift-work-days > .field-error {
+    display: block;
+    margin-top: 12px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .work-days-grid {
+        grid-template-columns: repeat(4, minmax(100px, 1fr));
+    }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .shift-work-days {
+        padding: 16px;
+    }
+
+    .work-days-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .work-days-grid {
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
+    }
+}
+/* ========================================
+   Shift List - Work Days
+======================================== */
+
+.shift-work-days-list {
+    display: flex;
+        flex-wrap: wrap;
+        flex-direction: row-reverse;
+        justify-content: center;
+        gap: 6px;
+        min-width: 180px;
+}
+
+.shift-work-day-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px;
+    padding: 6px 9px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    color: #1d4ed8;
+    background-color: #eff6ff;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.shift-no-work-days {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #64748b;
+    background-color: #f1f5f9;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* جلوگیری از فشرده‌شدن ستون روزهای کاری */
+.shift-table th:nth-child(8),
+.shift-table td:nth-child(8) {
+    min-width: 210px;
+}
+
+/* نمایش بهتر جدول در صفحه‌های کوچک */
+@media (max-width: 992px) {
+    .shift-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .shift-table {
+        min-width: 1250px;
+    }
+}
+/* ========================================
+   Employee Shift Assignments
+======================================== */
+
+.shift-assignment-container {
+    width: min(1400px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 34px 0 56px;
+}
+
+.assignment-form-card,
+.assignment-history-card {
+    margin-top: 22px;
+    padding: 24px;
+    border: 1px solid #dbe3ee;
+    border-radius: 18px;
+    background: rgb(255 255 255 / 94%);
+    box-shadow: 0 12px 30px rgb(15 23 42 / 8%);
+}
+
+.assignment-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.assignment-card-heading h2 {
+    margin: 0 0 6px;
+    color: #172033;
+    font-size: 20px;
+}
+
+.assignment-card-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.assignment-count {
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: #1d4ed8;
+    background: #eff6ff;
+    white-space: nowrap;
+}
+
+.assignment-form {
+    display: grid;
+    grid-template-columns: 1.35fr 1.2fr 1fr auto;
+    align-items: start;
+    gap: 16px;
+}
+
+.assignment-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.assignment-field label {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.assignment-field select,
+.assignment-field input,
+.end-assignment-form input {
+    min-height: 46px;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    color: #172033;
+    background: #ffffff;
+    font: inherit;
+}
+
+.assignment-submit-button {
+    align-self: end;
+    min-height: 46px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 10px;
+    color: #ffffff;
+    background: #2563eb;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.assignment-submit-button:hover {
+    background: #1d4ed8;
+}
+
+.assignment-error-alert {
+    margin-top: 18px;
+    padding: 13px 16px;
+    border: 1px solid #fecaca;
+    border-radius: 11px;
+    color: #b91c1c;
+    background: #fef2f2;
+    font-weight: 700;
+}
+
+.assignment-table {
+    min-width: 1180px;
+}
+
+.assignment-open-ended {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.end-assignment-form {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.end-assignment-form input {
+    min-width: 135px;
+    min-height: 36px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+
+.end-assignment-form button {
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #b91c1c;
+    background: #fff1f2;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.end-assignment-form button:hover {
+    color: #ffffff;
+    background: #dc2626;
+}
+
+.assignment-finished {
+    color: #94a3b8;
+}
+
+@media (max-width: 980px) {
+    .assignment-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .shift-assignment-container {
+        width: min(100% - 20px, 1400px);
+        padding-top: 18px;
+    }
+
+    .assignment-form,
+    .assignment-card-heading {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .assignment-submit-button {
+        width: 100%;
+    }
+}
+/* ========================================
+   Weekly Shift Schedule
+======================================== */
+
+.weekly-schedule-container {
+    width: min(1450px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 34px 0 60px;
+}
+
+.weekly-schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.weekly-schedule-card {
+    margin-top: 22px;
+    padding: 24px;
+    border: 1px solid #dbe3ee;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgb(15 23 42 / 8%);
+}
+
+.weekly-schedule-intro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.weekly-schedule-intro h2 {
+    margin: 0 0 6px;
+    color: #172033;
+}
+
+.weekly-schedule-intro p {
+    margin: 0;
+    color: #64748b;
+}
+
+.weekly-schedule-intro > span {
+    padding: 8px 12px;
+    border-radius: 10px;
+    color: #1d4ed8;
+    background: #eff6ff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.weekly-schedule-table-wrapper {
+    overflow-x: auto;
+}
+
+.weekly-schedule-table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+}
+
+.weekly-schedule-table th,
+.weekly-schedule-table td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: right;
+}
+
+.weekly-schedule-table th {
+    color: #475569;
+    background: #f8fafc;
+    font-size: 12px;
+}
+
+.weekly-schedule-table input[type="time"],
+.weekly-schedule-table input[type="number"] {
+    min-height: 40px;
+    padding: 7px 9px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    color: #172033;
+    background: #fff;
+    font: inherit;
+}
+
+.schedule-day-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.schedule-day-toggle input {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+}
+
+.schedule-number {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.schedule-number input {
+    width: 82px;
+}
+
+.schedule-number span {
+    color: #64748b;
+    font-size: 11px;
+}
+
+.schedule-day-row.day-off {
+    opacity: 0.58;
+    background: #f8fafc;
+}
+
+.schedule-button {
+    color: #7c3aed !important;
+    background: #f5f3ff !important;
+}
+
+
+/* ========================================
+   Global Light/Dark Theme
+======================================== */
+
+.theme-toggle-button {
+    position: fixed;
+    z-index: 1000;
+    left: 22px;
+    bottom: 22px;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #cbd5e1;
+    border-radius: 50%;
+    color: #172033;
+    background: #fff;
+    box-shadow: 0 10px 28px rgb(15 23 42 / 20%);
+    font: 700 25px/1 sans-serif;
+    cursor: pointer;
+    transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+}
+
+.theme-toggle-button:hover {
+    transform: translateY(-2px) rotate(-8deg);
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+    color: #e5e7eb;
+    background-color: #0b1120 !important;
+    background-image: none !important;
+}
+
+html[data-theme="dark"] .section-ui-page,
+html[data-theme="dark"] .form-ui-page {
+    background: #0b1120 !important;
+}
+
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .dashboard-sidebar {
+    background: #111827 !important;
+    border-color: #263247 !important;
+}
+
+html[data-theme="dark"] .assignment-form-card,
+html[data-theme="dark"] .assignment-history-card,
+html[data-theme="dark"] .shift-table-card,
+html[data-theme="dark"] .shift-summary-card,
+html[data-theme="dark"] .shift-form-card,
+html[data-theme="dark"] .form-ui-card,
+html[data-theme="dark"] .weekly-schedule-card,
+html[data-theme="dark"] .dashboard-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .report-card,
+html[data-theme="dark"] .table-card {
+    color: #e5e7eb !important;
+    background: #111827 !important;
+    border-color: #263247 !important;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 28%) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] label,
+html[data-theme="dark"] strong {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] small,
+html[data-theme="dark"] .field-help {
+    color: #9ca3af !important;
+}
+
+html[data-theme="dark"] table th {
+    color: #cbd5e1 !important;
+    background: #182235 !important;
+    border-color: #2b374b !important;
+}
+
+html[data-theme="dark"] table td {
+    color: #e5e7eb !important;
+    background: #111827;
+    border-color: #263247 !important;
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    color: #f8fafc !important;
+    background: #0f172a !important;
+    border-color: #3b4a61 !important;
+}
+
+html[data-theme="dark"] input:disabled {
+    color: #718096 !important;
+    background: #172033 !important;
+}
+
+html[data-theme="dark"] .schedule-day-row.day-off,
+html[data-theme="dark"] .shift-empty-state {
+    background: #151f31 !important;
+}
+
+html[data-theme="dark"] .theme-toggle-button {
+    color: #fbbf24;
+    background: #172033;
+    border-color: #3b4a61;
+}
+
+@media (max-width: 700px) {
+    .weekly-schedule-container {
+        width: calc(100% - 20px);
+        padding-top: 18px;
+    }
+
+    .weekly-schedule-header,
+    .weekly-schedule-intro {
+        flex-direction: column;
+    }
+
+    .theme-toggle-button {
+        left: 14px;
+        bottom: 14px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* =========================================================
+   ادغام CSS صفحات مدیریت تردد و گزارش روزانه
+   /admin/attendance
+   /admin/reports/daily-attendance
+   کلاس‌های admin-layout / sidebar / topbar و اجزای مرتبط
+   ========================================================= */
+
+:root {
+    --primary: #126467;
+    --primary-dark: #0c4e50;
+    --primary-light: #e4f2f2;
+    --navy: #021f55;
+    --navy-dark: #01122e;
+    --teal: #0d7375;
+    --teal-dark: #0a5c5e;
+    --gold: #d6ad45;
+    --background: #f3f6f7;
+    --surface: #ffffff;
+    --text: #183335;
+    --muted: #718386;
+    --border: #dde7e8;
+    --success: #1f8a55;
+    --warning: #d68a15;
+    --danger: #c94646;
+    --sidebar-width: 270px;
+    --card-shadow: 0 10px 28px rgba(3, 30, 55, 0.08);
+}
+
+/* ---------- Layout + Sidebar ---------- */
+
+.admin-layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    direction: rtl;
+    background: var(--background);
+    color: var(--text);
+    font-family: Tahoma, Arial, sans-serif;
+}
+
+.admin-layout .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    background: linear-gradient(180deg, #113f45, #0b3035);
+    z-index: 40;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 8px 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 18px;
+}
+
+.admin-layout .brand-logo {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.brand-text strong {
+    font-size: 15px;
+    letter-spacing: 0.4px;
+}
+
+.brand-text span {
+    color: #aac8ca;
+    font-size: 12px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-link {
+    min-height: 46px;
+    padding: 11px 13px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #d3e4e5;
+    border-radius: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+    background: var(--primary);
+    font-weight: 700;
+}
+
+.sidebar-icon {
+    width: 22px;
+    height: 22px;
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 22px;
+    font-size: 16px;
+}
+
+/* ---------- Main + Topbar ---------- */
+
+.admin-layout .main-content {
+    min-width: 0;
+    padding: 0;
+    background:
+        linear-gradient(
+            160deg,
+            rgba(243, 246, 247, 0.96),
+            rgba(236, 244, 245, 0.98)
+        );
+}
+
+.admin-layout .topbar {
+    min-height: 92px;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.sidebar-toggle {
+    display: none;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #ffffff;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.topbar-title {
+    min-width: 0;
+}
+
+.topbar-title h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: #0a3439;
+}
+
+.topbar-title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.page-content {
+    padding: 24px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Alerts ---------- */
+
+.admin-layout .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.alert-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 24px;
+    border-radius: 50%;
+    font-weight: 900;
+}
+
+.admin-layout .alert-success {
+    color: #166534;
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+
+.admin-layout .alert-success .alert-icon {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.admin-layout .alert-danger {
+    color: #991b1b;
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.admin-layout .alert-danger .alert-icon {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.admin-layout .alert-warning {
+    color: #92400e;
+    background: #fffbeb;
+    border-color: #fcd34d;
+}
+
+.import-errors ul {
+    margin: 10px 0 0;
+    padding-right: 18px;
+}
+
+.import-errors li {
+    margin-bottom: 4px;
+}
+
+/* ---------- Cards ---------- */
+
+.admin-layout .content-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    padding: 0;
+}
+
+.admin-layout .card-header,
+.admin-layout .card-heading {
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: linear-gradient(180deg, #ffffff, #f7fbfb);
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-layout .card-header h2,
+.admin-layout .card-heading h2 {
+    margin: 0 0 6px;
+    color: #0a3439;
+    font-size: 18px;
+}
+
+.admin-layout .card-header p,
+.admin-layout .card-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.manual-icon {
+    color: var(--success);
+    background: #e5f6ed;
+}
+
+.upload-icon {
+    color: #3566b8;
+    background: #e9f0fc;
+}
+
+/* ---------- Buttons ---------- */
+
+.admin-layout .btn {
+    min-height: 42px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-layout .btn-primary {
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    border-color: var(--teal-dark);
+}
+
+.admin-layout .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(13, 115, 117, 0.25);
+}
+
+.admin-layout .btn-secondary {
+    color: #062f36;
+    background: linear-gradient(135deg, #f6df8b, #d6ad45);
+    border-color: #f5df8d;
+}
+
+.admin-layout .btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(214, 173, 69, 0.28);
+}
+
+.admin-layout .btn-outline {
+    color: var(--teal-dark);
+    background: #edf7f7;
+    border-color: #bcd8d9;
+}
+
+.admin-layout .btn-outline:hover {
+    background: #ffffff;
+    border-color: var(--teal);
+}
+
+.btn-icon {
+    min-height: 34px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btn-delete {
+    color: #991b1b;
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
+
+.delete-form {
+    margin: 0;
+}
+
+/* ---------- Forms inside admin-layout ---------- */
+
+.admin-layout .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.admin-layout .form-group label {
+    color: #24484c;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.admin-layout .form-control {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    color: #173b3f;
+    background: #fbfdfd;
+    border: 1px solid #bdd0d2;
+    border-radius: 11px;
+    outline: none;
+    transition: 0.2s ease;
+    font: inherit;
+}
+
+.admin-layout .form-control:focus {
+    background: #ffffff;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.14);
+}
+
+.admin-layout input[type="date"].form-control {
+    direction: ltr;
+    text-align: left;
+}
+
+.admin-layout .file-input {
+    padding-top: 10px;
+}
+
+.admin-layout .form-hint {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* ---------- Attendance management page ---------- */
+
+.attendance-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.action-card {
+    padding: 0 0 20px;
+}
+
+.action-card .card-heading {
+    border-bottom: none;
+    background: transparent;
+    padding-bottom: 8px;
+}
+
+.action-card > .btn {
+    margin: 0 22px;
+}
+
+.import-form {
+    padding: 0 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.import-form .btn {
+    margin: 4px 0 0;
+    width: fit-content;
+}
+
+/* ---------- Daily report page ---------- */
+
+.report-filter-form {
+    padding: 20px 22px 22px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.report-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.report-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-layout .summary-card {
+    min-height: 110px;
+    margin-bottom: 0;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+}
+
+.summary-label {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.admin-layout .summary-card strong {
+    font-size: 28px;
+    color: #0a3439;
+}
+
+.summary-present strong {
+    color: var(--success);
+}
+
+.summary-absent strong {
+    color: var(--danger);
+}
+
+.summary-incomplete strong {
+    color: #7b58b5;
+}
+
+/* ---------- Tables ---------- */
+
+.admin-layout .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-layout .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.admin-layout .data-table th,
+.admin-layout .data-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+    vertical-align: middle;
+    font-size: 13px;
+}
+
+.admin-layout .data-table th {
+    background: #f8fafa;
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.admin-layout .data-table td {
+    color: #24484c;
+}
+
+.admin-layout .data-table tbody tr:nth-child(even) {
+    background: #fbfdfe;
+}
+
+.admin-layout .data-table tbody tr:hover {
+    background: #f3fafa;
+}
+
+.report-data-table th,
+.report-data-table td {
+    padding: 12px 10px;
+    font-size: 12px;
+}
+
+.employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+}
+
+.employee-avatar {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #126467, #0d7375);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+.employee-cell strong {
+    display: block;
+    color: #0a3439;
+    font-size: 13px;
+}
+
+.employee-cell small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ---------- Badges ---------- */
+
+.admin-layout .status-badge,
+.source-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-entry,
+.status-present {
+    color: var(--success);
+    background: #e6f6ed;
+}
+
+.status-exit {
+    color: #3566b8;
+    background: #e9f0fc;
+}
+
+.status-absent {
+    color: var(--danger);
+    background: #fdeaea;
+}
+
+.status-incomplete {
+    color: #7b58b5;
+    background: #f0eafd;
+}
+
+.status-no-shift {
+    color: #64748b;
+    background: #eef2f6;
+}
+
+.source-manual {
+    color: #0f766e;
+    background: #ccfbf1;
+}
+
+.source-device {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.time-value {
+    font-weight: 800;
+}
+
+.overtime-value {
+    color: #1d4ed8;
+}
+
+.late-value {
+    color: var(--warning);
+}
+
+.early-leave-value {
+    color: var(--danger);
+}
+
+/* ---------- Empty state ---------- */
+
+.admin-layout .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: #edf4f4;
+    color: var(--teal);
+    font-size: 28px;
+}
+
+.admin-layout .empty-state h3 {
+    margin: 0 0 8px;
+    color: #0a3439;
+    font-size: 18px;
+}
+
+.admin-layout .empty-state p {
+    margin: 0 auto;
+    max-width: 420px;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* ---------- Responsive for admin-layout pages ---------- */
+
+@media (max-width: 1200px) {
+    .report-filter-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .report-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 980px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-layout .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: min(290px, 86vw);
+        height: 100vh;
+        transform: translateX(105%);
+        transition: transform 0.25s ease;
+        z-index: 1000;
+    }
+
+    body.sidebar-collapsed .admin-layout .sidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: inline-grid;
+        place-items: center;
+    }
+
+    .attendance-action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-content {
+        padding: 18px 16px 32px;
+    }
+
+    .admin-layout .topbar {
+        padding: 16px;
+    }
+
+    .topbar-title h1 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 640px) {
+    .report-filter-form,
+    .report-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-layout .card-header,
+    .admin-layout .card-heading {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .report-filter-actions,
+    .import-form .btn,
+    .action-card > .btn {
+        width: 100%;
+    }
+
+    .admin-layout .btn {
+        width: 100%;
+    }
+}
+/* =========================================================
+   صفحات مدیریت تردد و گزارش روزانه
+   هماهنگ با section-ui-page (مثل خلاصه کارکرد)
+   پس‌زمینه دانشگاهی + کارت‌های شیشه‌ای
+   ========================================================= */
+
+body.section-ui-page .page-container {
+    width: min(100% - 40px, 1480px);
+    margin: 0 auto;
+    padding: 28px 0 50px;
+}
+
+/* هشدارها روی پس‌زمینه تیره */
+body.section-ui-page .section-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    line-height: 1.8;
+    box-shadow: 0 10px 28px rgba(3, 30, 55, 0.12);
+}
+
+body.section-ui-page .section-alert .alert-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 24px;
+    border-radius: 50%;
+    font-weight: 900;
+}
+
+body.section-ui-page .alert-success.section-alert {
+    color: #166534;
+    background: rgba(240, 253, 244, 0.96);
+    border-color: #86efac;
+}
+
+body.section-ui-page .alert-success.section-alert .alert-icon {
+    color: #166534;
+    background: #dcfce7;
+}
+
+body.section-ui-page .alert-danger.section-alert {
+    color: #991b1b;
+    background: rgba(254, 242, 242, 0.96);
+    border-color: #fca5a5;
+}
+
+body.section-ui-page .alert-danger.section-alert .alert-icon {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+body.section-ui-page .alert-warning.section-alert {
+    color: #92400e;
+    background: rgba(255, 251, 235, 0.96);
+    border-color: #fcd34d;
+}
+
+body.section-ui-page .import-errors ul {
+    margin: 10px 0 0;
+    padding-right: 18px;
+}
+
+body.section-ui-page .import-errors li {
+    margin-bottom: 4px;
+}
+
+/* گرید عملیات مدیریت تردد */
+body.section-ui-page .attendance-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+body.section-ui-page .action-card {
+    padding: 22px 24px 24px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+body.section-ui-page .card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+body.section-ui-page .card-heading h2 {
+    margin: 0 0 8px;
+    color: #0a3439;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+body.section-ui-page .card-heading p {
+    margin: 0;
+    color: #6b8185;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+body.section-ui-page .card-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+body.section-ui-page .manual-icon {
+    color: #1f8a55;
+    background: #e5f6ed;
+}
+
+body.section-ui-page .upload-icon {
+    color: #3566b8;
+    background: #e9f0fc;
+}
+
+body.section-ui-page .import-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+body.section-ui-page .form-hint {
+    color: #6b8185;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+body.section-ui-page .file-input {
+    padding-top: 10px;
+}
+
+/* دکمه‌ها */
+body.section-ui-page .button {
+    min-height: 44px;
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+body.section-ui-page .search-button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #0d7375, #0a5c5e) !important;
+    border-color: #0a5c5e !important;
+}
+
+body.section-ui-page .search-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(13, 115, 117, 0.28);
+}
+
+body.section-ui-page .excel-button {
+    color: #062f36 !important;
+    background: linear-gradient(135deg, #f6df8b, #d6ad45) !important;
+    border-color: #f5df8d !important;
+}
+
+body.section-ui-page .excel-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(214, 173, 69, 0.28);
+}
+
+body.section-ui-page .reset-button {
+    color: #0a5c5e !important;
+    background: #edf7f7 !important;
+    border: 1px solid #bcd8d9 !important;
+}
+
+body.section-ui-page .reset-button:hover {
+    background: #ffffff !important;
+    border-color: #0d7375 !important;
+}
+
+/* عنوان جدول */
+body.section-ui-page .table-title {
+    min-height: 72px;
+    padding: 17px 23px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    background: linear-gradient(180deg, #ffffff, #f7fbfb) !important;
+    border-bottom: 1px solid #d6e4e6 !important;
+}
+
+body.section-ui-page .table-title h2 {
+    margin: 0 0 6px;
+    color: #0a3439 !important;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+}
+
+body.section-ui-page .table-title p {
+    margin: 0;
+    color: #6b8185;
+    font-size: 13px;
+}
+
+/* جدول */
+body.section-ui-page .table-wrapper {
+    overflow-x: auto;
+}
+
+body.section-ui-page .table-card table,
+body.section-ui-page .attendance-table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+body.section-ui-page .table-card th,
+body.section-ui-page .table-card td,
+body.section-ui-page .attendance-table-card th,
+body.section-ui-page .attendance-table-card td {
+    padding: 13px 12px;
+    text-align: right;
+    border-bottom: 1px solid #dde7e8;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+body.section-ui-page .table-card th,
+body.section-ui-page .attendance-table-card th {
+    background: #f8fafa;
+    color: #6b8185;
+    font-weight: 800;
+}
+
+body.section-ui-page .table-card td,
+body.section-ui-page .attendance-table-card td {
+    color: #24484c;
+}
+
+body.section-ui-page .table-card tbody tr:nth-child(even),
+body.section-ui-page .attendance-table-card tbody tr:nth-child(even) {
+    background: #fbfdfe;
+}
+
+body.section-ui-page .table-card tbody tr:hover,
+body.section-ui-page .attendance-table-card tbody tr:hover {
+    background: #f3fafa;
+}
+
+/* سلول کارمند */
+body.section-ui-page .employee-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 160px;
+}
+
+body.section-ui-page .employee-avatar {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #126467, #0d7375);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 14px;
+}
+
+body.section-ui-page .employee-cell strong {
+    display: block;
+    color: #0a3439;
+    font-size: 13px;
+}
+
+body.section-ui-page .employee-cell small {
+    display: block;
+    margin-top: 3px;
+    color: #6b8185;
+    font-size: 11px;
+}
+
+/* Badgeها */
+body.section-ui-page .status-badge,
+body.section-ui-page .source-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+body.section-ui-page .status-entry,
+body.section-ui-page .status-present {
+    color: #1f8a55;
+    background: #e6f6ed;
+}
+
+body.section-ui-page .status-exit {
+    color: #3566b8;
+    background: #e9f0fc;
+}
+
+body.section-ui-page .status-absent {
+    color: #c94646;
+    background: #fdeaea;
+}
+
+body.section-ui-page .status-incomplete {
+    color: #7b58b5;
+    background: #f0eafd;
+}
+
+body.section-ui-page .status-no-shift {
+    color: #64748b;
+    background: #eef2f6;
+}
+
+body.section-ui-page .source-manual {
+    color: #0f766e;
+    background: #ccfbf1;
+}
+
+body.section-ui-page .source-device {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+body.section-ui-page .time-value {
+    font-weight: 800;
+}
+
+body.section-ui-page .overtime-value {
+    color: #1d4ed8;
+}
+
+body.section-ui-page .late-value {
+    color: #d68a15;
+}
+
+body.section-ui-page .early-leave-value {
+    color: #c94646;
+}
+
+/* Empty state */
+body.section-ui-page .empty-state {
+    padding: 48px 24px !important;
+    text-align: center;
+    color: #6b8185;
+}
+
+body.section-ui-page .empty-state-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: #edf4f4;
+    color: #0d7375;
+    font-size: 28px;
+}
+
+body.section-ui-page .empty-state h3 {
+    margin: 0 0 8px;
+    color: #0a3439;
+    font-size: 18px;
+}
+
+body.section-ui-page .empty-state p {
+    margin: 0 auto;
+    max-width: 420px;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+body.section-ui-page .delete-form {
+    margin: 0;
+}
+
+/* گزارش روزانه */
+body.section-ui-page.daily-report-page .report-filter-card,
+body.section-ui-page.daily-report-page .filter-card {
+    margin-bottom: 18px;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+body.section-ui-page .report-filter-form,
+body.section-ui-page.daily-report-page .filter-form {
+    padding: 20px 22px 22px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+body.section-ui-page .report-filter-actions,
+body.section-ui-page .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+body.section-ui-page .report-summary-grid,
+body.section-ui-page.daily-report-page .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+body.section-ui-page .report-summary-grid .summary-card,
+body.section-ui-page.daily-report-page .summary-card {
+    min-height: 110px;
+    margin-bottom: 0;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.97) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 28px rgba(3, 30, 55, 0.1) !important;
+}
+
+body.section-ui-page .summary-label,
+body.section-ui-page .summary-title {
+    color: #6b8185;
+    font-size: 13px;
+}
+
+body.section-ui-page .report-summary-grid .summary-card strong,
+body.section-ui-page .summary-value {
+    font-size: 28px;
+    color: #0a3439;
+}
+
+body.section-ui-page .summary-present strong,
+body.section-ui-page .present-card .summary-value {
+    color: #1f8a55;
+}
+
+body.section-ui-page .summary-absent strong,
+body.section-ui-page .absent-card .summary-value {
+    color: #c94646;
+}
+
+body.section-ui-page .summary-incomplete strong,
+body.section-ui-page .incomplete-card .summary-value {
+    color: #7b58b5;
+}
+
+body.section-ui-page .report-table-card {
+    margin-bottom: 10px;
+}
+
+body.section-ui-page .filter-card .card-heading {
+    margin: -4px 0 4px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    body.section-ui-page .report-filter-form,
+    body.section-ui-page.daily-report-page .filter-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.section-ui-page .report-summary-grid,
+    body.section-ui-page.daily-report-page .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    body.section-ui-page .attendance-action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.section-ui-page .table-title {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 640px) {
+    body.section-ui-page .report-filter-form,
+    body.section-ui-page.daily-report-page .filter-form,
+    body.section-ui-page .report-summary-grid,
+    body.section-ui-page.daily-report-page .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.section-ui-page .report-filter-actions,
+    body.section-ui-page .form-actions,
+    body.section-ui-page .button {
+        width: 100%;
+    }
+
+    body.section-ui-page .card-heading {
+        flex-direction: column;
+    }
+}
+/* چهار کارت خلاصه گزارش روزانه — همیشه یک ردیف */
+body.section-ui-page .report-summary-grid,
+body.section-ui-page.daily-report-page .summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    margin-bottom: 18px;
+}
+
+body.section-ui-page .report-summary-grid .summary-card,
+body.section-ui-page.daily-report-page .summary-card {
+    min-height: 88px !important;
+    padding: 14px 16px !important;
+    gap: 8px !important;
+}
+
+body.section-ui-page .report-summary-grid .summary-label,
+body.section-ui-page .report-summary-grid .summary-title,
+body.section-ui-page.daily-report-page .summary-title {
+    font-size: 12px !important;
+}
+
+body.section-ui-page .report-summary-grid .summary-card strong,
+body.section-ui-page .report-summary-grid .summary-value,
+body.section-ui-page.daily-report-page .summary-value {
+    font-size: 22px !important;
+}
+
+/* در عرض‌های متوسط هم چهارتایی بمانند */
+@media (max-width: 1200px) {
+    body.section-ui-page .report-summary-grid,
+    body.section-ui-page.daily-report-page .summary-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+/* فقط در موبایل دو‌ستونه شوند */
+@media (max-width: 640px) {
+    body.section-ui-page .report-summary-grid,
+    body.section-ui-page.daily-report-page .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+/* نوع نیرو زیر نام کارمند در جدول گزارش روزانه */
+body.section-ui-page .report-table-card td strong,
+body.section-ui-page.daily-report-page .table-card td strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: #0a3439;
+    line-height: 1.4;
+}
+
+body.section-ui-page .report-table-card td small,
+body.section-ui-page.daily-report-page .table-card td small {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px !important;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #0a5c5e;
+    background: #edf7f7;
+    border: 1px solid #d5eaea;
+}
+/* نام کارمند + نوع نیرو در جدول‌ها */
+body.section-ui-page .table-card td strong,
+body.section-ui-page .attendance-table-card td strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    color: #0a3439;
+    line-height: 1.4;
+}
+
+body.section-ui-page .table-card td small,
+body.section-ui-page .attendance-table-card td small {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px !important;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #0a5c5e;
+    background: #edf7f7;
+    border: 1px solid #d5eaea;
+}
+/* ========== بهبودهای حرفه‌ای داشبورد ========== */
+
+/* کارت‌های آمار */
+.admin-dashboard-page .stat-card {
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+}
+
+.admin-dashboard-page .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+}
+
+.admin-dashboard-page .stat-icon {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* پنل‌ها */
+.admin-dashboard-page .panel {
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.25s ease;
+}
+
+.admin-dashboard-page .panel:hover {
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+}
+
+/* نمودارها - ظاهر حرفه‌ای‌تر */
+.admin-dashboard-page .chart-bar-track {
+    background: linear-gradient(180deg, #f1f5f5 0%, #e8eeee 100%);
+    border-radius: 8px 8px 3px 3px;
+    overflow: hidden;
+}
+
+.admin-dashboard-page .chart-bar {
+    border-radius: 8px 8px 3px 3px;
+    transition: height 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
+    position: relative;
+    min-height: 4px; /* حتی مقادیر کم هم دیده می‌شن */
+}
+
+.admin-dashboard-page .present-bar {
+    background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+
+.admin-dashboard-page .absent-bar {
+    background: linear-gradient(180deg, #f87171 0%, #ef4444 100%);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.admin-dashboard-page .late-bar {
+    background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.admin-dashboard-page .incomplete-bar {
+    background: linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%);
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+/* وقتی مقدار ۰ است، نوار خیلی کمرنگ بشه */
+.admin-dashboard-page .chart-bar[style*="--bar-size: 0%"] {
+    opacity: 0.25;
+    min-height: 3px;
+}
+
+/* مقدار بالای نوار */
+.admin-dashboard-page .chart-value {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: var(--text);
+    opacity: 0.9;
+}
+
+/* empty state جدول */
+.admin-dashboard-page .table-wrapper table tbody tr td[colspan] {
+    padding: 48px 20px !important;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13.5px;
+    background: linear-gradient(180deg, #fafbfb 0%, #f4f6f6 100%);
+    border-radius: 0 0 12px 12px;
+}
+
+/* نیازمند رسیدگی - ظاهر بهتر */
+.admin-dashboard-page .attention-item {
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
+}
+
+.admin-dashboard-page .attention-item:hover {
+    transform: translateX(-3px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.admin-dashboard-page .attention-item.resolved {
+    opacity: 0.65;
+}
+
+.admin-dashboard-page .attention-item.resolved:hover {
+    opacity: 0.85;
+}
+
+.admin-dashboard-page .attention-item b {
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+/* هدر پنل */
+.admin-dashboard-page .panel-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 14px;
+    margin-bottom: 4px;
+}
+
+.admin-dashboard-page .panel-title {
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+/* تاریخ بالا */
+.admin-dashboard-page .date-box {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 1px solid #bae6fd;
+    box-shadow: 0 2px 8px rgba(14, 165, 233, 0.08);
+}
+
+/* حالت تاریک */
+html[data-theme="dark"] .admin-dashboard-page .chart-bar-track {
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+}
+
+html[data-theme="dark"] .admin-dashboard-page .stat-card,
+html[data-theme="dark"] .admin-dashboard-page .panel {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme="dark"] .admin-dashboard-page .date-box {
+    background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
+    border-color: #0ea5e9;
+}
+/* فیکس ارتفاع واقعی نوارهای نمودار */
+.admin-dashboard-page .chart-bar {
+    height: var(--bar-size, 0%) !important;
+    min-height: 3px;
+    width: 100%;
+    border-radius: 6px 6px 2px 2px;
+    transition: height 0.4s ease;
+}
+
+.admin-dashboard-page .chart-bar[style*="--bar-size: 0%"] {
+    opacity: 0.25;
+}
+body.section-ui-page .leave-status,
+body.section-ui-page .leave-badge {
+    color: #075985 !important;
+    background: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+}
+.leave-card {
+    border-top: 4px solid #0284c7 !important;
+}
+
+.status-badge.status-leave {
+    color: #075985 !important;
+    background: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+}
+/* =========================================================
+   گزارش خلاصه کارکرد کارکنان
+   ========================================================= */
+
+body.section-ui-page.summary-report-page .month-navigation {
+    margin-bottom: 18px;
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    background: var(--card-color) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--card-shadow) !important;
+}
+
+body.section-ui-page.summary-report-page .month-button {
+    min-height: 42px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--teal-dark) !important;
+    background: #edf7f7 !important;
+    border: 1px solid #bcd8d9 !important;
+    border-radius: 11px !important;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    transition: 0.2s ease;
+}
+
+body.section-ui-page.summary-report-page .month-button:hover {
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+    border-color: var(--teal-dark) !important;
+}
+
+body.section-ui-page.summary-report-page .previous-month-button { justify-self: start; }
+body.section-ui-page.summary-report-page .next-month-button { justify-self: end; }
+
+body.section-ui-page.summary-report-page .current-month-button {
+    color: #062f36 !important;
+    background: linear-gradient(135deg, #f6df8b, #d6ad45) !important;
+    border: 1px solid #f5df8d !important;
+}
+
+body.section-ui-page.summary-report-page .summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    margin-bottom: 20px;
+}
+
+body.section-ui-page.summary-report-page .summary-card {
+    min-height: 96px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.97) !important;
+    border: 1px solid rgba(255, 255, 255, 0.78) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 28px rgba(3, 30, 55, 0.1) !important;
+    border-top: 4px solid #0d7375 !important;
+}
+
+body.section-ui-page.summary-report-page .summary-title {
+    color: #6b8185;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+body.section-ui-page.summary-report-page .summary-value {
+    color: #0a3439;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+body.section-ui-page.summary-report-page .employee-card { border-top-color: #0d7375 !important; }
+body.section-ui-page.summary-report-page .present-card { border-top-color: #1f8a55 !important; }
+body.section-ui-page.summary-report-page .absent-card { border-top-color: #c94646 !important; }
+body.section-ui-page.summary-report-page .leave-card { border-top-color: #0284c7 !important; }
+body.section-ui-page.summary-report-page .mission-card { border-top-color: #7c3aed !important; }
+body.section-ui-page.summary-report-page .holiday-card { border-top-color: #db2777 !important; }
+body.section-ui-page.summary-report-page .incomplete-card { border-top-color: #f59e0b !important; }
+body.section-ui-page.summary-report-page .no-shift-card { border-top-color: #64748b !important; }
+body.section-ui-page.summary-report-page .worked-card { border-top-color: #0891b2 !important; }
+body.section-ui-page.summary-report-page .late-card { border-top-color: #d68a15 !important; }
+body.section-ui-page.summary-report-page .early-card { border-top-color: #9333ea !important; }
+
+body.section-ui-page.summary-report-page .duration-value {
+    display: inline-flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    font-size: 14px !important;
+}
+
+body.section-ui-page.summary-report-page .ai-button {
+    color: #fff !important;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+    border: 1px solid #6d28d9 !important;
+}
+
+body.section-ui-page.summary-report-page .ai-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+body.section-ui-page.summary-report-page .ai-analysis-card {
+    margin-bottom: 20px;
+}
+
+body.section-ui-page.summary-report-page .ai-analysis-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+body.section-ui-page.summary-report-page .ai-badge {
+    padding: 7px 12px;
+    color: #6d28d9;
+    background: #f5f3ff;
+    border: 1px solid #c4b5fd;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+body.section-ui-page.summary-report-page .ai-analysis-content {
+    padding: 20px 23px;
+    color: #24484c;
+    line-height: 2;
+    white-space: pre-wrap;
+}
+
+body.section-ui-page.summary-report-page .count-badge {
+    min-width: 36px;
+    padding: 5px 9px;
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 20px;
+    font-weight: 800;
+}
+
+body.section-ui-page.summary-report-page .present-badge { color: #166534; background: #dcfce7; }
+body.section-ui-page.summary-report-page .absent-badge { color: #991b1b; background: #fee2e2; }
+body.section-ui-page.summary-report-page .leave-badge { color: #075985; background: #e0f2fe; }
+body.section-ui-page.summary-report-page .mission-badge { color: #6b21a8; background: #f3e8ff; }
+body.section-ui-page.summary-report-page .holiday-badge { color: #9d174d; background: #fce7f3; }
+body.section-ui-page.summary-report-page .incomplete-badge { color: #92400e; background: #fef3c7; }
+body.section-ui-page.summary-report-page .no-shift-badge { color: #475569; background: #e2e8f0; }
+
+body.section-ui-page.summary-report-page .worked-time { color: #0e7490; font-weight: 800; }
+body.section-ui-page.summary-report-page .late-time { color: #c2410c; font-weight: 800; }
+body.section-ui-page.summary-report-page .early-time { color: #6d28d9; font-weight: 800; }
+body.section-ui-page.summary-report-page .zero-value { color: #94a3b8; }
+
+body.section-ui-page.summary-report-page .empty-row td {
+    padding: 45px !important;
+    color: #6b8185;
+    text-align: center;
+}
+
+@media (max-width: 1200px) {
+    body.section-ui-page.summary-report-page .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 700px) {
+    body.section-ui-page.summary-report-page .month-navigation {
+        grid-template-columns: 1fr;
+    }
+    body.section-ui-page.summary-report-page .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+/* =========================================================
+   هدر صفحات درخواست مرخصی و مأموریت
+   (پس‌زمینه مثل بقیه صفحات)
+   ========================================================= */
+
+body.section-ui-page .page-header,
+body.section-ui-page.leave-request-page .page-header,
+body.section-ui-page.mission-request-page .page-header,
+.mission-request-page .page-header,
+.leave-request-page .page-header {
+    min-height: 160px !important;
+    margin-bottom: 24px !important;
+    padding: 28px 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 24px !important;
+    color: #ffffff !important;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.88) 0%,
+            rgba(2, 31, 85, 0.78) 50%,
+            rgba(1, 18, 48, 0.92) 100%
+        ),
+        url("/css/persepolis-login.webp") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    border: 1px solid rgba(214, 171, 55, 0.45) !important;
+    border-radius: 22px !important;
+    box-shadow:
+        0 18px 42px rgba(2, 31, 85, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* گوشه طلایی مثل بقیه هدرها */
+body.section-ui-page .page-header::before,
+.mission-request-page .page-header::before,
+.leave-request-page .page-header::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 18px !important;
+    right: 18px !important;
+    width: 120px !important;
+    height: 120px !important;
+    border-top: 2px solid rgba(241, 216, 94, 0.5) !important;
+    border-right: 2px solid rgba(241, 216, 94, 0.5) !important;
+    border-radius: 0 18px 0 0 !important;
+    pointer-events: none !important;
+}
+
+/* عنوان و توضیح */
+body.section-ui-page .page-header h1,
+.mission-request-page .page-header h1,
+.leave-request-page .page-header h1 {
+    margin: 0 0 10px !important;
+    font-size: clamp(26px, 3vw, 34px) !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.section-ui-page .page-header p,
+.mission-request-page .page-header p,
+.leave-request-page .page-header p {
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 14px !important;
+    line-height: 1.8 !important;
+}
+
+/* دکمه بازگشت داخل هدر */
+body.section-ui-page .page-header .header-link,
+body.section-ui-page .page-header a,
+.mission-request-page .page-header a,
+.leave-request-page .page-header a {
+    min-height: 42px !important;
+    padding: 10px 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    border-radius: 11px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    transition: 0.2s ease !important;
+}
+
+body.section-ui-page .page-header .header-link:hover,
+body.section-ui-page .page-header a:hover,
+.mission-request-page .page-header a:hover,
+.leave-request-page .page-header a:hover {
+    color: #01122e !important;
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    transform: translateY(-1px);
+}
+/* اطمینان از ظاهر یکسان هدر درخواست‌ها با تعطیلات رسمی */
+body.section-ui-page.mission-request-page .section-page-header,
+body.section-ui-page.leave-request-page .section-page-header {
+    min-height: 160px;
+    margin-bottom: 24px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            105deg,
+            rgba(2, 22, 55, 0.88) 0%,
+            rgba(2, 31, 85, 0.78) 50%,
+            rgba(1, 18, 48, 0.92) 100%
+        ),
+        url("/css/persepolis-login.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border: 1px solid rgba(214, 171, 55, 0.45);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 42px rgba(2, 31, 85, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    position: relative;
+    overflow: hidden;
+}/* اطمینان از ظاهر یکسان هدر درخواست‌ها با تعطیلات رسمی */
+ body.section-ui-page.mission-request-page .section-page-header,
+ body.section-ui-page.leave-request-page .section-page-header {
+     min-height: 160px;
+     margin-bottom: 24px;
+     padding: 28px 32px;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 24px;
+     color: #ffffff;
+     background:
+         linear-gradient(
+             105deg,
+             rgba(2, 22, 55, 0.88) 0%,
+             rgba(2, 31, 85, 0.78) 50%,
+             rgba(1, 18, 48, 0.92) 100%
+         ),
+         url("/css/persepolis-login.webp");
+     background-repeat: no-repeat;
+     background-position: center;
+     background-size: cover;
+     border: 1px solid rgba(214, 171, 55, 0.45);
+     border-radius: 22px;
+     box-shadow:
+         0 18px 42px rgba(2, 31, 85, 0.28),
+         inset 0 1px 0 rgba(255, 255, 255, 0.12);
+     position: relative;
+     overflow: hidden;
+ }ب
+ /* جلوگیری از برخورد تزئین طلایی با عنوان */
+ .leave-page-header::after,
+ .mission-page-header::after {
+
+     top: 14px;
+
+     right: auto;
+     left: 22px;
+
+     width: 130px;
+     height: 3px;
+
+     background:
+             linear-gradient(
+                     90deg,
+                     #d6ad45,
+                     transparent
+             );
+
+     z-index: 1;
+ }
+
+
+ /* فاصله امن عنوان از سمت راست هدر */
+ .leave-heading,
+ .mission-heading {
+
+     position: relative;
+     z-index: 2;
+
+     padding-right: 24px;
+ }
+
+
+ /* دکمه هم بالاتر از المان تزئینی باشد */
+ .leave-header-actions,
+ .mission-header-actions {
+
+     position: relative;
+     z-index: 2;
+ }
+ /* ==========================================
+    یک‌ردیفه کردن فیلترهای گزارش
+    ========================================== */
+
+ .report-filter-form {
+
+     display: grid !important;
+
+     grid-template-columns:
+             minmax(170px, 1fr)
+             minmax(170px, 1fr)
+             minmax(240px, 1.35fr)
+             minmax(180px, 1fr)
+             auto;
+
+     align-items: end !important;
+
+     gap: 18px !important;
+ }
+
+
+ /* همه فیلدها دقیقاً هم‌ارتفاع و هم‌سطح */
+
+ .report-filter-form .form-group {
+
+     margin: 0 !important;
+
+     display: flex;
+
+     flex-direction: column;
+
+     justify-content: flex-end;
+ }
+
+
+ .report-filter-form .form-group label {
+
+     margin-bottom: 9px;
+ }
+
+
+ .report-filter-form input,
+ .report-filter-form select {
+
+     width: 100%;
+
+     height: 54px !important;
+
+     margin: 0 !important;
+ }
+
+
+ /* وضعیت دیگر پایین‌تر از بقیه نباشد */
+
+ .status-filter-group {
+
+     align-self: end !important;
+ }
+
+
+ /* ==========================================
+    دکمه‌ها کنار فیلترها
+    ========================================== */
+
+ .report-filter-actions {
+
+     margin: 0 !important;
+
+     padding: 0 !important;
+
+     display: flex !important;
+
+     align-items: center !important;
+
+     justify-content: flex-start !important;
+
+     flex-wrap: nowrap !important;
+
+     gap: 9px !important;
+
+     align-self: end !important;
+
+     grid-column: auto !important;
+ }
+
+
+ /* ارتفاع یکسان دکمه‌ها با input */
+
+ .report-filter-actions .button {
+
+     height: 54px !important;
+
+     min-height: 54px !important;
+
+     margin: 0 !important;
+
+     padding: 0 18px !important;
+
+     display: inline-flex !important;
+
+     align-items: center !important;
+
+     justify-content: center !important;
+
+     white-space: nowrap;
+ }
+
+
+ /* پاک کردن فیلتر هم کنار دو دکمه دیگر */
+
+ .report-filter-actions .reset-button {
+
+     margin: 0 !important;
+ }
+
+
+ /* ==========================================
+    Responsive
+    ========================================== */
+
+ @media (max-width: 1250px) {
+
+     .report-filter-form {
+
+         grid-template-columns:
+                 repeat(
+                         2,
+                         minmax(220px, 1fr)
+                 );
+     }
+
+
+     .report-filter-actions {
+
+         grid-column:
+                 1 / -1 !important;
+     }
+
+ }
+
+
+ @media (max-width: 650px) {
+
+     .report-filter-form {
+
+         grid-template-columns:
+                 1fr;
+     }
+
+
+     .report-filter-actions {
+
+         grid-column:
+                 auto !important;
+
+         flex-direction:
+                 column;
+
+         align-items:
+                 stretch !important;
+     }
+
+
+     .report-filter-actions .button {
+
+         width:
+                 100%;
+     }
+
+ }
+ .report-summary-grid {
+
+     display: grid;
+
+     grid-template-columns:
+             repeat(
+                     8,
+                     minmax(
+                             0,
+                             1fr
+                     )
+             );
+
+     gap: 14px;
+ }
+
+ .report-summary-grid .summary-card {
+
+     min-width: 0;
+
+     padding: 18px 16px;
+ }
+
+ @media (
+         max-width: 1400px
+ ) {
+
+     .report-summary-grid {
+
+         grid-template-columns:
+                 repeat(
+                         4,
+                         minmax(
+                                 160px,
+                                 1fr
+                         )
+                 );
+     }
+
+ }
+
+ @media (
+         max-width: 900px
+ ) {
+
+     .report-summary-grid {
+
+         grid-template-columns:
+                 repeat(
+                         2,
+                         minmax(
+                                 160px,
+                                 1fr
+                         )
+                 );
+     }
+
+ }
+
+ @media (
+         max-width: 700px
+ ) {
+
+     .report-summary-grid {
+
+         grid-template-columns:
+                 1fr;
+     }
+
+ }
+ /* ==================================================
+    FINAL OVERRIDE - کارت‌های آمار روزانه
+    ================================================== */
+
+ body.daily-report-page
+ .report-summary-grid.summary-grid {
+
+     display: grid !important;
+
+     grid-template-columns:
+             repeat(
+                     8,
+                     minmax(0, 1fr)
+             ) !important;
+
+     gap: 12px !important;
+
+     width: 100% !important;
+ }
+
+
+ body.daily-report-page
+ .report-summary-grid.summary-grid
+ .summary-card {
+
+     min-width: 0 !important;
+
+     width: auto !important;
+
+     margin: 0 !important;
+
+     padding: 16px 12px !important;
+ }
+
+
+ /* فقط موبایل و تبلت کوچک */
+
+ @media (max-width: 800px) {
+
+     body.daily-report-page
+     .report-summary-grid.summary-grid {
+
+         grid-template-columns:
+                 repeat(
+                         4,
+                         minmax(0, 1fr)
+                 ) !important;
+     }
+
+ }
+
+
+ @media (max-width: 550px) {
+
+     body.daily-report-page
+     .report-summary-grid.summary-grid {
+
+         grid-template-columns:
+                 repeat(
+                         2,
+                         minmax(0, 1fr)
+                 ) !important;
+     }
+
+ }
+.record-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    border: 2px solid transparent;
+    white-space: nowrap;
+}
+
+/* ورود */
+.badge-entry {
+    color: #0f8a5f;
+    background: rgba(15, 138, 95, 0.10);
+    border-color: rgba(15, 138, 95, 0.35);
+    box-shadow: 0 0 0 3px rgba(15, 138, 95, 0.05);
+}
+
+/* خروج */
+.badge-exit {
+    color: #c24141;
+    background: rgba(194, 65, 65, 0.10);
+    border-color: rgba(194, 65, 65, 0.35);
+    box-shadow: 0 0 0 3px rgba(194, 65, 65, 0.05);
+}
+
+/* ثبت دستی */
+.badge-manual {
+    color: #b7791f;
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.38);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.05);
+}
+
+/* فایل/دستگاه */
+.badge-device {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.10);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.05);
+}
+/* =========================================
+   Operator Attendance Badges
+   ========================================= */
+
+.record-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 88px;
+    padding: 7px 12px;
+
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+/* ورود */
+.badge-entry {
+    color: #0f8a5f;
+    background: rgba(15, 138, 95, 0.10);
+    border-color: rgba(15, 138, 95, 0.35);
+}
+
+/* خروج */
+.badge-exit {
+    color: #c24141;
+    background: rgba(194, 65, 65, 0.10);
+    border-color: rgba(194, 65, 65, 0.35);
+}
+
+/* ثبت دستی */
+.badge-manual {
+    color: #b7791f;
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.38);
+}
+
+/* فایل دستگاه */
+.badge-device {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.10);
+    border-color: rgba(37, 99, 235, 0.35);
+}
+
+/* کمی افکت هنگام Hover */
+.record-badge:hover {
+    transform: translateY(-1px);
+    transition: 0.15s ease;
+}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>مدیریت تعطیلات رسمی</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-dashboard.css(v=20)}">
+
+    <style>
+
+        .holiday-container {
+            width: min(1400px, 96%);
+            margin: 30px auto;
+        }
+
+        .holiday-card {
+            margin-bottom: 24px;
+            padding: 24px;
+            background: white;
+            border-radius: 18px;
+        }
+
+        .holiday-form {
+            display: grid;
+            grid-template-columns:
+                    220px
+                    1fr
+                    2fr
+                    auto;
+            gap: 14px;
+            align-items: end;
+        }
+
+        .holiday-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .holiday-field input {
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-family: inherit;
+        }
+
+        .save-button {
+            height: 44px;
+            padding: 0 20px;
+            color: white;
+            background: #2563eb;
+            border: none;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        .holiday-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .holiday-table th,
+        .holiday-table td {
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .active-status {
+            color: #166534;
+            background: #dcfce7;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .inactive-status {
+            color: #991b1b;
+            background: #fee2e2;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .toggle-button {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @media(max-width:800px) {
+
+            .holiday-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body class="section-ui-page">
+
+<main class="holiday-container">
+
+    <header class="page-header section-page-header">
+
+        <div>
+
+            <h1>
+                مدیریت تعطیلات رسمی
+            </h1>
+
+            <p>
+                ثبت روزهای تعطیل رسمی در تقویم حضور و غیاب
+            </p>
+
+        </div>
+
+        <a class="header-link"
+           th:href="@{/admin/dashboard}">
+            بازگشت به داشبورد
+        </a>
+
+    </header>
+
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+
+    <section class="holiday-card">
+
+        <h2>
+            ثبت تعطیلی
+        </h2>
+
+        <form th:action="@{/admin/holidays}"
+              method="post"
+              class="holiday-form">
+
+
+            <div class="holiday-field">
+
+                <label>
+                    تاریخ
+                </label>
+
+                <input type="date"
+                       name="holidayDate"
+                       th:value="${today}"
+                       required>
+
+            </div>
+
+
+            <div class="holiday-field">
+
+                <label>
+                    عنوان
+                </label>
+
+                <input type="text"
+                       name="title"
+                       placeholder="مثلاً تعطیلات رسمی"
+                       required>
+
+            </div>
+
+
+            <div class="holiday-field">
+
+                <label>
+                    توضیحات
+                </label>
+
+                <input type="text"
+                       name="description"
+                       placeholder="توضیحات اختیاری">
+
+            </div>
+
+
+            <button type="submit"
+                    class="save-button">
+
+                ثبت تعطیلی
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <section class="holiday-card">
+
+        <h2>
+            تقویم تعطیلات
+        </h2>
+
+        <div style="overflow-x:auto">
+
+            <table class="holiday-table">
+
+                <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>تاریخ</th>
+                    <th>عنوان</th>
+                    <th>توضیحات</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="holiday, stat : ${holidays}">
+
+                    <td th:text="${stat.count}">
+                    </td>
+
+                    <td th:text="${holiday.holidayDate}">
+                    </td>
+
+                    <td th:text="${holiday.title}">
+                    </td>
+
+                    <td th:text="${holiday.description != null ? holiday.description : '—'}">
+                    </td>
+
+                    <td>
+
+                        <span th:if="${holiday.active}"
+                              class="active-status">
+                            فعال
+                        </span>
+
+                        <span th:unless="${holiday.active}"
+                              class="inactive-status">
+                            غیرفعال
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <form th:action="@{/admin/holidays/{id}/toggle(id=${holiday.id})}"
+                              method="post">
+
+                            <button class="toggle-button"
+                                    type="submit"
+                                    th:text="${holiday.active ? 'غیرفعال کردن' : 'فعال کردن'}">
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+
+                <tr th:if="${holidays == null or holidays.isEmpty()}">
+
+                    <td colspan="6">
+                        هنوز تعطیلی رسمی ثبت نشده است.
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

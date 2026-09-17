@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارزیابی سه‌ماهه کارکنان | مدیر</title>
+    <link rel="stylesheet" th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+<body class="portal-page">
+<main class="portal-shell">
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">ارزیابی عملکرد سه‌ماهه</span>
+            <h1>بهره‌وری بر اساس کارهای محول‌شده و حضور</h1>
+            <p>ابتدا کارها و وزن هر کار را ثبت کنید، سپس درصد انجام را در طول سه‌ماهه به‌روزرسانی و در پایان گزارش را برای منابع انسانی ارسال کنید.</p>
+        </div>
+    </header>
+
+    <nav class="portal-nav">
+        <a th:href="@{/manager/dashboard}">داشبورد</a>
+        <a th:href="@{/manager/overtime}">اضافه‌کاری</a>
+        <a th:href="@{/manager/insufficient-attendance}">حد نصاب حضور</a>
+        <a class="active" th:href="@{/manager/performance}">ارزیابی سه‌ماهه</a>
+    </nav>
+
+    <div th:if="${successMessage}" class="portal-alert success" th:text="${successMessage}">موفق</div>
+    <div th:if="${errorMessage}" class="portal-alert danger" th:text="${errorMessage}">خطا</div>
+
+    <section class="portal-panel">
+        <form class="portal-filter" method="get" th:action="@{/manager/performance}">
+            <div class="portal-field">
+                <label for="employeeId">کارمند</label>
+                <select id="employeeId" name="employeeId" required>
+                    <option value="">انتخاب کارمند</option>
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:selected="${selectedEmployeeId != null and selectedEmployeeId == employee.id}"
+                            th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">کارمند</option>
+                </select>
+            </div>
+            <div class="portal-field"><label for="year">سال شمسی</label><input id="year" type="number" name="year" min="1300" max="1600" th:value="${year}" required></div>
+            <div class="portal-field">
+                <label for="quarter">سه‌ماهه</label>
+                <select id="quarter" name="quarter" required>
+                    <option value="1" th:selected="${quarter == 1}">سه‌ماهه اول</option>
+                    <option value="2" th:selected="${quarter == 2}">سه‌ماهه دوم</option>
+                    <option value="3" th:selected="${quarter == 3}">سه‌ماهه سوم</option>
+                    <option value="4" th:selected="${quarter == 4}">سه‌ماهه چهارم</option>
+                </select>
+            </div>
+            <div class="portal-filter-actions"><button class="portal-button primary" type="submit">باز کردن ارزیابی</button></div>
+        </form>
+    </section>
+
+    <section class="portal-panel" th:if="${selectedEmployeeId != null}">
+        <div class="portal-panel-header">
+            <div>
+                <h2>بازه ارزیابی</h2>
+                <p th:text="|از ${quarterFromDate} تا ${quarterToDate}|">بازه سه‌ماهه</p>
+            </div>
+            <span class="portal-badge" th:if="${review != null}" th:text="${review.status.title}">وضعیت</span>
+            <span class="portal-badge" th:if="${review == null}">هنوز ایجاد نشده</span>
+        </div>
+
+        <div class="portal-note">
+            فرمول بهره‌وری: امتیاز کارهای محول‌شده × نرخ حضور ÷ ۱۰۰. روزهای مرخصی، مأموریت، تعطیل و بدون شیفت در مخرج نرخ حضور قرار نمی‌گیرند.
+        </div>
+    </section>
+
+    <section class="portal-stat-grid" th:if="${performanceRow != null}">
+        <article class="portal-stat-card info"><span>امتیاز کارها</span><strong th:text="|${performanceRow.taskScore}%|">0%</strong><small>میانگین وزنی درصد انجام</small></article>
+        <article class="portal-stat-card"><span>نرخ حضور</span><strong th:text="|${performanceRow.attendanceRate}%|">0%</strong><small th:text="|${performanceRow.presentDays} حضور / ${performanceRow.absentDays} غیبت / ${performanceRow.incompleteDays} ناقص|">روزها</small></article>
+        <article class="portal-stat-card success"><span>امتیاز بهره‌وری</span><strong th:text="|${performanceRow.productivityScore}%|">0%</strong><small>سه‌ماهه انتخابی</small></article>
+    </section>
+
+    <section class="portal-panel" th:if="${selectedEmployeeId != null and (review == null or review.draft)}">
+        <div class="portal-panel-header"><div><h2>ثبت کار محول‌شده</h2><p>برای هر کار وزن اهمیت بین ۱ تا ۱۰۰ وارد کنید. مجموع وزن‌ها لازم نیست دقیقاً ۱۰۰ باشد؛ سیستم آن‌ها را نرمال می‌کند.</p></div></div>
+        <form method="post" th:action="@{/manager/performance/tasks}" class="portal-form-grid">
+            <input type="hidden" name="employeeId" th:value="${selectedEmployeeId}">
+            <input type="hidden" name="year" th:value="${year}">
+            <input type="hidden" name="quarter" th:value="${quarter}">
+            <div class="portal-field"><label>عنوان کار</label><input type="text" name="title" maxlength="250" required></div>
+            <div class="portal-field"><label>وزن اهمیت</label><input type="number" name="weightPercent" min="1" max="100" value="10" required></div>
+            <div class="portal-field full"><label>شرح کار</label><textarea name="description" maxlength="1200" rows="3"></textarea></div>
+            <div class="portal-form-actions"><button class="portal-button primary" type="submit">افزودن کار</button></div>
+        </form>
+    </section>
+
+    <section class="portal-panel" th:if="${review != null}">
+        <div class="portal-panel-header"><div><h2>کارهای محول‌شده</h2><p th:text="|${review.tasks.size()} کار ثبت شده است.|">0 کار</p></div></div>
+        <div class="portal-table-wrapper">
+            <table class="portal-table">
+                <thead><tr><th>کار</th><th>وزن</th><th>درصد انجام</th><th>عملیات</th></tr></thead>
+                <tbody>
+                <tr th:each="task : ${review.tasks}">
+                    <td><strong th:text="${task.title}">عنوان</strong><small class="portal-block portal-muted" th:text="${task.description != null ? task.description : '—'}">شرح</small></td>
+                    <td th:text="|${task.weightPercent}%|">0%</td>
+                    <td>
+                        <form th:if="${review.draft}" method="post" th:action="@{|/manager/performance/tasks/${task.id}/completion|}" class="portal-actions">
+                            <input type="hidden" name="employeeId" th:value="${selectedEmployeeId}"><input type="hidden" name="year" th:value="${year}"><input type="hidden" name="quarter" th:value="${quarter}">
+                            <input type="number" name="completionPercent" min="0" max="100" th:value="${task.completionPercent}" required style="width:90px">
+                            <button class="portal-mini-button" type="submit">ثبت</button>
+                        </form>
+                        <strong th:unless="${review.draft}" th:text="|${task.completionPercent}%|">0%</strong>
+                    </td>
+                    <td>
+                        <form th:if="${review.draft}" method="post" th:action="@{|/manager/performance/tasks/${task.id}/delete|}">
+                            <input type="hidden" name="employeeId" th:value="${selectedEmployeeId}"><input type="hidden" name="year" th:value="${year}"><input type="hidden" name="quarter" th:value="${quarter}">
+                            <button class="portal-mini-button danger" type="submit">حذف</button>
+                        </form>
+                        <span th:unless="${review.draft}">قفل شده</span>
+                    </td>
+                </tr>
+                <tr th:if="${review.tasks.isEmpty()}"><td colspan="4" class="portal-empty">هنوز کاری ثبت نشده است.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="portal-panel" th:if="${review != null and review.draft}">
+        <div class="portal-panel-header"><div><h2>ارسال گزارش به منابع انسانی</h2><p>پس از ارسال، این ارزیابی دیگر توسط مدیر قابل ویرایش نیست.</p></div></div>
+        <form method="post" th:action="@{/manager/performance/submit}">
+            <input type="hidden" name="employeeId" th:value="${selectedEmployeeId}"><input type="hidden" name="year" th:value="${year}"><input type="hidden" name="quarter" th:value="${quarter}">
+            <div class="portal-field"><label>یادداشت مدیر</label><textarea name="managerNote" rows="4" maxlength="1500"></textarea></div>
+            <div class="portal-form-actions"><button class="portal-button primary" type="submit">ارسال نهایی گزارش</button></div>
+        </form>
+    </section>
+
+    <section class="portal-panel" th:if="${review != null and review.submitted}">
+        <div class="portal-alert success">این گزارش برای منابع انسانی ارسال شده و قفل است.</div>
+        <p th:if="${review.managerNote != null}" th:text="${review.managerNote}">یادداشت</p>
+    </section>
+</main>
+</body>
+</html>

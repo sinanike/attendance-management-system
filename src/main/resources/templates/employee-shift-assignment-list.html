@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        برنامه‌ریزی شیفت کارکنان خدمات
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=14"
+          th:href="@{/css/admin-dashboard.css(v=14)}">
+
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+</head>
+
+<body class="section-ui-page shift-assignment-page">
+
+<main class="shift-assignment-container">
+
+    <header class="shift-list-header section-page-header">
+
+        <div>
+
+            <h1>
+                برنامه‌ریزی شیفت کارکنان خدمات
+            </h1>
+
+            <p>
+                تعیین شیفت کارکنان خدمات و پشتیبانی
+                برای یک روز یا یک بازه زمانی مشخص
+            </p>
+
+        </div>
+
+        <div class="shift-header-actions">
+
+            <a class="shift-back-button"
+               th:href="@{/admin/shifts}">
+                مدیریت شیفت‌ها
+            </a>
+
+            <a class="shift-back-button"
+               th:href="@{/admin/dashboard}">
+                بازگشت به داشبورد
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- پیام موفقیت -->
+
+    <div class="success-alert"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
+
+
+    <!-- پیام خطا -->
+
+    <div class="assignment-error-alert"
+         th:if="${errorMessage}"
+         th:text="${errorMessage}">
+    </div>
+
+
+    <!-- فرم ثبت -->
+
+    <section class="assignment-form-card">
+
+        <div class="assignment-card-heading">
+
+            <div>
+
+                <h2>
+                    ثبت برنامه شیفت
+                </h2>
+
+                <p>
+                    برای یک روز، تاریخ شروع و پایان را
+                    یکسان انتخاب کنید.
+                    برای چند روز متوالی، بازه موردنظر را
+                    مشخص کنید.
+                </p>
+
+            </div>
+
+            <span class="assignment-count">
+
+                <strong th:text="${assignmentCount}">
+                    0
+                </strong>
+
+                سابقه
+
+            </span>
+
+        </div>
+
+
+        <form class="assignment-form"
+              method="post"
+              th:action="@{/admin/shift-assignments}"
+              th:object="${assignmentForm}">
+
+
+            <!-- کارمند -->
+
+            <div class="assignment-field">
+
+                <label for="employeeId">
+                    کارمند خدمات
+                </label>
+
+                <select id="employeeId"
+                        th:field="*{employeeId}">
+
+                    <option value="">
+                        انتخاب کارمند
+                    </option>
+
+                    <option
+                            th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:text="${employee.firstName
+                            + ' '
+                            + employee.lastName
+                            + ' — '
+                            + employee.personnelCode}">
+                    </option>
+
+                </select>
+
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('employeeId')}"
+                      th:errors="*{employeeId}">
+                </span>
+
+            </div>
+
+
+            <!-- شیفت -->
+
+            <div class="assignment-field">
+
+                <label for="shiftId">
+                    شیفت کاری
+                </label>
+
+                <select id="shiftId"
+                        th:field="*{shiftId}">
+
+                    <option value="">
+                        انتخاب شیفت
+                    </option>
+
+                    <option
+                            th:each="shift : ${shifts}"
+                            th:value="${shift.id}"
+                            th:text="${shift.name
+                            + ' — '
+                            + shift.startTime
+                            + ' تا '
+                            + shift.endTime}">
+                    </option>
+
+                </select>
+
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('shiftId')}"
+                      th:errors="*{shiftId}">
+                </span>
+
+            </div>
+
+
+            <!-- تاریخ شروع -->
+
+            <div class="assignment-field">
+
+                <label for="startDate">
+                    از تاریخ
+                </label>
+
+                <input id="startDate"
+                       type="date"
+                       th:field="*{startDate}">
+
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('startDate')}"
+                      th:errors="*{startDate}">
+                </span>
+
+            </div>
+
+
+            <!-- تاریخ پایان -->
+
+            <div class="assignment-field">
+
+                <label for="endDate">
+                    تا تاریخ
+                </label>
+
+                <input id="endDate"
+                       type="date"
+                       th:field="*{endDate}">
+
+                <small class="field-help">
+                    برای شیفت یک‌روزه، همان تاریخ شروع را انتخاب کنید.
+                </small>
+
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('endDate')}"
+                      th:errors="*{endDate}">
+                </span>
+
+            </div>
+
+
+            <button
+                    class="assignment-submit-button"
+                    type="submit">
+
+                ثبت برنامه شیفت
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- جدول سوابق -->
+
+    <section class="shift-table-card assignment-history-card">
+
+        <div class="assignment-card-heading">
+
+            <div>
+
+                <h2>
+                    برنامه و سوابق شیفت
+                </h2>
+
+                <p>
+                    شیفت‌های ثبت‌شده کارکنان خدمات
+                    به ترتیب جدیدترین تاریخ نمایش داده می‌شوند.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="shift-table-wrapper"
+             th:unless="${#lists.isEmpty(assignments)}">
+
+            <table class="shift-table assignment-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>کارمند</th>
+
+                    <th>کد پرسنلی</th>
+
+                    <th>بخش</th>
+
+                    <th>شیفت</th>
+
+                    <th>شروع</th>
+
+                    <th>پایان</th>
+
+                    <th>وضعیت</th>
+
+                    <th>عملیات</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr th:each="assignment, status : ${assignments}">
+
+
+                    <!-- ردیف -->
+
+                    <td th:text="${status.count}">
+                        1
+                    </td>
+
+
+                    <!-- کارمند -->
+
+                    <td th:text="${assignment.employee.firstName
+                            + ' '
+                            + assignment.employee.lastName}">
+                        علی حسینی
+                    </td>
+
+
+                    <!-- کد پرسنلی -->
+
+                    <td>
+
+                        <span class="shift-code"
+                              th:text="${assignment.employee.personnelCode}">
+                            EMP-1001
+                        </span>
+
+                    </td>
+
+
+                    <!-- واحد -->
+
+                    <td th:text="${assignment.employee.department.name}">
+                        خدمات و پشتیبانی
+                    </td>
+
+
+                    <!-- شیفت -->
+
+                    <td>
+
+                        <strong th:text="${assignment.shift.name}">
+                            شیفت شب
+                        </strong>
+
+                        <div>
+
+                            <small
+                                    th:text="${assignment.shift.startTime
+                                    + ' تا '
+                                    + assignment.shift.endTime}">
+                                21:00 تا 06:00
+                            </small>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- شروع -->
+
+                    <td th:text="${assignment.startDate}">
+                        2026-08-08
+                    </td>
+
+
+                    <!-- پایان -->
+
+                    <td>
+
+                        <span th:if="${assignment.endDate != null}"
+                              th:text="${assignment.endDate}">
+                            2026-08-08
+                        </span>
+
+                        <span
+                                th:if="${assignment.endDate == null}"
+                                class="assignment-open-ended">
+                            بدون پایان
+                        </span>
+
+                    </td>
+
+
+                    <!-- وضعیت -->
+
+                    <td>
+
+                        <!-- لغو -->
+
+                        <span
+                                class="shift-status-badge inactive"
+                                th:if="${!assignment.active}">
+                            لغو شده
+                        </span>
+
+
+                        <!-- در حال اجرا -->
+
+                        <span
+                                class="shift-status-badge active"
+                                th:if="${assignment.active
+                                and assignment.isEffectiveOn(today)}">
+                            در حال اجرا
+                        </span>
+
+
+                        <!-- آینده -->
+
+                        <span
+                                class="shift-status-badge"
+                                th:if="${assignment.active
+                                and today.isBefore(assignment.startDate)}">
+                            برنامه‌ریزی شده
+                        </span>
+
+
+                        <!-- تمام‌شده -->
+
+                        <span
+                                class="shift-status-badge"
+                                th:if="${assignment.active
+                                and assignment.endDate != null
+                                and today.isAfter(assignment.endDate)}">
+                            پایان یافته
+                        </span>
+
+                    </td>
+
+
+                    <!-- عملیات -->
+
+                    <td>
+
+                        <form
+                                th:if="${assignment.active}"
+                                method="post"
+                                th:action="@{/admin/shift-assignments/{id}/cancel(
+                                id=${assignment.id}
+                                )}">
+
+                            <button
+                                    type="submit"
+                                    class="shift-status-button deactivate"
+                                    onclick="return confirm(
+                                    'آیا از لغو این برنامه شیفت مطمئن هستید؟'
+                                    )">
+
+                                لغو تخصیص
+
+                            </button>
+
+                        </form>
+
+
+                        <span
+                                th:unless="${assignment.active}">
+                            —
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- خالی بودن جدول -->
+
+        <div class="shift-empty-state"
+             th:if="${#lists.isEmpty(assignments)}">
+
+            <h2>
+                هنوز برنامه شیفتی ثبت نشده است
+            </h2>
+
+            <p>
+                از فرم بالا برای کارکنان خدمات
+                اولین برنامه شیفت را ثبت کنید.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const startDate =
+                document.getElementById("startDate");
+
+            const endDate =
+                document.getElementById("endDate");
+
+
+            /*
+             * اگر کاربر تاریخ شروع را جلو ببرد
+             * و تاریخ پایان عقب‌تر باشد،
+             * پایان نیز با شروع برابر می‌شود.
+             */
+            function synchronizeDates() {
+
+                if (!startDate.value) {
+                    return;
+                }
+
+                endDate.min =
+                    startDate.value;
+
+                if (
+                    !endDate.value
+                    || endDate.value < startDate.value
+                ) {
+
+                    endDate.value =
+                        startDate.value;
+                }
+            }
+
+
+            startDate.addEventListener(
+                "change",
+                synchronizeDates
+            );
+
+            synchronizeDates();
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+
+<nav class="manager-navigation"
+     th:fragment="managerNav(activePage)">
+
+
+    <a href="/manager/dashboard"
+       th:href="@{/manager/dashboard}"
+       th:classappend="${activePage == 'dashboard'} ? ' active' : ''">
+
+        داشبورد
+
+    </a>
+
+
+    <a href="/manager/employees"
+       th:href="@{/manager/employees}"
+       th:classappend="${activePage == 'employees'} ? ' active' : ''">
+
+        کارکنان واحد من
+
+    </a>
+
+
+    <a href="/manager/attendance"
+       th:href="@{/manager/attendance}"
+       th:classappend="${activePage == 'attendance'} ? ' active' : ''">
+
+        گزارش حضور و غیاب
+
+    </a>
+
+
+    <a href="/manager/summary"
+       th:href="@{/manager/summary}"
+       th:classappend="${activePage == 'summary'} ? ' active' : ''">
+
+        خلاصه کارکرد
+
+    </a>
+
+
+    <a href="/manager/leaves"
+       th:href="@{/manager/leaves}"
+       th:classappend="${activePage == 'leaves'} ? ' active' : ''">
+
+        مرخصی‌ها
+
+    </a>
+
+
+    <a href="/manager/missions"
+       th:href="@{/manager/missions}"
+       th:classappend="${activePage == 'missions'} ? ' active' : ''">
+
+        مأموریت‌ها
+
+    </a>
+
+
+    <form th:action="@{/logout}"
+          action="/logout"
+          method="post">
+
+        <button type="submit"
+                class="manager-logout-button">
+
+            خروج از حساب
+
+        </button>
+
+    </form>
+
+
+</nav>
+
+
+</body>
+
+</html>

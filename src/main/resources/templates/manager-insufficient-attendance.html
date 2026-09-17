@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حد نصاب حضور | مدیر</title>
+    <link rel="stylesheet" th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+<body class="portal-page">
+<main class="portal-shell">
+    <header class="portal-topbar">
+        <div><span class="portal-eyebrow">کنترل حضور واحد</span><h1>کارکنان با حد نصاب حضور ناکافی</h1><p th:text="|واحد ${department.name}|">واحد</p></div>
+    </header>
+    <nav class="portal-nav">
+        <a th:href="@{/manager/dashboard}">داشبورد</a><a th:href="@{/manager/overtime}">اضافه‌کاری</a><a class="active" th:href="@{/manager/insufficient-attendance}">حد نصاب حضور</a><a th:href="@{/manager/performance}">ارزیابی سه‌ماهه</a>
+    </nav>
+    <section class="portal-panel">
+        <form class="portal-filter" method="get" th:action="@{/manager/insufficient-attendance}">
+            <div class="portal-field"><label>از تاریخ</label><input type="date" name="fromDate" th:value="${fromDate}" required></div>
+            <div class="portal-field"><label>تا تاریخ</label><input type="date" name="toDate" th:value="${toDate}" required></div>
+            <div class="portal-filter-actions"><button class="portal-button primary" type="submit">بررسی</button></div>
+        </form>
+    </section>
+    <section class="portal-stat-grid compact"><article class="portal-stat-card warning"><span>حد نصاب تعریف‌شده</span><strong th:text="|${minimumAttendancePercent}%|">80%</strong><small>قابل تنظیم توسط منابع انسانی</small></article><article class="portal-stat-card danger"><span>کمتر از حد نصاب</span><strong th:text="${rows.size()}">0</strong><small>نفر</small></article></section>
+    <section class="portal-panel">
+        <div class="portal-table-wrapper"><table class="portal-table"><thead><tr><th>کارمند</th><th>حضور</th><th>غیبت</th><th>ناقص</th><th>نرخ حضور</th></tr></thead><tbody>
+        <tr th:each="row : ${rows}"><td th:text="|${row.employee.firstName} ${row.employee.lastName}|">کارمند</td><td th:text="${row.presentDays}">0</td><td th:text="${row.absentDays}">0</td><td th:text="${row.incompleteDays}">0</td><td><strong th:text="|${row.attendanceRate}%|">0%</strong></td></tr>
+        <tr th:if="${rows.isEmpty()}"><td colspan="5" class="portal-empty">در این بازه هیچ کارمندی زیر حد نصاب نیست.</td></tr>
+        </tbody></table></div>
+    </section>
+</main>
+</body>
+</html>

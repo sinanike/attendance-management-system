@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+    <title th:text="${editMode ? 'ویرایش کارمند' : 'افزودن کارمند'}">
+        فرم کارمند
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=11"
+          th:href="@{/css/admin-dashboard.css(v=11)}">
+
+    <!--
+        این استایل عمداً داخل خود صفحه قرار گرفته است تا فرم کارمند
+        حتی در صورت کش‌شدن یا بارگذاری‌نشدن فایل CSS اصلی، درست نمایش داده شود.
+    -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body.employee-entry-page {
+            min-height: 100vh;
+            margin: 0;
+            padding: 18px;
+            color: #173b3f;
+            background:
+                radial-gradient(circle at 15% 5%, rgba(35, 143, 145, 0.24), transparent 34%),
+                linear-gradient(135deg, #0b3c43 0%, #0b5660 48%, #092f36 100%);
+            font-family: Tahoma, Arial, sans-serif;
+        }
+
+        body.employee-entry-page .employee-form-page {
+            width: min(920px, 100%);
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        body.employee-entry-page .employee-form-header {
+            min-height: 88px;
+            margin: 0 0 12px;
+            padding: 15px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            color: #ffffff;
+            background: rgba(7, 43, 49, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(0, 16, 22, 0.24);
+            backdrop-filter: blur(7px);
+        }
+
+        body.employee-entry-page .employee-form-header h1 {
+            margin: 0 0 7px;
+            color: #ffffff;
+            font-size: clamp(22px, 2.4vw, 29px);
+            line-height: 1.35;
+        }
+
+        body.employee-entry-page .employee-form-header p {
+            margin: 0;
+            color: #c8e0e2;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        body.employee-entry-page .employee-form-header .back-link {
+            min-height: 38px;
+            padding: 8px 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.18s ease;
+        }
+
+        body.employee-entry-page .employee-form-header .back-link:hover {
+            background: rgba(255, 255, 255, 0.17);
+            border-color: rgba(255, 255, 255, 0.42);
+        }
+
+        body.employee-entry-page .employee-form-card {
+            width: 100%;
+            margin: 0;
+            padding: 18px;
+            display: block;
+            overflow: hidden;
+            background: linear-gradient(180deg, #ffffff, #f8fbfb);
+            border: 1px solid rgba(255, 255, 255, 0.86);
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(1, 24, 31, 0.25);
+        }
+
+        body.employee-entry-page .employee-form {
+            width: 100%;
+            margin: 0;
+        }
+
+        body.employee-entry-page .employee-form-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+            gap: 12px 16px;
+        }
+
+        body.employee-entry-page .employee-form-grid .form-group {
+            min-width: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        body.employee-entry-page .employee-form-grid .form-group[hidden] {
+            display: none !important;
+        }
+
+        body.employee-entry-page .employee-form-grid label {
+            position: static;
+            width: auto;
+            margin: 0;
+            padding: 0;
+            display: block;
+            color: #21474b;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.55;
+            opacity: 1;
+            transform: none;
+        }
+
+        body.employee-entry-page .employee-form-grid .form-input {
+            position: static;
+            width: 100%;
+            height: 40px;
+            min-height: 40px;
+            margin: 0;
+            padding: 7px 11px;
+            display: block;
+            color: #173b3f;
+            background: #f9fcfc;
+            border: 1px solid #bfd1d3;
+            border-radius: 8px;
+            box-shadow: none;
+            outline: none;
+            font: inherit;
+            font-size: 13px;
+            opacity: 1;
+            transform: none;
+            transition: 0.18s ease;
+        }
+
+        body.employee-entry-page .employee-form-grid .form-input:hover {
+            border-color: #8fb2b4;
+        }
+
+        body.employee-entry-page .employee-form-grid .form-input:focus {
+            background: #ffffff;
+            border-color: #0d7375;
+            box-shadow: 0 0 0 4px rgba(13, 115, 117, 0.13);
+        }
+
+        body.employee-entry-page .employee-form-grid .input-error {
+            background: #fffafa;
+            border-color: #d9858a;
+        }
+
+        body.employee-entry-page .field-error {
+            min-height: 0;
+            margin: 0;
+            color: #b8383e;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.65;
+        }
+
+        body.employee-entry-page .form-actions {
+            margin: 14px 0 0;
+            padding: 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 9px;
+            border-top: 1px solid #dbe7e8;
+        }
+
+        body.employee-entry-page .form-actions .button {
+            min-width: 118px;
+            min-height: 38px;
+            padding: 7px 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        body.employee-entry-page .form-actions .button-primary {
+            color: #ffffff;
+            background: linear-gradient(135deg, #0d7375, #07575a);
+            border: 1px solid #07575a;
+            box-shadow: 0 7px 17px rgba(7, 88, 91, 0.22);
+        }
+
+        body.employee-entry-page .form-actions .button-primary:hover {
+            background: linear-gradient(135deg, #0a686b, #044a4d);
+            transform: translateY(-1px);
+        }
+
+        body.employee-entry-page .form-actions .button-secondary {
+            color: #52686b;
+            background: #edf2f3;
+            border: 1px solid #d1dee0;
+        }
+
+        body.employee-entry-page .form-actions .button-secondary:hover {
+            color: #173b3f;
+            background: #e2e9ea;
+            border-color: #bdcfd1;
+        }
+
+        @media (max-width: 700px) {
+            body.employee-entry-page {
+                padding: 12px;
+            }
+
+            body.employee-entry-page .employee-form-header {
+                min-height: auto;
+                padding: 15px;
+                align-items: stretch;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            body.employee-entry-page .employee-form-header .back-link {
+                width: 100%;
+            }
+
+            body.employee-entry-page .employee-form-card {
+                padding: 15px;
+            }
+
+            body.employee-entry-page .employee-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            body.employee-entry-page .form-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            body.employee-entry-page .form-actions .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="section-ui-page form-ui-page employee-entry-page">
+
+<main class="employee-form-page">
+
+    <header class="employee-form-header section-page-header">
+        <div>
+            <h1 th:text="${editMode
+                    ? 'ویرایش اطلاعات کارمند'
+                    : 'افزودن کارمند جدید'}">
+                فرم کارمند
+            </h1>
+
+            <p th:text="${editMode
+                    ? 'اطلاعات موردنظر را اصلاح و ذخیره کنید.'
+                    : 'اطلاعات هویتی و سازمانی کارمند را وارد کنید.'}">
+            </p>
+        </div>
+
+        <a th:href="@{/admin/employees}"
+           class="back-link header-link">
+            بازگشت به فهرست کارکنان
+        </a>
+    </header>
+
+    <section class="employee-form-card form-ui-card">
+
+        <form th:action="${editMode}
+                  ? @{/admin/employees/{id}(id=${employeeId})}
+                  : @{/admin/employees}"
+              th:object="${employeeForm}"
+              method="post"
+              class="employee-form">
+
+            <div class="employee-form-grid">
+
+                <div class="form-group">
+                    <label for="firstName">نام</label>
+
+                    <input id="firstName"
+                           type="text"
+                           th:field="*{firstName}"
+                           class="form-input"
+                           th:classappend="${#fields.hasErrors('firstName')}
+                                   ? 'input-error' : ''"
+                           maxlength="50">
+
+                    <p th:if="${#fields.hasErrors('firstName')}"
+                       th:errors="*{firstName}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">نام خانوادگی</label>
+
+                    <input id="lastName"
+                           type="text"
+                           th:field="*{lastName}"
+                           class="form-input"
+                           th:classappend="${#fields.hasErrors('lastName')}
+                                   ? 'input-error' : ''"
+                           maxlength="70">
+
+                    <p th:if="${#fields.hasErrors('lastName')}"
+                       th:errors="*{lastName}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="personnelCode">کد پرسنلی</label>
+
+                    <input id="personnelCode"
+                           type="text"
+                           th:field="*{personnelCode}"
+                           class="form-input"
+                           th:classappend="${#fields.hasErrors('personnelCode')}
+                                   ? 'input-error' : ''"
+                           placeholder="مثلاً EMP-1007"
+                           maxlength="30"
+                           dir="ltr">
+
+                    <p th:if="${#fields.hasErrors('personnelCode')}"
+                       th:errors="*{personnelCode}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="deviceUserId">
+                        شناسه کارمند در دستگاه اثر انگشت
+                    </label>
+
+                    <input id="deviceUserId"
+                           type="text"
+                           th:field="*{deviceUserId}"
+                           class="form-input"
+                           th:classappend="${#fields.hasErrors('deviceUserId')}
+                                   ? 'input-error' : ''"
+                           placeholder="مثلاً 27"
+                           maxlength="50"
+                           dir="ltr">
+
+                    <p th:if="${#fields.hasErrors('deviceUserId')}"
+                       th:errors="*{deviceUserId}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="nationalCode">کد ملی</label>
+
+                    <input id="nationalCode"
+                           type="text"
+                           inputmode="numeric"
+                           th:field="*{nationalCode}"
+                           class="form-input"
+                           th:classappend="${#fields.hasErrors('nationalCode')}
+                                   ? 'input-error' : ''"
+                           maxlength="10"
+                           placeholder="۱۰ رقم"
+                           dir="ltr">
+
+                    <p th:if="${#fields.hasErrors('nationalCode')}"
+                       th:errors="*{nationalCode}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="departmentId">واحد سازمانی</label>
+
+                    <select id="departmentId"
+                            th:field="*{departmentId}"
+                            class="form-input"
+                            th:classappend="${#fields.hasErrors('departmentId')}
+                                    ? 'input-error' : ''">
+
+                        <option value="">
+                            واحد سازمانی را انتخاب کنید
+                        </option>
+
+                        <option th:each="department : ${departments}"
+                                th:value="${department.id}"
+                                th:text="${department.name}">
+                            امور اداری
+                        </option>
+                    </select>
+
+                    <p th:if="${#fields.hasErrors('departmentId')}"
+                       th:errors="*{departmentId}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeType">نوع نیرو</label>
+
+                    <select id="employeeType"
+                            th:field="*{employeeType}"
+                            class="form-input"
+                            th:classappend="${#fields.hasErrors('employeeType')}
+                                ? 'input-error' : ''">
+
+                        <option value="">
+                            نوع نیرو را انتخاب کنید
+                        </option>
+
+                        <option th:each="type : ${employeeTypes}"
+                                th:value="${type}"
+                                th:text="${type.displayName}">
+                            کارمند اداری
+                        </option>
+                    </select>
+
+                    <p th:if="${#fields.hasErrors('employeeType')}"
+                       th:errors="*{employeeType}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group" id="shiftGroup">
+                    <label for="shiftId">شیفت کاری</label>
+
+                    <select id="shiftId"
+                            th:field="*{shiftId}"
+                            class="form-input"
+                            th:classappend="${#fields.hasErrors('shiftId')}
+                                    ? 'input-error' : ''">
+
+                        <option value="">
+                            شیفت کاری را انتخاب کنید
+                        </option>
+
+                        <option th:each="shift : ${shifts}"
+                                th:value="${shift.id}"
+                                th:text="${shift.name}">
+                            شیفت صبح
+                        </option>
+                    </select>
+
+                    <p th:if="${#fields.hasErrors('shiftId')}"
+                       th:errors="*{shiftId}"
+                       class="field-error">
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="submit"
+                        class="button button-primary"
+                        th:text="${editMode
+                                ? 'ذخیره تغییرات'
+                                : 'ثبت کارمند'}">
+                    ثبت کارمند
+                </button>
+
+                <a th:href="@{/admin/employees}"
+                   class="button button-secondary">
+                    انصراف
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const employeeTypeSelect =
+                document.getElementById("employeeType");
+        const shiftGroup =
+                document.getElementById("shiftGroup");
+        const shiftSelect =
+                document.getElementById("shiftId");
+
+        function updateShiftField() {
+            const isServiceSupport =
+                    employeeTypeSelect.value === "SERVICE_SUPPORT";
+
+            shiftGroup.hidden = !isServiceSupport;
+            shiftSelect.disabled = !isServiceSupport;
+            shiftSelect.required = isServiceSupport;
+
+            if (!isServiceSupport) {
+                shiftSelect.value = "";
+            }
+        }
+
+        employeeTypeSelect.addEventListener(
+                "change",
+                updateShiftField
+        );
+
+        updateShiftField();
+    });
+</script>
+
+</body>
+</html>

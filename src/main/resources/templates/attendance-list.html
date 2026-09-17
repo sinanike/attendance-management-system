@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت ترددها | SUTECH</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css(v=8)}">
+</head>
+
+<body class="section-ui-page attendance-management-page">
+
+<main class="page-container">
+
+    <header class="page-header section-page-header">
+        <div>
+            <h1>مدیریت ترددها</h1>
+            <p>ثبت دستی و دریافت اطلاعات دستگاه حضور و غیاب</p>
+        </div>
+        <div class="header-actions">
+            <a class="header-link" th:href="@{/admin/reports/daily-attendance}">گزارش روزانه</a>
+            <a class="header-link" th:href="@{/admin/dashboard}">بازگشت به داشبورد</a>
+        </div>
+    </header>
+
+    <div th:if="${successMessage}" class="alert alert-success section-alert">
+        <span class="alert-icon">✓</span>
+        <span th:text="${successMessage}">عملیات با موفقیت انجام شد.</span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger section-alert">
+        <span class="alert-icon">!</span>
+        <span th:text="${errorMessage}">انجام عملیات ممکن نشد.</span>
+    </div>
+
+    <div th:if="${importErrors != null and !importErrors.isEmpty()}"
+         class="alert alert-warning import-errors section-alert">
+        <strong>بعضی از سطرهای فایل پذیرفته نشدند:</strong>
+        <ul>
+            <li th:each="error : ${importErrors}" th:text="${error}">جزئیات خطا</li>
+        </ul>
+    </div>
+
+    <div class="attendance-action-grid">
+
+        <article class="filter-card action-card">
+            <div class="card-heading">
+                <div>
+                    <h2>ثبت دستی تردد</h2>
+                    <p>ورود یا خروج کارمند را به‌صورت دستی ثبت کنید.</p>
+                </div>
+                <div class="card-icon manual-icon">✓</div>
+            </div>
+            <a th:href="@{/admin/attendance/new}" class="button search-button">ثبت تردد جدید</a>
+        </article>
+
+        <article class="filter-card action-card">
+            <div class="card-heading">
+                <div>
+                    <h2>دریافت فایل دستگاه</h2>
+                    <p>فایل CSV خروجی دستگاه اثر انگشت را وارد سامانه کنید.</p>
+                </div>
+                <div class="card-icon upload-icon">⇧</div>
+            </div>
+
+            <form th:action="@{/admin/attendance/import}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="import-form">
+
+                <div class="form-group">
+                    <label for="deviceCode">کد دستگاه</label>
+                    <input type="text" id="deviceCode" name="deviceCode"
+                           placeholder="مثلاً DEVICE-01" maxlength="100" required>
+                    <small class="form-hint">برای هر دستگاه یک کد ثابت وارد کنید تا رکورد تکراری ثبت نشود.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendanceFile">فایل CSV</label>
+                    <input type="file" id="attendanceFile" name="file"
+                           class="file-input" accept=".csv,text/csv" required>
+                    <small class="form-hint">ستون‌ها: شناسه کارمند، تاریخ و ساعت، نوع تردد و شناسه رکورد</small>
+                </div>
+
+                <button type="submit" class="button excel-button">ورود اطلاعات فایل</button>
+            </form>
+        </article>
+
+    </div>
+
+    <section class="table-card attendance-table-card">
+
+        <div class="table-title">
+            <div>
+                <h2>آخرین ترددهای ثبت‌شده</h2>
+                <p>
+                    تعداد کل:
+                    <strong th:text="${recordCount}">0</strong>
+                    رکورد
+                </p>
+            </div>
+            <a th:href="@{/admin/reports/daily-attendance}" class="button reset-button">
+                مشاهده گزارش روزانه
+            </a>
+        </div>
+
+        <div th:if="${attendanceRecords == null or attendanceRecords.isEmpty()}"
+             class="empty-state">
+            <div class="empty-state-icon">◷</div>
+            <h3>هنوز ترددی ثبت نشده است</h3>
+            <p>می‌توانید یک تردد را دستی ثبت کنید یا فایل دستگاه را وارد سامانه کنید.</p>
+        </div>
+
+        <div th:unless="${attendanceRecords == null or attendanceRecords.isEmpty()}"
+             class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>تاریخ</th>
+                    <th>ساعت</th>
+                    <th>نوع تردد</th>
+                    <th>منبع ثبت</th>
+                    <th>کد دستگاه</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="record, iteration : ${attendanceRecords}">
+                    <td th:text="${iteration.count}">1</td>
+                    <td>
+                        <div>
+                            <strong th:text="|${record.employee.firstName} ${record.employee.lastName}|">علی رضایی</strong>
+                            <br>
+                            <small th:text="${record.employee.employeeType != null
+                     ? record.employee.employeeType.displayName
+                     : '—'}">
+                                کارمند اداری
+                            </small>
+                        </div>
+                    </td>
+                    <td th:text="${record.employee.personnelCode}">EMP-1001</td>
+                    <td th:text="${#temporals.format(record.eventTime, 'yyyy/MM/dd')}">1405/05/12</td>
+                    <td th:text="${#temporals.format(record.eventTime, 'HH:mm')}">08:00</td>
+                    <td>
+                        <span th:if="${record.attendanceType.name() == 'ENTRY'}"
+                              class="status-badge status-entry">ورود</span>
+                        <span th:if="${record.attendanceType.name() == 'EXIT'}"
+                              class="status-badge status-exit">خروج</span>
+                    </td>
+                    <td>
+                        <span th:if="${record.attendanceSource.name() == 'MANUAL'}"
+                              class="source-badge source-manual">ثبت دستی</span>
+                        <span th:if="${record.attendanceSource.name() == 'FILE_IMPORT'}"
+                              class="source-badge source-device">فایل دستگاه</span>
+                    </td>
+                    <td th:text="${record.deviceCode != null ? record.deviceCode : '—'}">—</td>
+                    <td>
+                        <form th:action="@{/admin/attendance/{recordId}/delete(recordId=${record.id})}"
+                              method="post" class="delete-form">
+                            <button type="submit"
+                                    class="delete-attendance-button"
+                                    title="حذف تردد"
+                                    onclick="return confirm('آیا از حذف این تردد مطمئن هستید؟')">
+                                حذف
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

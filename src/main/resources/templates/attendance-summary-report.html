@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گزارش خلاصه کارکرد کارکنان | SUTECH</title>
+    <script th:src="@{/js/dark-mode.js(v=1)}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css(v=24)}">
+</head>
+<body class="section-ui-page summary-report-page">
+
+<main class="page-container">
+
+    <header class="page-header section-page-header">
+        <div>
+            <h1>گزارش خلاصه کارکرد کارکنان</h1>
+            <p>
+                گزارش تجمیعی حضور، غیبت، مرخصی، مأموریت،
+                تعطیلی رسمی و کارکرد کارکنان
+            </p>
+        </div>
+        <div class="header-actions">
+            <a class="header-link" th:href="@{/admin/reports/daily-attendance}">گزارش روزانه</a>
+            <a class="header-link" th:href="@{/admin/dashboard}">بازگشت به داشبورد</a>
+        </div>
+    </header>
+
+    <div th:if="${reportError != null}"
+         class="alert alert-danger section-alert"
+         th:text="${reportError}">
+        خطا در گزارش
+    </div>
+
+    <nav class="month-navigation" aria-label="جابه‌جایی ماه">
+        <a class="month-button previous-month-button"
+           th:href="@{/admin/reports/attendance-summary(
+               fromDate=${previousMonthFromDate},
+               toDate=${previousMonthToDate},
+               employeeId=${selectedEmployeeId}
+           )}">
+            <span>→</span>
+            <span>ماه قبل</span>
+        </a>
+
+        <a class="month-button current-month-button"
+           th:href="@{/admin/reports/attendance-summary(
+               fromDate=${currentMonthFromDate},
+               toDate=${currentMonthToDate},
+               employeeId=${selectedEmployeeId}
+           )}">
+            ماه جاری
+        </a>
+
+        <a class="month-button next-month-button"
+           th:href="@{/admin/reports/attendance-summary(
+               fromDate=${nextMonthFromDate},
+               toDate=${nextMonthToDate},
+               employeeId=${selectedEmployeeId}
+           )}">
+            <span>ماه بعد</span>
+            <span>←</span>
+        </a>
+    </nav>
+
+    <section class="filter-card report-filter-card">
+        <div class="table-title">
+            <div>
+                <h2>فیلتر گزارش</h2>
+                <p>بازه زمانی و کارمند موردنظر را انتخاب کنید.</p>
+            </div>
+        </div>
+
+        <form class="filter-form report-filter-form"
+              method="get"
+              th:action="@{/admin/reports/attendance-summary}">
+
+            <div class="form-group">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate" name="fromDate" type="date" required th:value="${fromDate}">
+            </div>
+
+            <div class="form-group">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate" name="toDate" type="date" required th:value="${toDate}">
+            </div>
+
+            <div class="form-group">
+                <label for="employeeId">کارمند</label>
+                <select id="employeeId" name="employeeId">
+                    <option value="">همه کارکنان</option>
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:selected="${selectedEmployeeId != null and selectedEmployeeId.equals(employee.id)}"
+                            th:text="${employee.personnelCode + ' - ' + employee.firstName + ' ' + employee.lastName}">
+                        EMP-1001 - علی رضایی
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-actions report-filter-actions">
+                <button type="submit" class="button search-button">نمایش گزارش</button>
+
+                <button type="submit"
+                        name="analyze"
+                        value="true"
+                        class="button ai-button"
+                        th:disabled="${aiAvailable == null or !aiAvailable}">
+                    ✨ تحلیل هوشمند
+                </button>
+
+                <button type="submit"
+                        class="button excel-button"
+                        th:formaction="@{/admin/reports/attendance-summary/excel}">
+                    دانلود اکسل
+                </button>
+
+                <a class="button reset-button"
+                   th:href="@{/admin/reports/attendance-summary}">
+                    پاک‌کردن فیلتر
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <section class="summary-grid report-summary-grid">
+        <article class="summary-card employee-card">
+            <span class="summary-title">تعداد کارکنان</span>
+            <strong class="summary-value" th:text="${rowCount != null ? rowCount : 0}">0</strong>
+        </article>
+
+        <article class="summary-card present-card">
+            <span class="summary-title">مجموع روزهای حضور</span>
+            <strong class="summary-value" th:text="${totalPresentDays != null ? totalPresentDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card absent-card">
+            <span class="summary-title">مجموع روزهای غیبت</span>
+            <strong class="summary-value" th:text="${totalAbsentDays != null ? totalAbsentDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card leave-card">
+            <span class="summary-title">مجموع روزهای مرخصی</span>
+            <strong class="summary-value" th:text="${totalLeaveDays != null ? totalLeaveDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card mission-card">
+            <span class="summary-title">مجموع روزهای مأموریت</span>
+            <strong class="summary-value" th:text="${totalMissionDays != null ? totalMissionDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card holiday-card">
+            <span class="summary-title">مجموع تعطیلات رسمی</span>
+            <strong class="summary-value" th:text="${totalHolidayDays != null ? totalHolidayDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card incomplete-card">
+            <span class="summary-title">مجموع ترددهای ناقص</span>
+            <strong class="summary-value" th:text="${totalIncompleteDays != null ? totalIncompleteDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card no-shift-card">
+            <span class="summary-title">مجموع روزهای بدون شیفت</span>
+            <strong class="summary-value" th:text="${totalNoShiftDays != null ? totalNoShiftDays : 0}">0</strong>
+        </article>
+
+        <article class="summary-card worked-card">
+            <span class="summary-title">مجموع کارکرد</span>
+            <strong class="summary-value duration-value">
+                <span th:text="${totalWorkedHours != null ? totalWorkedHours : 0}">0</span>
+                <span>ساعت و</span>
+                <span th:text="${totalWorkedRemainingMinutes != null ? totalWorkedRemainingMinutes : 0}">0</span>
+                <span>دقیقه</span>
+            </strong>
+        </article>
+
+        <article class="summary-card late-card">
+            <span class="summary-title">مجموع تأخیر</span>
+            <strong class="summary-value duration-value">
+                <span th:text="${totalLateHours != null ? totalLateHours : 0}">0</span>
+                <span>ساعت و</span>
+                <span th:text="${totalLateRemainingMinutes != null ? totalLateRemainingMinutes : 0}">0</span>
+                <span>دقیقه</span>
+            </strong>
+        </article>
+
+        <article class="summary-card early-card">
+            <span class="summary-title">مجموع خروج زودهنگام</span>
+            <strong class="summary-value duration-value">
+                <span th:text="${totalEarlyLeaveHours != null ? totalEarlyLeaveHours : 0}">0</span>
+                <span>ساعت و</span>
+                <span th:text="${totalEarlyLeaveRemainingMinutes != null ? totalEarlyLeaveRemainingMinutes : 0}">0</span>
+                <span>دقیقه</span>
+            </strong>
+        </article>
+    </section>
+
+    <section th:if="${aiAnalysis != null}" class="ai-analysis-card table-card">
+        <div class="ai-analysis-header table-title">
+            <div>
+                <h2>تحلیل هوشمند گزارش</h2>
+                <p>تحلیل بر اساس آمار تجمیعی و بدون اطلاعات هویتی کارکنان</p>
+            </div>
+            <span class="ai-badge">Gemini</span>
+        </div>
+        <div class="ai-analysis-content" th:text="${aiAnalysis}">تحلیل هوشمند</div>
+    </section>
+
+    <div th:if="${aiError != null}"
+         class="alert alert-danger section-alert"
+         th:text="${aiError}">
+        خطا در تحلیل هوشمند
+    </div>
+
+    <section class="table-card report-table-card">
+        <div class="table-title">
+            <div>
+                <h2>خلاصه کارکرد کارکنان</h2>
+                <p>هر ردیف جمع اطلاعات یک کارمند در بازه انتخاب‌شده است.</p>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>واحد سازمانی</th>
+                    <th>روزهای حضور</th>
+                    <th>روزهای غیبت</th>
+                    <th>مرخصی</th>
+                    <th>مأموریت</th>
+                    <th>تعطیل رسمی</th>
+                    <th>تردد ناقص</th>
+                    <th>بدون شیفت</th>
+                    <th>مجموع کارکرد</th>
+                    <th>مجموع تأخیر</th>
+                    <th>مجموع خروج زودهنگام</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row, rowStat : ${summaryRows}">
+                    <td th:text="${rowStat.count}">1</td>
+                    <td>
+                        <strong class="employee-name"
+                                th:text="|${row.employee.firstName} ${row.employee.lastName}|">
+                            علی رضایی
+                        </strong>
+                    </td>
+                    <td th:text="${row.employee.personnelCode}">EMP-1001</td>
+                    <td th:text="${row.employee.department != null ? row.employee.department.name : '—'}">امور اداری</td>
+                    <td><span class="count-badge present-badge" th:text="${row.presentDays}">0</span></td>
+                    <td><span class="count-badge absent-badge" th:text="${row.absentDays}">0</span></td>
+                    <td><span class="count-badge leave-badge" th:text="${row.leaveDays}">0</span></td>
+                    <td><span class="count-badge mission-badge" th:text="${row.missionDays}">0</span></td>
+                    <td><span class="count-badge holiday-badge" th:text="${row.holidayDays}">0</span></td>
+                    <td><span class="count-badge incomplete-badge" th:text="${row.incompleteDays}">0</span></td>
+                    <td><span class="count-badge no-shift-badge" th:text="${row.noShiftDays}">0</span></td>
+                    <td>
+                        <span class="worked-time">
+                            <span th:text="${row.totalWorkedHours}">0</span> ساعت و
+                            <span th:text="${row.totalWorkedRemainingMinutes}">0</span> دقیقه
+                        </span>
+                    </td>
+                    <td>
+                        <span th:if="${row.totalLateMinutes > 0}" class="late-time">
+                            <span th:text="${row.totalLateHours}">0</span> ساعت و
+                            <span th:text="${row.totalLateRemainingMinutes}">0</span> دقیقه
+                        </span>
+                        <span th:unless="${row.totalLateMinutes > 0}" class="zero-value">—</span>
+                    </td>
+                    <td>
+                        <span th:if="${row.totalEarlyLeaveMinutes > 0}" class="early-time">
+                            <span th:text="${row.totalEarlyLeaveHours}">0</span> ساعت و
+                            <span th:text="${row.totalEarlyLeaveRemainingMinutes}">0</span> دقیقه
+                        </span>
+                        <span th:unless="${row.totalEarlyLeaveMinutes > 0}" class="zero-value">—</span>
+                    </td>
+                </tr>
+
+                <tr th:if="${summaryRows == null or summaryRows.isEmpty()}" class="empty-row">
+                    <td colspan="14">برای بازه انتخاب‌شده گزارشی وجود ندارد.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

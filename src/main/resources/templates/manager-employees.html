@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        کارکنان واحد من | مدیر بخش
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/manager-portal.css?v=2"
+          th:href="@{/css/manager-portal.css(v=2)}">
+
+</head>
+
+
+<body class="manager-portal-page">
+
+
+<main class="manager-layout">
+
+
+    <header class="manager-topbar">
+
+
+        <div class="manager-heading">
+
+            <span class="manager-eyebrow">
+                مدیریت واحد سازمانی
+            </span>
+
+            <h1>
+                کارکنان واحد من
+            </h1>
+
+            <p>
+
+                مشاهده کارکنان واحد
+
+                <strong th:text="${department.name}">
+                    واحد سازمانی
+                </strong>
+
+            </p>
+
+        </div>
+
+
+        <div class="manager-profile">
+
+
+            <div class="manager-avatar"
+                 th:text="${manager.firstName != null
+                 and !manager.firstName.isEmpty()
+                 ? manager.firstName.substring(0,1)
+                 : 'م'}">
+
+                م
+
+            </div>
+
+
+            <div>
+
+                <strong th:text="|${manager.firstName} ${manager.lastName}|">
+                    مدیر بخش
+                </strong>
+
+                <span th:text="|${department.name} - ${manager.personnelCode}|">
+                    واحد سازمانی
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- منوی مشترک -->
+
+    <div th:replace="~{fragments/manager-nav :: managerNav('employees')}"></div>
+
+
+    <section class="manager-welcome-panel">
+
+
+        <div>
+
+            <span class="welcome-label">
+                واحد تحت مدیریت شما
+            </span>
+
+            <h2 th:text="${department.name}">
+                واحد سازمانی
+            </h2>
+
+            <p>
+                فقط کارکنان این واحد سازمانی برای شما نمایش داده می‌شوند.
+            </p>
+
+        </div>
+
+
+        <div class="welcome-code">
+
+            <span>
+                کد واحد
+            </span>
+
+            <strong th:text="${department.code}">
+                CODE
+            </strong>
+
+        </div>
+
+
+    </section>
+
+
+    <section class="manager-stat-grid manager-stat-grid-small">
+
+
+        <article class="manager-stat-card total">
+
+            <span>
+                کل کارکنان واحد
+            </span>
+
+            <strong th:text="${totalCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card present">
+
+            <span>
+                کارکنان فعال
+            </span>
+
+            <strong th:text="${activeCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card neutral">
+
+            <span>
+                کارکنان غیرفعال
+            </span>
+
+            <strong th:text="${inactiveCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card rate">
+
+            <span>
+                واحد سازمانی
+            </span>
+
+            <strong th:text="${department.code}">
+                —
+            </strong>
+
+            <small th:text="${department.name}">
+                واحد
+            </small>
+
+        </article>
+
+
+    </section>
+
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    فهرست کارکنان واحد
+                </h2>
+
+                <p>
+                    اطلاعات پرسنلی کارکنانی که در واحد شما قرار دارند.
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/manager/attendance}"
+               class="manager-header-button">
+
+                گزارش حضور و غیاب
+
+            </a>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>کارمند</th>
+
+                    <th>کد پرسنلی</th>
+
+                    <th>کد ملی</th>
+
+                    <th>نوع نیرو</th>
+
+                    <th>واحد سازمانی</th>
+
+                    <th>وضعیت</th>
+
+                    <th>گزارش</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="employee, state : ${employees}">
+
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${employee.firstName} ${employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                            <span th:text="${employee.personnelCode}">
+                                EMP
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${employee.personnelCode}">
+                        EMP
+                    </td>
+
+
+                    <td th:text="${employee.nationalCode != null
+                    ? employee.nationalCode
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${employee.employeeType != null
+                    ? employee.employeeType.title
+                    : 'تعیین نشده'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="${employee.department != null
+                            ? employee.department.name
+                            : 'تعیین نشده'}">
+                                واحد
+                            </strong>
+
+                            <span th:if="${employee.department != null}"
+                                  th:text="${employee.department.code}">
+                                CODE
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <span th:if="${employee.active}"
+                              class="manager-status-badge status-present">
+                            فعال
+                        </span>
+
+                        <span th:unless="${employee.active}"
+                              class="manager-status-badge status-no-shift">
+                            غیرفعال
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <a th:if="${employee.active}"
+                           class="table-action-link"
+                           th:href="@{/manager/attendance(employeeId=${employee.id})}">
+
+                            مشاهده گزارش
+
+                        </a>
+
+                        <span th:unless="${employee.active}">
+                            —
+                        </span>
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${employees == null or employees.isEmpty()}">
+
+                    <td colspan="8"
+                        class="manager-empty-state">
+
+                        هیچ کارمندی در این واحد سازمانی وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

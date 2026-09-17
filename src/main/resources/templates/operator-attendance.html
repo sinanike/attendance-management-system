@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>اصلاح و مدیریت تردد | اپراتور</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                عملیات تردد
+            </span>
+
+            <h1>
+                اصلاح و مدیریت ترددها
+            </h1>
+
+            <p>
+                رکوردهای خام دستگاه فقط مشاهده می‌شوند؛
+                اصلاحات به‌صورت رکورد دستی ثبت می‌شوند.
+            </p>
+        </div>
+
+        <a th:href="@{/operator/attendance/new}"
+           class="portal-button primary">
+            + ثبت اصلاح دستی
+        </a>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('attendance')}"></div>
+
+    <div th:if="${successMessage}"
+         class="portal-alert success"
+         th:text="${successMessage}">
+        موفق
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>فهرست ترددها</h2>
+                <p>
+                    <strong th:text="${recordCount}">0</strong>
+                    رکورد در سامانه
+                </p>
+            </div>
+
+            <input id="portalTableSearch"
+                   class="portal-search"
+                   type="search"
+                   placeholder="جست‌وجوی نام، کد پرسنلی، نوع یا منبع...">
+        </div>
+
+        <div class="portal-table-wrapper">
+
+            <table class="portal-table"
+                   id="portalSearchTable">
+
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>واحد</th>
+                    <th>تاریخ</th>
+                    <th>ساعت</th>
+                    <th>نوع</th>
+                    <th>منبع</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="record, state : ${attendanceRecords}"
+                    class="portal-search-row">
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+                    <td th:text="|${record.employee.firstName} ${record.employee.lastName}|">
+                        کارمند
+                    </td>
+
+                    <td th:text="${record.employee.personnelCode}">
+                        EMP
+                    </td>
+
+                    <td th:text="${record.employee.department != null
+                    ? record.employee.department.name
+                    : '—'}">
+                        واحد
+                    </td>
+
+                    <td th:text="${#temporals.format(record.eventTime, 'yyyy/MM/dd')}">
+                        -
+                    </td>
+
+                    <td th:text="${#temporals.format(record.eventTime, 'HH:mm')}">
+                        -
+                    </td>
+
+                    <td>
+                        <span class="portal-badge"
+                              th:classappend="${record.attendanceType.name() == 'ENTRY'}
+                              ? ' success'
+                              : ' info'"
+                              th:text="${record.attendanceType.displayName}">
+                            ورود
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="portal-badge"
+                              th:classappend="${record.attendanceSource.name() == 'MANUAL'}
+                              ? ' warning'
+                              : ' neutral'"
+                              th:text="${record.attendanceSource.displayName}">
+                            منبع
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <div class="portal-actions"
+                             th:if="${record.attendanceSource.name() == 'MANUAL'}">
+
+                            <a th:href="@{/operator/attendance/{id}/edit(id=${record.id})}"
+                               class="portal-mini-button">
+                                ویرایش
+                            </a>
+
+                            <form method="post"
+                                  th:action="@{/operator/attendance/{id}/delete(id=${record.id})}"
+                                  onsubmit="return confirm('این اصلاح دستی حذف شود؟');">
+
+                                <button type="submit"
+                                        class="portal-mini-button danger">
+                                    حذف
+                                </button>
+                            </form>
+
+                        </div>
+
+                        <span th:unless="${record.attendanceSource.name() == 'MANUAL'}"
+                              class="portal-muted">
+                            رکورد خام دستگاه
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr th:if="${attendanceRecords == null or attendanceRecords.isEmpty()}">
+                    <td colspan="9"
+                        class="portal-empty">
+                        هنوز ترددی در سامانه ثبت نشده است.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+    (() => {
+        const input =
+            document.getElementById("portalTableSearch");
+
+        if (!input) {
+            return;
+        }
+
+        const rows =
+            document.querySelectorAll(".portal-search-row");
+
+        input.addEventListener("input", () => {
+            const value =
+                input.value
+                    .trim()
+                    .toLowerCase();
+
+            rows.forEach(row => {
+                row.style.display =
+                    row.textContent
+                        .toLowerCase()
+                        .includes(value)
+                        ? ""
+                        : "none";
+            });
+        });
+    })();
+</script>
+
+</body>
+</html>

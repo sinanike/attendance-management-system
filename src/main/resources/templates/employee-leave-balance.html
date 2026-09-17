@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مانده مرخصی | کارمند</title>
+    <link rel="stylesheet" th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+<body class="portal-page">
+<main class="portal-shell narrow">
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">پنل کارمند</span>
+            <h1>مانده مرخصی سالانه</h1>
+            <p th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">کارمند</p>
+        </div>
+    </header>
+
+    <nav class="portal-nav">
+        <a th:href="@{/employee/dashboard}">داشبورد</a>
+        <a th:href="@{/employee/attendance}">سوابق حضور و غیاب</a>
+        <a th:href="@{/employee/leaves}">درخواست‌های مرخصی</a>
+        <a class="active" th:href="@{/employee/leave-balance}">مانده مرخصی</a>
+        <a th:href="@{/employee/overtime}">اضافه‌کاری</a>
+    </nav>
+
+    <section class="portal-panel">
+        <form class="portal-filter" method="get" th:action="@{/employee/leave-balance}">
+            <div class="portal-field">
+                <label for="year">سال شمسی</label>
+                <input id="year" type="number" name="year" min="1300" max="1600" th:value="${year}" required>
+            </div>
+            <div class="portal-filter-actions">
+                <button class="portal-button primary" type="submit">نمایش</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="portal-stat-grid">
+        <article class="portal-stat-card info">
+            <span>سهمیه سالانه</span>
+            <strong th:text="${balance.annualAllowanceDays}">0</strong>
+            <small>روز</small>
+        </article>
+        <article class="portal-stat-card warning">
+            <span>مرخصی مصرف‌شده</span>
+            <strong th:text="${balance.usedDays}">0</strong>
+            <small>روز مؤثر کاری</small>
+        </article>
+        <article class="portal-stat-card success">
+            <span>مانده مرخصی</span>
+            <strong th:text="${balance.remainingDays}">0</strong>
+            <small>روز</small>
+        </article>
+    </section>
+
+    <section class="portal-panel">
+        <div class="portal-note">
+            مرخصی مصرف‌شده از روزهایی محاسبه می‌شود که موتور حضور و غیاب وضعیت آن‌ها را «مرخصی» تشخیص داده است؛ تعطیلات و روزهای بدون شیفت از سهمیه کم نمی‌شوند.
+        </div>
+    </section>
+</main>
+</body>
+</html>

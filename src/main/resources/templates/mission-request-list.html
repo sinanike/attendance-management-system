@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        درخواست‌های مأموریت کارکنان | SUTECH
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=23"
+          th:href="@{/css/admin-dashboard.css(v=23)}">
+
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+    <style>
+
+        /*
+         * ==========================================
+         * پس‌زمینه صفحه مأموریت
+         * همان تصویر صفحه تعطیلات رسمی
+         * ==========================================
+         */
+
+        body.mission-management-page {
+
+            --section-background:
+                    url("/css/persepolis-login.webp");
+        }
+
+
+        /*
+         * ==========================================
+         * صفحه اصلی
+         * ==========================================
+         */
+
+        .mission-page {
+
+            width:
+                    min(
+                            1480px,
+                            calc(100% - 56px)
+                    );
+
+            min-height: 100vh;
+
+            margin:
+                    0 auto;
+
+            padding:
+                    32px 0 64px;
+        }
+
+
+        /*
+         * ==========================================
+         * هدر مأموریت
+         *
+         * خود رنگ و تصویر اصلی
+         * از section-page-header می‌آید.
+         * ==========================================
+         */
+
+        .mission-page-header {
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        /*
+         * قاب طلایی مشابه صفحه تعطیلات
+         */
+
+        .mission-page-header::before {
+
+            position: absolute;
+
+            inset: 10px;
+
+            content: "";
+
+            pointer-events: none;
+
+            border:
+                    1px solid
+                    rgba(
+                            214,
+                            173,
+                            69,
+                            0.82
+                    );
+
+            border-radius:
+                    16px;
+        }
+
+
+        /*
+         * خط تزئینی طلایی گوشه بالا
+         */
+
+        .mission-page-header::after {
+
+            position: absolute;
+
+            top: 0;
+
+            right: 0;
+
+            width: 170px;
+
+            height: 3px;
+
+            content: "";
+
+            background:
+                    linear-gradient(
+                            90deg,
+                            transparent,
+                            #d6ad45
+                    );
+        }
+
+
+        /*
+         * متن هدر باید روی قاب باشد
+         */
+
+        .mission-heading,
+        .mission-header-actions {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /*
+         * ==========================================
+         * پیام‌ها
+         * ==========================================
+         */
+
+        .message {
+
+            margin-bottom: 18px;
+
+            padding:
+                    13px 16px;
+
+            border-radius:
+                    10px;
+
+            font-size:
+                    13px;
+
+            font-weight:
+                    bold;
+        }
+
+
+        .message-success {
+
+            color:
+                    #166534;
+
+            background:
+                    #ecfdf3;
+
+            border:
+                    1px solid #bbf7d0;
+        }
+
+
+        .message-error {
+
+            color:
+                    #991b1b;
+
+            background:
+                    #fef2f2;
+
+            border:
+                    1px solid #fecaca;
+        }
+
+
+        /*
+         * ==========================================
+         * کارت‌های آماری
+         * ==========================================
+         */
+
+        .mission-summary-grid {
+
+            margin-bottom:
+                    22px;
+
+            display:
+                    grid;
+
+            grid-template-columns:
+                    repeat(
+                            4,
+                            minmax(
+                                    150px,
+                                    1fr
+                            )
+                    );
+
+            gap:
+                    14px;
+        }
+
+
+        .mission-summary-card {
+
+            padding:
+                    18px 20px;
+
+            background:
+                    rgba(
+                            255,
+                            255,
+                            255,
+                            0.97
+                    );
+
+            border:
+                    1px solid
+                    rgba(
+                            255,
+                            255,
+                            255,
+                            0.82
+                    );
+
+            border-radius:
+                    16px;
+
+            box-shadow:
+                    0 14px 35px
+                    rgba(
+                            2,
+                            23,
+                            45,
+                            0.18
+                    );
+        }
+
+
+        .mission-summary-card span {
+
+            display:
+                    block;
+
+            margin-bottom:
+                    8px;
+
+            color:
+                    #718487;
+
+            font-size:
+                    12px;
+        }
+
+
+        .mission-summary-card strong {
+
+            color:
+                    #163c3e;
+
+            font-size:
+                    25px;
+        }
+
+
+        .mission-summary-card.total {
+
+            border-top:
+                    4px solid
+                    #126467;
+        }
+
+
+        .mission-summary-card.pending {
+
+            border-top:
+                    4px solid
+                    #d97706;
+        }
+
+
+        .mission-summary-card.approved {
+
+            border-top:
+                    4px solid
+                    #16a34a;
+        }
+
+
+        .mission-summary-card.rejected {
+
+            border-top:
+                    4px solid
+                    #dc2626;
+        }
+
+
+        /*
+         * ==========================================
+         * پنل اصلی درخواست‌ها
+         * ==========================================
+         */
+
+        .mission-panel {
+
+            overflow:
+                    hidden;
+
+            background:
+                    rgba(
+                            255,
+                            255,
+                            255,
+                            0.97
+                    );
+
+            border:
+                    1px solid
+                    rgba(
+                            255,
+                            255,
+                            255,
+                            0.82
+                    );
+
+            border-radius:
+                    18px;
+
+            box-shadow:
+                    0 18px 45px
+                    rgba(
+                            2,
+                            23,
+                            45,
+                            0.23
+                    );
+        }
+
+
+        .mission-panel-header {
+
+            padding:
+                    19px 21px;
+
+            display:
+                    flex;
+
+            align-items:
+                    center;
+
+            justify-content:
+                    space-between;
+
+            gap:
+                    18px;
+
+            border-bottom:
+                    1px solid #e5eeee;
+        }
+
+
+        .mission-panel-header h2 {
+
+            margin:
+                    0 0 6px;
+
+            color:
+                    #163c3e;
+
+            font-size:
+                    18px;
+        }
+
+
+        .mission-panel-header p {
+
+            margin:
+                    0;
+
+            color:
+                    #819193;
+
+            font-size:
+                    12px;
+        }
+
+
+        /*
+         * ==========================================
+         * فیلترها
+         * ==========================================
+         */
+
+        .filters {
+
+            display:
+                    flex;
+
+            flex-wrap:
+                    wrap;
+
+            gap:
+                    7px;
+        }
+
+
+        .filter-button {
+
+            padding:
+                    8px 12px;
+
+            color:
+                    #52686b;
+
+            background:
+                    #f5f8f8;
+
+            border:
+                    1px solid #dce6e7;
+
+            border-radius:
+                    9px;
+
+            font-size:
+                    12px;
+
+            text-decoration:
+                    none;
+
+            transition:
+                    0.18s ease;
+        }
+
+
+        .filter-button:hover,
+        .filter-button.active {
+
+            color:
+                    #ffffff;
+
+            background:
+                    #126467;
+
+            border-color:
+                    #126467;
+        }
+
+
+        /*
+         * ==========================================
+         * جدول
+         * ==========================================
+         */
+
+        .mission-table-wrapper {
+
+            overflow-x:
+                    auto;
+        }
+
+
+        .mission-table {
+
+            width:
+                    100%;
+
+            min-width:
+                    1400px;
+
+            border-collapse:
+                    collapse;
+
+            font-size:
+                    13px;
+        }
+
+
+        .mission-table thead {
+
+            color:
+                    #476063;
+
+            background:
+                    #f5f9f9;
+        }
+
+
+        .mission-table th,
+        .mission-table td {
+
+            padding:
+                    14px 10px;
+
+            border-bottom:
+                    1px solid #e6eeee;
+
+            text-align:
+                    center;
+
+            vertical-align:
+                    middle;
+        }
+
+
+        .mission-table tbody tr:hover {
+
+            background:
+                    #fafcfc;
+        }
+
+
+        /*
+         * ==========================================
+         * اطلاعات کارمند
+         * ==========================================
+         */
+
+        .employee-cell {
+
+            text-align:
+                    right !important;
+        }
+
+
+        .employee-name {
+
+            display:
+                    block;
+
+            color:
+                    #163c3e;
+
+            font-weight:
+                    bold;
+        }
+
+
+        .employee-code {
+
+            display:
+                    block;
+
+            margin-top:
+                    4px;
+
+            color:
+                    #8a999b;
+
+            font-size:
+                    11px;
+        }
+
+
+        /*
+         * ==========================================
+         * مقصد و شرح مأموریت
+         * ==========================================
+         */
+
+        .destination-cell {
+
+            color:
+                    #334b4e;
+
+            font-weight:
+                    bold;
+        }
+
+
+        .purpose-cell {
+
+            max-width:
+                    280px;
+
+            color:
+                    #52686b;
+
+            text-align:
+                    right !important;
+
+            white-space:
+                    normal;
+        }
+
+
+        /*
+         * ==========================================
+         * وضعیت‌ها
+         * ==========================================
+         */
+
+        .status-badge {
+
+            min-width:
+                    95px;
+
+            padding:
+                    6px 10px;
+
+            display:
+                    inline-flex;
+
+            align-items:
+                    center;
+
+            justify-content:
+                    center;
+
+            border-radius:
+                    20px;
+
+            font-size:
+                    12px;
+
+            font-weight:
+                    bold;
+        }
+
+
+        .status-pending {
+
+            color:
+                    #92400e;
+
+            background:
+                    #fef3c7;
+        }
+
+
+        .status-approved {
+
+            color:
+                    #166534;
+
+            background:
+                    #dcfce7;
+        }
+
+
+        .status-rejected {
+
+            color:
+                    #991b1b;
+
+            background:
+                    #fee2e2;
+        }
+
+
+        /*
+         * ==========================================
+         * بررسی مدیر
+         * ==========================================
+         */
+
+        .review-box {
+
+            min-width:
+                    240px;
+
+            display:
+                    flex;
+
+            flex-direction:
+                    column;
+
+            gap:
+                    7px;
+        }
+
+
+        .review-box form {
+
+            margin:
+                    0;
+        }
+
+
+        .review-note {
+
+            width:
+                    100%;
+
+            min-height:
+                    52px;
+
+            margin-bottom:
+                    6px;
+
+            padding:
+                    8px 10px;
+
+            color:
+                    #334b4e;
+
+            background:
+                    #fbfdfd;
+
+            border:
+                    1px solid #d8e4e5;
+
+            border-radius:
+                    8px;
+
+            outline:
+                    none;
+
+            font-family:
+                    inherit;
+
+            font-size:
+                    11px;
+
+            resize:
+                    vertical;
+        }
+
+
+        .review-note:focus {
+
+            border-color:
+                    #126467;
+
+            box-shadow:
+                    0 0 0 3px
+                    rgba(
+                            18,
+                            100,
+                            103,
+                            0.10
+                    );
+        }
+
+
+        .action-button {
+
+            width:
+                    100%;
+
+            padding:
+                    8px 11px;
+
+            border:
+                    none;
+
+            border-radius:
+                    8px;
+
+            cursor:
+                    pointer;
+
+            font-family:
+                    inherit;
+
+            font-size:
+                    11px;
+
+            font-weight:
+                    bold;
+
+            transition:
+                    0.18s ease;
+        }
+
+
+        .approve-button {
+
+            color:
+                    #166534;
+
+            background:
+                    #dcfce7;
+        }
+
+
+        .approve-button:hover {
+
+            background:
+                    #bbf7d0;
+        }
+
+
+        .reject-button {
+
+            color:
+                    #991b1b;
+
+            background:
+                    #fee2e2;
+        }
+
+
+        .reject-button:hover {
+
+            background:
+                    #fecaca;
+        }
+
+
+        .pending-button {
+
+            color:
+                    #92400e;
+
+            background:
+                    #fef3c7;
+        }
+
+
+        .pending-button:hover {
+
+            background:
+                    #fde68a;
+        }
+
+
+        .reviewed-note {
+
+            margin-bottom:
+                    7px;
+
+            padding:
+                    9px 10px;
+
+            color:
+                    #647577;
+
+            background:
+                    #f8fafc;
+
+            border:
+                    1px solid #e2e8f0;
+
+            border-radius:
+                    8px;
+
+            font-size:
+                    11px;
+
+            line-height:
+                    1.8;
+
+            white-space:
+                    normal;
+        }
+
+
+        /*
+         * ==========================================
+         * حالت خالی
+         * ==========================================
+         */
+
+        .empty-row td {
+
+            padding:
+                    50px 20px;
+
+            color:
+                    #718487;
+
+            text-align:
+                    center;
+        }
+
+
+        /*
+         * ==========================================
+         * Responsive
+         * ==========================================
+         */
+
+        @media (
+                max-width: 900px
+        ) {
+
+            .mission-summary-grid {
+
+                grid-template-columns:
+                        repeat(
+                                2,
+                                1fr
+                        );
+            }
+
+
+            .mission-panel-header {
+
+                align-items:
+                        stretch;
+
+                flex-direction:
+                        column;
+            }
+
+        }
+
+
+        @media (
+                max-width: 650px
+        ) {
+
+            .mission-page {
+
+                width:
+                        min(
+                                100% - 20px,
+                                1480px
+                        );
+
+                padding:
+                        18px 0 35px;
+            }
+
+
+            .mission-summary-grid {
+
+                grid-template-columns:
+                        1fr;
+            }
+
+
+            .mission-page-header::before {
+
+                inset:
+                        6px;
+            }
+
+        }
+        /* حذف کامل تزئین زرد مزاحم هدر */
+body.leave-management-page .leave-page-header::before,
+body.leave-management-page .leave-page-header::after,
+body.mission-management-page .mission-page-header::before,
+body.mission-management-page .mission-page-header::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* اگر خط طلایی زیر عنوان هم وجود داشت */
+body.leave-management-page .leave-page-header h1::after,
+body.mission-management-page .mission-page-header h1::after {
+    content: none !important;
+    display: none !important;
+}
+
+    </style>
+
+</head>
+
+
+<body class="section-ui-page mission-management-page">
+
+
+<main class="mission-page">
+
+
+    <!-- ==========================================
+         هدر تصویری
+         ========================================== -->
+
+    <header class="mission-page-header section-page-header">
+
+
+        <div class="mission-heading">
+
+            <h1>
+                درخواست‌های مأموریت کارکنان
+            </h1>
+
+            <p>
+                بررسی، تأیید و رد درخواست‌های مأموریت ثبت‌شده توسط کارکنان
+            </p>
+
+        </div>
+
+
+        <div class="mission-header-actions header-actions">
+
+            <a href="/admin/dashboard"
+               th:href="@{/admin/dashboard}"
+               class="header-link">
+
+                بازگشت به داشبورد
+
+            </a>
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==========================================
+         پیام موفقیت
+         ========================================== -->
+
+    <div th:if="${successMessage}"
+         class="message message-success"
+         th:text="${successMessage}">
+
+        عملیات با موفقیت انجام شد.
+
+    </div>
+
+
+    <!-- ==========================================
+         پیام خطا
+         ========================================== -->
+
+    <div th:if="${errorMessage}"
+         class="message message-error"
+         th:text="${errorMessage}">
+
+        انجام عملیات ممکن نشد.
+
+    </div>
+
+
+    <!-- ==========================================
+         آمار درخواست‌ها
+         ========================================== -->
+
+    <section class="mission-summary-grid">
+
+
+        <article class="mission-summary-card total">
+
+            <span>
+                همه درخواست‌ها
+            </span>
+
+            <strong th:text="${totalCount != null ? totalCount : 0}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="mission-summary-card pending">
+
+            <span>
+                در انتظار بررسی
+            </span>
+
+            <strong th:text="${pendingCount != null ? pendingCount : 0}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="mission-summary-card approved">
+
+            <span>
+                تأییدشده
+            </span>
+
+            <strong th:text="${approvedCount != null ? approvedCount : 0}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="mission-summary-card rejected">
+
+            <span>
+                ردشده
+            </span>
+
+            <strong th:text="${rejectedCount != null ? rejectedCount : 0}">
+                0
+            </strong>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         پنل درخواست‌ها
+         ========================================== -->
+
+    <section class="mission-panel">
+
+
+        <div class="mission-panel-header">
+
+
+            <div>
+
+                <h2>
+                    فهرست درخواست‌های مأموریت
+                </h2>
+
+                <p>
+                    درخواست‌ها را بر اساس وضعیت فیلتر و بررسی کنید.
+                </p>
+
+            </div>
+
+
+            <!-- ==================================
+                 فیلترها
+                 ================================== -->
+
+            <div class="filters">
+
+
+                <a th:href="@{/admin/missions}"
+                   class="filter-button"
+                   th:classappend="${selectedStatus == 'ALL'} ? ' active' : ''">
+
+                    همه
+
+                </a>
+
+
+                <a th:href="@{/admin/missions(status='PENDING')}"
+                   class="filter-button"
+                   th:classappend="${selectedStatus == 'PENDING'} ? ' active' : ''">
+
+                    در انتظار
+
+                </a>
+
+
+                <a th:href="@{/admin/missions(status='APPROVED')}"
+                   class="filter-button"
+                   th:classappend="${selectedStatus == 'APPROVED'} ? ' active' : ''">
+
+                    تأییدشده
+
+                </a>
+
+
+                <a th:href="@{/admin/missions(status='REJECTED')}"
+                   class="filter-button"
+                   th:classappend="${selectedStatus == 'REJECTED'} ? ' active' : ''">
+
+                    ردشده
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ======================================
+             جدول
+             ====================================== -->
+
+        <div class="mission-table-wrapper">
+
+
+            <table class="mission-table">
+
+
+                <thead>
+
+
+                <tr>
+
+                    <th>
+                        ردیف
+                    </th>
+
+                    <th>
+                        کارمند
+                    </th>
+
+                    <th>
+                        از تاریخ
+                    </th>
+
+                    <th>
+                        تا تاریخ
+                    </th>
+
+                    <th>
+                        مقصد
+                    </th>
+
+                    <th>
+                        شرح مأموریت
+                    </th>
+
+                    <th>
+                        وضعیت
+                    </th>
+
+                    <th>
+                        تاریخ ثبت
+                    </th>
+
+                    <th>
+                        بررسی مدیر
+                    </th>
+
+                </tr>
+
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="mission, iteration : ${missionRequests}">
+
+
+                    <!-- ردیف -->
+
+                    <td th:text="${iteration.count}">
+                        1
+                    </td>
+
+
+                    <!-- کارمند -->
+
+                    <td class="employee-cell">
+
+
+                        <span class="employee-name"
+                              th:text="|${mission.employee.firstName} ${mission.employee.lastName}|">
+
+                            علی رضایی
+
+                        </span>
+
+
+                        <span class="employee-code"
+                              th:text="${mission.employee.personnelCode}">
+
+                            EMP-1001
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- تاریخ شروع -->
+
+                    <td th:text="${mission.startDate != null
+                    ? #temporals.format(
+                    mission.startDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        2026/08/08
+
+                    </td>
+
+
+                    <!-- تاریخ پایان -->
+
+                    <td th:text="${mission.endDate != null
+                    ? #temporals.format(
+                    mission.endDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        2026/08/08
+
+                    </td>
+
+
+                    <!-- مقصد -->
+
+                    <td class="destination-cell"
+                        th:text="${mission.destination != null
+                        and !#strings.isEmpty(mission.destination)
+                        ? mission.destination
+                        : '—'}">
+
+                        تهران
+
+                    </td>
+
+
+                    <!-- شرح -->
+
+                    <td class="purpose-cell"
+                        th:text="${mission.purpose != null
+                        and !#strings.isEmpty(mission.purpose)
+                        ? mission.purpose
+                        : '—'}">
+
+                        جلسه اداری
+
+                    </td>
+
+
+                    <!-- وضعیت -->
+
+                    <td>
+
+
+                        <span th:if="${mission.pending}"
+                              class="status-badge status-pending">
+
+                            در انتظار بررسی
+
+                        </span>
+
+
+                        <span th:if="${mission.approved}"
+                              class="status-badge status-approved">
+
+                            تأیید شده
+
+                        </span>
+
+
+                        <span th:if="${mission.rejected}"
+                              class="status-badge status-rejected">
+
+                            رد شده
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- زمان ثبت -->
+
+                    <td th:text="${mission.createdAt != null
+                    ? #temporals.format(
+                    mission.createdAt,
+                    'yyyy/MM/dd HH:mm'
+                    )
+                    : '—'}">
+
+                        2026/08/08 10:30
+
+                    </td>
+
+
+                    <!-- ==================================
+                         عملیات مدیر
+                         ================================== -->
+
+                    <td>
+
+
+                        <!-- در انتظار بررسی -->
+
+                        <div th:if="${mission.pending}"
+                             class="review-box">
+
+
+                            <!-- تأیید -->
+
+                            <form method="post"
+                                  th:action="@{/admin/missions/{id}/approve(id=${mission.id})}">
+
+
+                                <textarea name="reviewNote"
+                                          class="review-note"
+                                          placeholder="یادداشت مدیر برای تأیید - اختیاری"></textarea>
+
+
+                                <button type="submit"
+                                        class="action-button approve-button">
+
+                                    تأیید درخواست
+
+                                </button>
+
+
+                            </form>
+
+
+                            <!-- رد -->
+
+                            <form method="post"
+                                  th:action="@{/admin/missions/{id}/reject(id=${mission.id})}">
+
+
+                                <textarea name="reviewNote"
+                                          class="review-note"
+                                          placeholder="علت رد درخواست - اختیاری"></textarea>
+
+
+                                <button type="submit"
+                                        class="action-button reject-button">
+
+                                    رد درخواست
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                        <!-- درخواست بررسی‌شده -->
+
+                        <div th:unless="${mission.pending}"
+                             class="review-box">
+
+
+                            <div class="reviewed-note">
+
+
+                                <strong>
+                                    یادداشت مدیر:
+                                </strong>
+
+
+                                <span th:text="${mission.reviewNote != null
+                                and !#strings.isEmpty(mission.reviewNote)
+                                ? mission.reviewNote
+                                : 'بدون یادداشت'}">
+
+                                    بدون یادداشت
+
+                                </span>
+
+
+                            </div>
+
+
+                            <form method="post"
+                                  th:action="@{/admin/missions/{id}/pending(id=${mission.id})}">
+
+
+                                <button type="submit"
+                                        class="action-button pending-button">
+
+                                    بازگرداندن برای بررسی مجدد
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                <!-- ==================================
+                     حالت بدون درخواست
+                     ================================== -->
+
+                <tr th:if="${missionRequests == null
+                or missionRequests.isEmpty()}"
+                    class="empty-row">
+
+
+                    <td colspan="9">
+
+                        هیچ درخواست مأموریتی با این وضعیت وجود ندارد.
+
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

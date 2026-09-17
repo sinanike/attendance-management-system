@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        پنل کارمند | سامانه حضور و غیاب
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/employee-portal.css(v=2)}">
+
+</head>
+
+
+<body class="employee-portal-page">
+
+
+<main class="employee-layout">
+
+
+    <!-- ==================================================
+         Header
+         ================================================== -->
+
+    <header class="employee-topbar">
+
+
+        <div class="employee-heading">
+
+            <h1>
+                پنل کارمند
+            </h1>
+
+            <p>
+                مشاهده وضعیت حضور و غیاب،
+                کارکرد، مرخصی و مأموریت‌های شخصی
+            </p>
+
+        </div>
+
+
+        <div class="employee-user-box">
+
+
+            <div class="employee-avatar"
+                 th:text="${employee.firstName != null
+                 and !employee.firstName.isEmpty()
+                 ? employee.firstName.substring(0,1)
+                 : 'ک'}">
+
+                ک
+
+            </div>
+
+
+            <div>
+
+                <div class="employee-user-name"
+                     th:text="|${employee.firstName} ${employee.lastName}|">
+
+                    علی رضایی
+
+                </div>
+
+
+                <div class="employee-user-code"
+                     th:text="|کد پرسنلی: ${employee.personnelCode}|">
+
+                    کد پرسنلی
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==================================================
+         Navigation
+         ================================================== -->
+
+    <nav class="employee-navigation">
+
+
+        <a th:href="@{/employee/dashboard}"
+           class="active">
+
+            داشبورد
+
+        </a>
+
+
+        <a th:href="@{/employee/attendance}">
+
+            کارکرد و تردد من
+
+        </a>
+
+
+        <a th:href="@{/employee/leaves}">
+
+            درخواست مرخصی
+
+        </a>
+
+
+        <a th:href="@{/employee/missions}">
+
+            درخواست مأموریت
+
+        </a>
+
+
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit"
+                    class="logout-button">
+
+                خروج از حساب
+
+            </button>
+
+        </form>
+
+
+    </nav>
+
+
+    <!-- ==================================================
+         Pending notification
+         ================================================== -->
+
+    <section class="employee-dashboard-alert"
+             th:if="${pendingRequestCount > 0}">
+
+
+        <div class="dashboard-alert-icon">
+
+            !
+
+        </div>
+
+
+        <div class="dashboard-alert-content">
+
+            <strong>
+                درخواست در انتظار بررسی دارید
+            </strong>
+
+
+            <span th:text="|${pendingRequestCount} درخواست شما هنوز توسط مدیر بررسی نشده است.|">
+
+                درخواست در انتظار
+
+            </span>
+
+        </div>
+
+
+        <div class="dashboard-alert-details">
+
+
+            <span th:if="${pendingLeaveCount > 0}"
+                  th:text="|مرخصی: ${pendingLeaveCount}|">
+
+                مرخصی
+
+            </span>
+
+
+            <span th:if="${pendingMissionCount > 0}"
+                  th:text="|مأموریت: ${pendingMissionCount}|">
+
+                مأموریت
+
+            </span>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Profile
+         ================================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    مشخصات سازمانی
+                </h2>
+
+                <p>
+                    اطلاعات ثبت‌شده برای حساب کاربری شما
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="profile-grid">
+
+
+            <div class="profile-item">
+
+                <span>
+                    نام و نام خانوادگی
+                </span>
+
+                <strong th:text="|${employee.firstName} ${employee.lastName}|">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>
+                    کد پرسنلی
+                </span>
+
+                <strong th:text="${employee.personnelCode}">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>
+                    واحد سازمانی
+                </span>
+
+                <strong th:text="${employee.department != null
+                ? employee.department.name
+                : 'تعیین نشده'}">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-item">
+
+                <span>
+                    نوع نیرو
+                </span>
+
+                <strong th:text="${employee.employeeType != null
+                ? employee.employeeType.title
+                : 'تعیین نشده'}">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Today
+         ================================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    وضعیت امروز
+                </h2>
+
+                <p th:text="|تاریخ ${today}|">
+
+                    امروز
+
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/employee/attendance}"
+               class="panel-header-link">
+
+                مشاهده جزئیات
+
+            </a>
+
+
+        </div>
+
+
+        <div class="today-status-card"
+             th:if="${todayRow != null}">
+
+
+            <!-- وضعیت -->
+
+            <div class="today-status-main">
+
+
+                <span class="today-status-title">
+
+                    وضعیت حضور امروز
+
+                </span>
+
+
+                <span class="status-badge"
+
+                      th:text="${todayRow.status.title}"
+
+                      th:classappend="${
+                      todayRow.status.name() == 'PRESENT'
+                      ? ' status-present'
+                      :
+                      todayRow.status.name() == 'ABSENT'
+                      ? ' status-absent'
+                      :
+                      todayRow.status.name() == 'INCOMPLETE'
+                      ? ' status-incomplete'
+                      :
+                      todayRow.status.name() == 'LEAVE'
+                      ? ' status-leave'
+                      :
+                      todayRow.status.name() == 'MISSION'
+                      ? ' status-mission'
+                      :
+                      todayRow.status.name() == 'HOLIDAY'
+                      ? ' status-holiday'
+                      :
+                      ' status-no-shift'
+                      }">
+
+                    حاضر
+
+                </span>
+
+
+            </div>
+
+
+            <!-- ورود -->
+
+            <div class="today-detail">
+
+                <span>
+                    اولین ورود
+                </span>
+
+                <strong class="time-value"
+                        th:text="${todayRow.firstCheckIn != null
+                        ? #temporals.format(
+                        todayRow.firstCheckIn,
+                        'HH:mm'
+                        )
+                        : '—'}">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+            <!-- خروج -->
+
+            <div class="today-detail">
+
+                <span>
+                    آخرین خروج
+                </span>
+
+                <strong class="time-value"
+                        th:text="${todayRow.lastCheckOut != null
+                        ? #temporals.format(
+                        todayRow.lastCheckOut,
+                        'HH:mm'
+                        )
+                        : '—'}">
+
+                    —
+
+                </strong>
+
+            </div>
+
+
+            <!-- کارکرد -->
+
+            <div class="today-detail">
+
+                <span>
+                    کارکرد
+                </span>
+
+                <strong th:text="|${todayRow.workedMinutes / 60} ساعت ${todayRow.workedMinutes % 60} دقیقه|">
+
+                    0 ساعت
+
+                </strong>
+
+            </div>
+
+
+            <!-- تاخیر -->
+
+            <div class="today-detail">
+
+                <span>
+                    تأخیر
+                </span>
+
+                <strong th:text="|${todayRow.lateMinutes} دقیقه|">
+
+                    0 دقیقه
+
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="empty-state"
+             th:if="${todayRow == null}">
+
+            اطلاعات حضور امروز موجود نیست.
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Monthly summary
+         ================================================== -->
+
+    <section class="employee-dashboard-section-title">
+
+
+        <div>
+
+            <h2>
+                خلاصه ماه جاری
+            </h2>
+
+            <p>
+                وضعیت کارکرد شما از ابتدای ماه تا امروز
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+    <section class="employee-card-grid dashboard-month-grid">
+
+
+        <!-- حاضر -->
+
+        <article class="employee-stat-card present">
+
+            <span class="employee-stat-label">
+
+                روزهای حضور
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.presentDays
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                حضور کامل
+
+            </div>
+
+        </article>
+
+
+        <!-- غایب -->
+
+        <article class="employee-stat-card absent">
+
+            <span class="employee-stat-label">
+
+                روزهای غیبت
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.absentDays
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                غیبت ثبت‌شده
+
+            </div>
+
+        </article>
+
+
+        <!-- ناقص -->
+
+        <article class="employee-stat-card warning">
+
+            <span class="employee-stat-label">
+
+                تردد ناقص
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.incompleteDays
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                ورود یا خروج ناقص
+
+            </div>
+
+        </article>
+
+
+        <!-- مرخصی -->
+
+        <article class="employee-stat-card leave">
+
+            <span class="employee-stat-label">
+
+                مرخصی
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.leaveDays
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                روز مرخصی
+
+            </div>
+
+        </article>
+
+
+        <!-- ماموریت -->
+
+        <article class="employee-stat-card mission">
+
+            <span class="employee-stat-label">
+
+                مأموریت
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.missionDays
+                    : 0}">
+
+                0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                روز مأموریت
+
+            </div>
+
+        </article>
+
+
+        <!-- کارکرد -->
+
+        <article class="employee-stat-card gold">
+
+            <span class="employee-stat-label">
+
+                مجموع کارکرد
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.totalWorkedHours
+                    + ':'
+                    + monthSummary.totalWorkedRemainingMinutes
+                    : '0:0'}">
+
+                0:0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                ساعت : دقیقه
+
+            </div>
+
+        </article>
+
+
+        <!-- تأخیر -->
+
+        <article class="employee-stat-card warning">
+
+            <span class="employee-stat-label">
+
+                مجموع تأخیر
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.totalLateHours
+                    + ':'
+                    + monthSummary.totalLateRemainingMinutes
+                    : '0:0'}">
+
+                0:0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                ساعت : دقیقه
+
+            </div>
+
+        </article>
+
+
+        <!-- خروج زودهنگام -->
+
+        <article class="employee-stat-card absent">
+
+            <span class="employee-stat-label">
+
+                خروج زودهنگام
+
+            </span>
+
+
+            <strong class="employee-stat-value"
+                    th:text="${monthSummary != null
+                    ? monthSummary.totalEarlyLeaveHours
+                    + ':'
+                    + monthSummary.totalEarlyLeaveRemainingMinutes
+                    : '0:0'}">
+
+                0:0
+
+            </strong>
+
+
+            <div class="employee-stat-note">
+
+                ساعت : دقیقه
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Request stats
+         ================================================== -->
+
+    <section class="employee-dashboard-section-title">
+
+
+        <div>
+
+            <h2>
+                وضعیت درخواست‌های من
+            </h2>
+
+            <p>
+                خلاصه وضعیت مرخصی و مأموریت
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+    <section class="dashboard-request-stat-grid">
+
+
+        <!-- مرخصی -->
+
+        <article class="dashboard-request-stat-card">
+
+
+            <div class="dashboard-request-stat-title">
+
+                مرخصی‌ها
+
+            </div>
+
+
+            <div class="dashboard-request-stat-values">
+
+
+                <div>
+
+                    <span>
+                        در انتظار
+                    </span>
+
+                    <strong th:text="${pendingLeaveCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        تأیید شده
+                    </span>
+
+                    <strong class="success-number"
+                            th:text="${approvedLeaveCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        رد شده
+                    </span>
+
+                    <strong class="danger-number"
+                            th:text="${rejectedLeaveCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <a th:href="@{/employee/leaves}">
+
+                مشاهده مرخصی‌ها
+
+            </a>
+
+
+        </article>
+
+
+        <!-- مأموریت -->
+
+        <article class="dashboard-request-stat-card">
+
+
+            <div class="dashboard-request-stat-title">
+
+                مأموریت‌ها
+
+            </div>
+
+
+            <div class="dashboard-request-stat-values">
+
+
+                <div>
+
+                    <span>
+                        در انتظار
+                    </span>
+
+                    <strong th:text="${pendingMissionCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        تأیید شده
+                    </span>
+
+                    <strong class="success-number"
+                            th:text="${approvedMissionCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        رد شده
+                    </span>
+
+                    <strong class="danger-number"
+                            th:text="${rejectedMissionCount}">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <a th:href="@{/employee/missions}">
+
+                مشاهده مأموریت‌ها
+
+            </a>
+
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Recent requests
+         ================================================== -->
+
+    <section class="dashboard-recent-grid">
+
+
+        <!-- آخرین مرخصی‌ها -->
+
+        <article class="employee-panel">
+
+
+            <div class="employee-panel-header">
+
+
+                <div>
+
+                    <h2>
+                        آخرین درخواست‌های مرخصی
+                    </h2>
+
+                    <p>
+                        پنج درخواست اخیر شما
+                    </p>
+
+                </div>
+
+
+                <a th:href="@{/employee/leaves}"
+                   class="panel-header-link">
+
+                    مشاهده همه
+
+                </a>
+
+
+            </div>
+
+
+            <div class="dashboard-mini-list">
+
+
+                <div class="dashboard-mini-item"
+                     th:each="leave : ${recentLeaveRequests}">
+
+
+                    <div class="dashboard-mini-main">
+
+
+                        <strong th:text="${
+                        leave.leaveType.name() == 'DAILY'
+                        ? 'مرخصی روزانه'
+                        :
+                        leave.leaveType.name() == 'HOURLY'
+                        ? 'مرخصی ساعتی'
+                        :
+                        leave.leaveType.name() == 'SICK'
+                        ? 'مرخصی استعلاجی'
+                        :
+                        'سایر'
+                        }">
+
+                            مرخصی
+
+                        </strong>
+
+
+                        <span th:text="|${leave.startDate} تا ${leave.endDate}|">
+
+                            —
+
+                        </span>
+
+
+                    </div>
+
+
+                    <span th:if="${leave.pending}"
+                          class="status-badge status-pending">
+
+                        در انتظار
+
+                    </span>
+
+
+                    <span th:if="${leave.approved}"
+                          class="status-badge status-approved">
+
+                        تأیید شده
+
+                    </span>
+
+
+                    <span th:if="${leave.rejected}"
+                          class="status-badge status-rejected">
+
+                        رد شده
+
+                    </span>
+
+
+                </div>
+
+
+                <div class="dashboard-list-empty"
+                     th:if="${recentLeaveRequests == null
+                     or recentLeaveRequests.isEmpty()}">
+
+                    هنوز درخواست مرخصی ثبت نکرده‌اید.
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+        <!-- آخرین مأموریت‌ها -->
+
+        <article class="employee-panel">
+
+
+            <div class="employee-panel-header">
+
+
+                <div>
+
+                    <h2>
+                        آخرین درخواست‌های مأموریت
+                    </h2>
+
+                    <p>
+                        پنج درخواست اخیر شما
+                    </p>
+
+                </div>
+
+
+                <a th:href="@{/employee/missions}"
+                   class="panel-header-link">
+
+                    مشاهده همه
+
+                </a>
+
+
+            </div>
+
+
+            <div class="dashboard-mini-list">
+
+
+                <div class="dashboard-mini-item"
+                     th:each="mission : ${recentMissionRequests}">
+
+
+                    <div class="dashboard-mini-main">
+
+
+                        <strong th:text="${mission.destination}">
+
+                            مقصد
+
+                        </strong>
+
+
+                        <span th:text="|${mission.startDate} تا ${mission.endDate}|">
+
+                            —
+
+                        </span>
+
+
+                    </div>
+
+
+                    <span th:if="${mission.pending}"
+                          class="status-badge status-pending">
+
+                        در انتظار
+
+                    </span>
+
+
+                    <span th:if="${mission.approved}"
+                          class="status-badge status-approved">
+
+                        تأیید شده
+
+                    </span>
+
+
+                    <span th:if="${mission.rejected}"
+                          class="status-badge status-rejected">
+
+                        رد شده
+
+                    </span>
+
+
+                </div>
+
+
+                <div class="dashboard-list-empty"
+                     th:if="${recentMissionRequests == null
+                     or recentMissionRequests.isEmpty()}">
+
+                    هنوز درخواست مأموریت ثبت نکرده‌اید.
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         Quick actions
+         ================================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    دسترسی سریع
+                </h2>
+
+                <p>
+                    عملیات پرکاربرد پنل شما
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="quick-action-grid">
+
+
+            <a th:href="@{/employee/attendance}"
+               class="quick-action-card">
+
+                <strong>
+                    مشاهده کارکرد
+                </strong>
+
+                <span>
+                    مشاهده ورود، خروج،
+                    تأخیر و وضعیت روزانه
+                </span>
+
+            </a>
+
+
+            <a th:href="@{/employee/leaves}"
+               class="quick-action-card">
+
+                <strong>
+                    درخواست مرخصی
+                </strong>
+
+                <span>
+                    ثبت و پیگیری درخواست‌های مرخصی
+                </span>
+
+            </a>
+
+
+            <a th:href="@{/employee/missions}"
+               class="quick-action-card">
+
+                <strong>
+                    درخواست مأموریت
+                </strong>
+
+                <span>
+                    ثبت و پیگیری مأموریت‌های اداری
+                </span>
+
+            </a>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

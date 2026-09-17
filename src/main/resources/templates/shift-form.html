@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+    <title th:text="${editing}
+            ? 'ویرایش شیفت'
+            : 'ثبت شیفت جدید'">
+        ثبت شیفت
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=8"
+          th:href="@{/css/admin-dashboard.css(v=8)}">
+</head>
+
+<body class="section-ui-page form-ui-page shift-entry-page">
+
+<main class="shift-form-page">
+
+    <header class="shift-form-header section-page-header">
+
+        <div>
+            <h1 th:text="${editing}
+                    ? 'ویرایش اطلاعات شیفت'
+                    : 'ثبت شیفت جدید'">
+                ثبت شیفت جدید
+            </h1>
+
+            <p>
+                ساعت کاری، روزهای کاری و میزان تأخیر یا خروج زودتر مجاز را مشخص کنید.
+            </p>
+        </div>
+
+        <a href="/admin/shifts"
+           th:href="@{/admin/shifts}"
+           class="shift-back-button">
+            بازگشت به فهرست شیفت‌ها
+        </a>
+
+    </header>
+
+    <section class="shift-form-card form-ui-card">
+
+        <form th:object="${shiftForm}"
+              th:action="${editing}
+                    ? @{/admin/shifts/{id}(id=${shiftId})}
+                    : @{/admin/shifts}"
+              method="post">
+
+            <div class="shift-form-grid">
+
+                <div class="shift-field">
+
+                    <label for="shiftCode">
+                        کد شیفت
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input id="shiftCode"
+                           type="text"
+                           th:field="*{shiftCode}"
+                           maxlength="20"
+                           placeholder="مثلاً MORNING">
+
+                    <small class="field-help">
+                        کد شیفت را با حروف انگلیسی وارد کنید.
+                    </small>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('shiftCode')}"
+                          th:errors="*{shiftCode}">
+                        خطای کد شیفت
+                    </span>
+
+                </div>
+
+                <div class="shift-field">
+
+                    <label for="name">
+                        نام شیفت
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input id="name"
+                           type="text"
+                           th:field="*{name}"
+                           maxlength="70"
+                           placeholder="مثلاً شیفت صبح">
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('name')}"
+                          th:errors="*{name}">
+                        خطای نام شیفت
+                    </span>
+
+                </div>
+
+                <div class="shift-field">
+
+                    <label for="startTime">
+                        ساعت شروع
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input id="startTime"
+                           type="time"
+                           th:field="*{startTime}">
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('startTime')}"
+                          th:errors="*{startTime}">
+                        خطای ساعت شروع
+                    </span>
+
+                </div>
+
+                <div class="shift-field">
+
+                    <label for="endTime">
+                        ساعت پایان
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <input id="endTime"
+                           type="time"
+                           th:field="*{endTime}">
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('endTime')}"
+                          th:errors="*{endTime}">
+                        خطای ساعت پایان
+                    </span>
+
+                </div>
+
+                <div class="shift-field">
+
+                    <label for="lateGraceMinutes">
+                        تأخیر مجاز
+                    </label>
+
+                    <div class="number-input-group">
+
+                        <input id="lateGraceMinutes"
+                               type="number"
+                               th:field="*{lateGraceMinutes}"
+                               min="0"
+                               max="180">
+
+                        <span>دقیقه</span>
+
+                    </div>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('lateGraceMinutes')}"
+                          th:errors="*{lateGraceMinutes}">
+                        خطای تأخیر مجاز
+                    </span>
+
+                </div>
+
+                <div class="shift-field">
+
+                    <label for="earlyLeaveGraceMinutes">
+                        خروج زودتر مجاز
+                    </label>
+
+                    <div class="number-input-group">
+
+                        <input id="earlyLeaveGraceMinutes"
+                               type="number"
+                               th:field="*{earlyLeaveGraceMinutes}"
+                               min="0"
+                               max="180">
+
+                        <span>دقیقه</span>
+
+                    </div>
+
+                    <span class="field-error"
+                          th:if="${#fields.hasErrors('earlyLeaveGraceMinutes')}"
+                          th:errors="*{earlyLeaveGraceMinutes}">
+                        خطای خروج زودتر
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="shift-work-days">
+
+                <div class="work-days-heading">
+
+                    <label>
+                        روزهای کاری
+                        <span class="required-mark">*</span>
+                    </label>
+
+                    <small class="field-help">
+                        روزهایی را که این شیفت در آن‌ها اجرا می‌شود انتخاب کنید.
+                    </small>
+
+                </div>
+
+                <div class="work-days-grid">
+
+                    <label class="work-day-option"
+                           th:each="workDay : ${workDays}"
+                           th:for="${'work-day-' + workDay.name()}">
+
+                        <input type="checkbox"
+                               th:field="*{workDays}"
+                               th:value="${workDay}"
+                               th:id="${'work-day-' + workDay.name()}">
+
+                        <span th:text="${workDay.persianTitle}">
+    روز هفته
+                        </span>
+                    </label>
+
+                </div>
+
+                <span class="field-error"
+                      th:if="${#fields.hasErrors('workDays')}"
+                      th:errors="*{workDays}">
+                    حداقل یک روز کاری را انتخاب کنید
+                </span>
+
+            </div>
+
+            <div class="night-shift-note">
+
+                <strong>نکته درباره شیفت شب:</strong>
+
+                اگر ساعت پایان از ساعت شروع کمتر باشد، سامانه آن را
+                شیفت شب در نظر می‌گیرد؛ مثلاً شروع ساعت ۲۰:۰۰ و پایان
+                ساعت ۰۸:۰۰ روز بعد.
+
+            </div>
+
+            <div class="shift-form-actions">
+
+                <button type="submit"
+                        class="shift-submit-button"
+                        th:text="${editing}
+                                ? 'ذخیره تغییرات'
+                                : 'ثبت شیفت'">
+                    ثبت شیفت
+                </button>
+
+                <a href="/admin/shifts"
+                   th:href="@{/admin/shifts}"
+                   class="shift-cancel-button">
+                    انصراف
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

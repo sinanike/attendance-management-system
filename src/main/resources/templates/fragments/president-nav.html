@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav class="portal-nav president-nav"
+     th:fragment="presidentNav(activePage)">
+
+    <a th:href="@{/president/dashboard}"
+       th:classappend="${activePage == 'dashboard'} ? ' active' : ''">
+        داشبورد دانشگاه
+    </a>
+
+    <a th:href="@{/president/reports}"
+       th:classappend="${activePage == 'reports'} ? ' active' : ''">
+        گزارش آماری
+    </a>
+
+    <a th:href="@{/president/departments}"
+       th:classappend="${activePage == 'departments'} ? ' active' : ''">
+        مقایسه بخش‌ها
+    </a>
+
+    <a th:href="@{/president/kpi}"
+       th:classappend="${activePage == 'kpi'} ? ' active' : ''">
+        شاخص‌های کلیدی
+    </a>
+
+    <form th:action="@{/logout}"
+          method="post"
+          class="portal-logout-form">
+        <button type="submit"
+                class="portal-logout-button">
+            خروج
+        </button>
+    </form>
+
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        داشبورد مدیر امور اداری | SUTECH
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=22"
+          th:href="@{/css/admin-dashboard.css(v=22)}">
+
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+    <style>
+
+        .dashboard-holiday-alert {
+            margin-bottom: 20px;
+            padding: 16px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            color: #9d174d;
+            background: #fce7f3;
+
+            border: 1px solid #f9a8d4;
+            border-radius: 12px;
+        }
+
+        .dashboard-holiday-alert strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-holiday-alert span {
+            font-size: 13px;
+        }
+
+        .dashboard-holiday-count {
+            padding: 7px 12px;
+
+            background: #fff;
+
+            border-radius: 20px;
+
+            white-space: nowrap;
+
+            font-weight: bold;
+        }
+
+        .stat-card.leave {
+            border-top: 4px solid #0284c7;
+        }
+
+        .stat-card.mission {
+            border-top: 4px solid #7c3aed;
+        }
+
+    </style>
+
+</head>
+
+<body class="admin-dashboard-page">
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+
+                <img src="/css/sutech-logo.png"
+                     alt="لوگوی دانشگاه صنعتی شیراز">
+
+            </div>
+
+            <div class="brand-text">
+
+                <h2 class="brand-title">
+                    سامانه حضور و غیاب
+                </h2>
+
+                <p class="brand-subtitle">
+                    دانشگاه صنعتی شیراز
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="nav-title">
+            منوی مدیر
+        </div>
+
+        <nav class="navigation"
+             aria-label="منوی مدیریت">
+
+            <a href="/admin/dashboard"
+               th:href="@{/admin/dashboard}"
+               class="nav-item active">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    داشبورد
+                </span>
+
+            </a>
+
+            <span class="nav-group-label">
+                مدیریت
+            </span>
+
+            <a href="/admin/employees"
+               th:href="@{/admin/employees}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0H5Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    کارکنان
+                </span>
+
+            </a>
+
+            <a href="/admin/shifts"
+               th:href="@{/admin/shifts}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M12 3a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm1 10.2 4 2.3-1 1.7-5-3V7h2v6.2Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    شیفت‌های کاری
+                </span>
+
+            </a>
+
+            <a href="/admin/shift-assignments"
+               th:href="@{/admin/shift-assignments}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm11 8H6v10h12V10ZM6 6v2h12V6H6Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    تخصیص شیفت روزانه
+                </span>
+
+            </a>
+
+            <a href="/admin/attendance"
+               th:href="@{/admin/attendance}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M5 4h10v2H7v12h8v2H5V4Zm11.6 4.6L20 12l-3.4 3.4-1.4-1.4 1-1H10v-2h6.2l-1-1 1.4-1.4Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    ترددهای ثبت‌شده
+                </span>
+
+            </a>
+
+            <a href="/admin/leaves"
+               th:href="@{/admin/leaves}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M7 3h10v2h3v16H4V5h3V3Zm2 2h6V4H9v1Zm-3 2v12h12V7h-1v2H7V7H6Zm3 5 2 2 4-4 1.4 1.4-5.4 5.4-3.4-3.4L9 12Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    درخواست‌های مرخصی
+                </span>
+
+            </a>
+
+            <a href="/admin/missions"
+               th:href="@{/admin/missions}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M3 7h5V4h8v3h5v13H3V7Zm7 0h4V6h-4v1Zm-5 2v9h14V9H5Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    درخواست‌های مأموریت
+                </span>
+
+            </a>
+
+            <a href="/admin/holidays"
+               th:href="@{/admin/holidays}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm11 7H6v11h12V9ZM6 6v1h12V6H6Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    تعطیلات رسمی
+                </span>
+
+            </a>
+
+            <span class="nav-group-label">
+                گزارش‌ها
+            </span>
+
+            <a href="/admin/reports/attendance"
+               th:href="@{/admin/reports/attendance}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M5 3h14v18H5V3Zm3 4v2h8V7H8Zm0 4v2h8v-2H8Zm0 4v2h5v-2H8Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    گزارش ورود و خروج
+                </span>
+
+            </a>
+
+            <a href="/admin/reports/daily-attendance"
+               th:href="@{/admin/reports/daily-attendance}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2Zm11 8H6v10h12V10ZM6 6v2h12V6H6Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    گزارش روزانه و شیفتی
+                </span>
+
+            </a>
+
+            <a href="/admin/reports/attendance-summary"
+               th:href="@{/admin/reports/attendance-summary}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M4 19h16v2H4v-2Zm2-3h3V8H6v8Zm5 0h3V3h-3v13Zm5 0h3v-6h-3v6Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    خلاصه کارکرد کارکنان
+                </span>
+
+            </a>
+
+            <span class="nav-group-label">
+                تنظیمات
+            </span>
+
+            <a href="/admin/users"
+               th:href="@{/admin/users}"
+               class="nav-item">
+
+                <span class="nav-icon"
+                      aria-hidden="true">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm9 4-2.1-1.2.1-2.4-2.1-2.1-2.4.1L13.2 4h-2.4L9.6 6.4l-2.4-.1-2.1 2.1.1 2.4L3 12l2.2 1.2-.1 2.4 2.1 2.1 2.4-.1 1.2 2.4h2.4l1.2-2.4 2.4.1 2.1-2.1-.1-2.4L21 12Z"/>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    کاربران و سطح دسترسی
+                </span>
+
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+
+            <form th:action="@{/logout}"
+                  method="post">
+
+                <button type="submit"
+                        class="logout-button">
+
+                    خروج از سامانه
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </aside>
+
+    <button class="sidebar-overlay"
+            type="button"
+            aria-label="بستن منوی کناری">
+    </button>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div class="topbar-heading">
+
+                <button class="menu-toggle"
+                        type="button"
+                        aria-label="باز کردن منوی مدیریت"
+                        aria-expanded="false">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+                <div>
+
+                    <h1 class="page-title">
+                        داشبورد مدیر امور اداری
+                    </h1>
+
+                    <p class="page-description">
+                        خلاصه وضعیت امروز و موارد نیازمند رسیدگی
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="topbar-meta">
+
+                <div class="date-box">
+
+                    <span class="date-label">
+                        امروز
+                    </span>
+
+                    <strong th:text="${todayWeekday + '، ' + todayPersian}">
+
+                        چهارشنبه، ۱۴۰۵/۰۵/۰۸
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <div th:if="${dashboardError != null}"
+             th:text="${dashboardError}"
+             class="form-error-message">
+
+            خطا در دریافت اطلاعات داشبورد
+
+        </div>
+
+        <div th:if="${holidayToday}"
+             class="dashboard-holiday-alert">
+
+            <div>
+
+                <strong>
+                    امروز تعطیل رسمی است
+                </strong>
+
+                <span>
+                    کارکنان مشمول تعطیلی در گزارش امروز
+                    با وضعیت «تعطیل رسمی» نمایش داده می‌شوند.
+                </span>
+
+            </div>
+
+            <span class="dashboard-holiday-count"
+                  th:text="|${holidayCount} مورد|">
+
+                0 مورد
+
+            </span>
+
+        </div>
+
+        <section class="stats-grid"
+                 aria-label="آمار امروز">
+
+            <a href="/admin/employees"
+               th:href="@{/admin/employees}"
+               class="stat-card workforce">
+
+                <div class="stat-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8-1a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM1 20a7 7 0 0 1 14 0H1Z"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <p class="stat-title">
+                        کارکنان فعال
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${activeEmployeeCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        مشاهده فهرست کارکنان
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/reports/daily-attendance"
+               th:href="@{/admin/reports/daily-attendance}"
+               class="stat-card present">
+
+                <div class="stat-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path d="m9.2 16.6-4.3-4.3 1.8-1.8 2.5 2.5 8.1-8.1 1.8 1.8-9.9 9.9Z"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+
+                    <p class="stat-title">
+                        حاضر امروز
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${presentCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note"
+                         th:text="${presentPercent + ' درصد روزهای مشمول حضور'}">
+
+                        0 درصد
+
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/reports/daily-attendance"
+               th:href="@{/admin/reports/daily-attendance}"
+               class="stat-card absent">
+
+                <div>
+
+                    <p class="stat-title">
+                        غایب امروز
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${absentCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        نیازمند بررسی
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/leaves"
+               th:href="@{/admin/leaves(status='APPROVED')}"
+               class="stat-card leave">
+
+                <div>
+
+                    <p class="stat-title">
+                        مرخصی امروز
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${leaveCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        مرخصی‌های تأییدشده
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/missions"
+               th:href="@{/admin/missions(status='APPROVED')}"
+               class="stat-card mission">
+
+                <div>
+
+                    <p class="stat-title">
+                        مأموریت امروز
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${missionCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        مأموریت‌های تأییدشده
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/reports/daily-attendance"
+               th:href="@{/admin/reports/daily-attendance}"
+               class="stat-card late">
+
+                <div>
+
+                    <p class="stat-title">
+                        تأخیر در ورود
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${lateCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        خارج از زمان مجاز شیفت
+                    </div>
+
+                </div>
+
+            </a>
+
+            <a href="/admin/reports/daily-attendance"
+               th:href="@{/admin/reports/daily-attendance}"
+               class="stat-card incomplete">
+
+                <div>
+
+                    <p class="stat-title">
+                        تردد ناقص
+                    </p>
+
+                    <h2 class="stat-value"
+                        th:text="${incompleteCount}">
+
+                        0
+
+                    </h2>
+
+                    <div class="stat-note">
+                        ورود یا خروج ثبت‌نشده
+                    </div>
+
+                </div>
+
+            </a>
+
+        </section>
+
+        <section class="charts-grid">
+
+            <article class="panel chart-panel">
+
+                <div class="chart-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            روند حضور و غیبت ۷ روز اخیر
+                        </h2>
+
+                        <p class="chart-description">
+                            مقایسه تعداد کارکنان حاضر و غایب در هر روز
+                        </p>
+
+                    </div>
+
+                    <div class="chart-legend">
+
+                        <span class="legend-item">
+
+                            <i class="legend-color present-color"></i>
+                            حاضر
+
+                        </span>
+
+                        <span class="legend-item">
+
+                            <i class="legend-color absent-color"></i>
+                            غایب
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${hasAttendanceTrendData}"
+                     class="chart-scroll">
+
+                    <div class="bar-chart">
+
+                        <div class="chart-day"
+                             th:each="day : ${weeklyStats}">
+
+                            <div class="chart-bars">
+
+                                <div class="chart-bar-column">
+
+                                    <span class="chart-value"
+                                          th:text="${day.presentCount}">
+
+                                        0
+
+                                    </span>
+
+                                    <div class="chart-bar-track">
+
+                                        <span class="chart-bar present-bar"
+                                              th:style="${'--bar-size: '
+                                              + (day.presentCount * 100.0 / attendanceChartMax)
+                                              + '%'}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="chart-bar-column">
+
+                                    <span class="chart-value"
+                                          th:text="${day.absentCount}">
+
+                                        0
+
+                                    </span>
+
+                                    <div class="chart-bar-track">
+
+                                        <span class="chart-bar absent-bar"
+                                              th:style="${'--bar-size: '
+                                              + (day.absentCount * 100.0 / attendanceChartMax)
+                                              + '%'}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <strong class="chart-day-name"
+                                    th:text="${day.weekday}">
+
+                                شنبه
+
+                            </strong>
+
+                            <span class="chart-date"
+                                  th:text="${day.dateLabel}">
+
+                                01/01
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div th:unless="${hasAttendanceTrendData}"
+                     class="chart-empty">
+
+                    برای هفت روز اخیر داده حضور یا غیبت وجود ندارد.
+
+                </div>
+
+            </article>
+
+            <article class="panel chart-panel">
+
+                <div class="chart-header">
+
+                    <div>
+
+                        <h2 class="panel-title">
+                            تأخیر و تردد ناقص ۷ روز اخیر
+                        </h2>
+
+                        <p class="chart-description">
+                            موارد نیازمند پیگیری مدیر امور اداری
+                        </p>
+
+                    </div>
+
+                    <div class="chart-legend">
+
+                        <span class="legend-item">
+
+                            <i class="legend-color late-color"></i>
+                            تأخیر
+
+                        </span>
+
+                        <span class="legend-item">
+
+                            <i class="legend-color incomplete-color"></i>
+                            تردد ناقص
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div th:if="${hasIssueTrendData}"
+                     class="chart-scroll">
+
+                    <div class="bar-chart">
+
+                        <div class="chart-day"
+                             th:each="day : ${weeklyStats}">
+
+                            <div class="chart-bars">
+
+                                <div class="chart-bar-column">
+
+                                    <span class="chart-value"
+                                          th:text="${day.lateCount}">
+                                        0
+                                    </span>
+
+                                    <div class="chart-bar-track">
+
+                                        <span class="chart-bar late-bar"
+                                              th:style="${'--bar-size: '
+                                              + (day.lateCount * 100.0 / issueChartMax)
+                                              + '%'}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="chart-bar-column">
+
+                                    <span class="chart-value"
+                                          th:text="${day.incompleteCount}">
+                                        0
+                                    </span>
+
+                                    <div class="chart-bar-track">
+
+                                        <span class="chart-bar incomplete-bar"
+                                              th:style="${'--bar-size: '
+                                              + (day.incompleteCount * 100.0 / issueChartMax)
+                                              + '%'}">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <strong class="chart-day-name"
+                                    th:text="${day.weekday}">
+                                شنبه
+                            </strong>
+
+                            <span class="chart-date"
+                                  th:text="${day.dateLabel}">
+                                01/01
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div th:unless="${hasIssueTrendData}"
+                     class="chart-empty chart-empty-success">
+
+                    در هفت روز اخیر تأخیر یا تردد ناقصی ثبت نشده است.
+
+                </div>
+
+            </article>
+
+        </section>
+
+        <section class="content-grid">
+
+            <article class="panel">
+
+                <div class="panel-header">
+
+                    <h2 class="panel-title">
+                        آخرین ترددهای امروز
+                    </h2>
+
+                    <a href="/admin/attendance"
+                       th:href="@{/admin/attendance}"
+                       class="panel-link">
+
+                        مشاهده همه
+
+                    </a>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+
+                            <th>
+                                کارمند
+                            </th>
+
+                            <th>
+                                بخش
+                            </th>
+
+                            <th>
+                                زمان تردد
+                            </th>
+
+                            <th>
+                                دستگاه
+                            </th>
+
+                            <th>
+                                وضعیت
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="record : ${recentAttendanceRecords}">
+
+                            <td th:text="${record.employee != null
+                            ? record.employee.firstName
+                            + ' '
+                            + record.employee.lastName
+                            : '—'}">
+
+                                نام کارمند
+
+                            </td>
+
+                            <td th:text="${record.employee != null
+                            and record.employee.department != null
+                            ? record.employee.department.name
+                            : '—'}">
+
+                                واحد
+
+                            </td>
+
+                            <td th:text="${record.eventTime != null
+                            ? #temporals.format(record.eventTime, 'HH:mm')
+                            : '—'}">
+
+                                08:00
+
+                            </td>
+
+                            <td th:text="${record.deviceCode != null
+                            and !#strings.isEmpty(record.deviceCode)
+                            ? record.deviceCode
+                            : 'منبع نامشخص'}">
+
+                                منبع نامشخص
+
+                            </td>
+
+                            <td>
+
+                                <span class="status"
+                                      th:classappend="${record.attendanceType != null
+                                      and (record.attendanceType.name() == 'ENTRY'
+                                      or record.attendanceType.name() == 'CHECK_IN')}
+                                      ? ' success'
+                                      : ' warning'"
+                                      th:text="${record.attendanceType != null
+                                      and (record.attendanceType.name() == 'ENTRY'
+                                      or record.attendanceType.name() == 'CHECK_IN')}
+                                      ? 'ورود'
+                                      : 'خروج'">
+
+                                    ورود
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(recentAttendanceRecords)}">
+
+                            <td colspan="5">
+
+                                امروز هنوز ترددی ثبت نشده است.
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </article>
+
+            <article class="panel attention-panel">
+
+                <div class="panel-header">
+
+                    <h2 class="panel-title">
+                        نیازمند رسیدگی
+                    </h2>
+
+                    <span class="panel-caption">
+                        امروز
+                    </span>
+
+                </div>
+
+                <div class="attention-list">
+
+                    <a th:href="@{/admin/reports/daily-attendance}"
+                       class="attention-item danger"
+                       th:classappend="${incompleteCount == 0}
+                       ? ' resolved'
+                       : ''">
+
+                        <span class="attention-marker"></span>
+
+                        <span class="attention-copy">
+
+                            <strong>
+                                تردد ناقص
+                            </strong>
+
+                            <small>
+                                ورود یا خروج ثبت نشده است
+                            </small>
+
+                        </span>
+
+                        <b th:text="${incompleteCount}">
+                            0
+                        </b>
+
+                    </a>
+
+                    <a th:href="@{/admin/reports/daily-attendance}"
+                       class="attention-item danger"
+                       th:classappend="${absentCount == 0}
+                       ? ' resolved'
+                       : ''">
+
+                        <span class="attention-marker"></span>
+
+                        <span class="attention-copy">
+
+                            <strong>
+                                غیبت امروز
+                            </strong>
+
+                            <small>
+                                کارکنان بدون حضور ثبت‌شده
+                            </small>
+
+                        </span>
+
+                        <b th:text="${absentCount}">
+                            0
+                        </b>
+
+                    </a>
+
+                    <a th:href="@{/admin/reports/daily-attendance}"
+                       class="attention-item warning"
+                       th:classappend="${earlyLeaveCount == 0}
+                       ? ' resolved'
+                       : ''">
+
+                        <span class="attention-marker"></span>
+
+                        <span class="attention-copy">
+
+                            <strong>
+                                خروج زودهنگام
+                            </strong>
+
+                            <small>
+                                پیش از پایان زمان شیفت
+                            </small>
+
+                        </span>
+
+                        <b th:text="${earlyLeaveCount}">
+                            0
+                        </b>
+
+                    </a>
+
+                    <a th:href="@{/admin/shift-assignments}"
+                       class="attention-item info"
+                       th:classappend="${noShiftCount == 0}
+                       ? ' resolved'
+                       : ''">
+
+                        <span class="attention-marker"></span>
+
+                        <span class="attention-copy">
+
+                            <strong>
+                                بدون شیفت
+                            </strong>
+
+                            <small>
+                                شیفت کاری تعیین نشده است
+                            </small>
+
+                        </span>
+
+                        <b th:text="${noShiftCount}">
+                            0
+                        </b>
+
+                    </a>
+
+                </div>
+
+                <a th:href="@{/admin/reports/daily-attendance}"
+                   class="attention-footer">
+
+                    مشاهده گزارش کامل امروز
+
+                </a>
+
+            </article>
+
+        </section>
+
+        <p class="demo-note"
+           th:text="${'آخرین به‌روزرسانی اطلاعات امروز: ساعت '
+           + lastUpdatedTime}">
+
+            آخرین به‌روزرسانی اطلاعات امروز: ساعت ۱۲:۳۰
+
+        </p>
+
+    </main>
+
+</div>
+
+<script>
+
+    (() => {
+
+        const body =
+            document.body;
+
+        const toggle =
+            document.querySelector(
+                ".menu-toggle"
+            );
+
+        const overlay =
+            document.querySelector(
+                ".sidebar-overlay"
+            );
+
+        if (
+            !toggle
+            ||
+            !overlay
+        ) {
+            return;
+        }
+
+        const setMenuState =
+            (isOpen) => {
+
+                body.classList.toggle(
+                    "sidebar-open",
+                    isOpen
+                );
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    String(isOpen)
+                );
+            };
+
+        toggle.addEventListener(
+            "click",
+            () => {
+
+                setMenuState(
+
+                    !body.classList.contains(
+                        "sidebar-open"
+                    )
+                );
+            }
+        );
+
+        overlay.addEventListener(
+            "click",
+            () => {
+
+                setMenuState(false);
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    setMenuState(false);
+                }
+            }
+        );
+
+    })();
+
+</script>
+
+</body>
+</html>

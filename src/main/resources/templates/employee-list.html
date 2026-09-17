@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+    <title>مدیریت کارکنان</title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css"
+          th:href="@{/css/admin-dashboard.css}">
+</head>
+
+<body>
+
+<main class="employee-page">
+
+    <header class="employee-header">
+
+        <div>
+            <h1>مدیریت کارکنان</h1>
+
+            <p>
+                مشاهده و مدیریت اطلاعات کارکنان دانشگاه صنعتی شیراز
+            </p>
+        </div>
+
+        <a href="/admin/employees/new"
+           th:href="@{/admin/employees/new}"
+           class="add-employee-button">
+
+            <span>＋</span>
+            افزودن کارمند
+        </a>
+
+    </header>
+
+    <div th:if="${successMessage}"
+         th:text="${successMessage}"
+         class="success-message">
+
+        عملیات با موفقیت انجام شد.
+    </div>
+
+    <section class="employee-summary">
+
+        <div class="employee-count">
+
+            <strong th:text="${employeeCount}">
+                0
+            </strong>
+
+            <span>
+                تعداد کل کارکنان ثبت‌شده
+            </span>
+
+        </div>
+
+        <input id="employeeSearch"
+               class="employee-search"
+               type="search"
+               placeholder="جست‌وجوی نام، کد پرسنلی، شناسه دستگاه، واحد، نوع نیرو یا شیفت...">
+
+    </section>
+
+    <section class="employee-table-card">
+
+        <div class="table-heading">
+
+            <h2>فهرست کارکنان</h2>
+
+            <a href="/admin/dashboard"
+               th:href="@{/admin/dashboard}"
+               class="dashboard-link">
+
+                بازگشت به داشبورد
+            </a>
+
+        </div>
+
+        <div class="employee-table-wrapper">
+
+            <table class="employee-table">
+
+                <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>نام و نام خانوادگی</th>
+                    <th>کد پرسنلی</th>
+                    <th>شناسه دستگاه</th>
+                    <th>کد ملی</th>
+                    <th>نوع نیرو</th>
+                    <th>واحد سازمانی</th>
+                    <th>شیفت کاری</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+
+                </thead>
+
+                <tbody id="employeeTableBody">
+
+                <tr th:each="employee, state : ${employees}"
+                    class="employee-data-row">
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+                    <td class="employee-name">
+
+                        <span th:text="${employee.firstName}">
+                            علی
+                        </span>
+
+                        <span th:text="${employee.lastName}">
+                            رضایی
+                        </span>
+
+                    </td>
+
+                    <td th:text="${employee.personnelCode}">
+                        EMP-1001
+                    </td>
+
+                    <td th:text="${employee.deviceUserId != null
+                            and !employee.deviceUserId.isBlank()
+                            ? employee.deviceUserId
+                            : 'ثبت نشده'}">
+
+                        27
+                    </td>
+
+                    <td th:text="${employee.nationalCode}">
+                        0000000001
+                    </td>
+
+                    <td th:text="${employee.employeeType != null
+                            ? employee.employeeType.displayName
+                            : 'تعیین نشده'}">
+
+                        کارمند اداری
+                    </td>
+
+                    <td th:text="${employee.department != null
+                            ? employee.department.name
+                            : 'تعیین نشده'}">
+
+                        امور اداری
+                    </td>
+
+                    <td th:text="${
+                            employee.employeeType != null
+                            and employee.employeeType.name() == 'ADMINISTRATIVE'
+                            ? 'ندارد'
+                            : (employee.shift != null
+                                ? employee.shift.name
+                                : 'تعیین نشده')
+                        }">
+
+                        ندارد
+                    </td>
+
+                    <td>
+
+                        <span th:if="${employee.active}"
+                              class="status-badge status-active">
+
+                            فعال
+                        </span>
+
+                        <span th:unless="${employee.active}"
+                              class="status-badge status-inactive">
+
+                            غیرفعال
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="employee-actions">
+
+                            <a href="#"
+                               th:href="@{/admin/employees/{id}/edit(id=${employee.id})}"
+                               class="edit-button">
+
+                                ویرایش
+                            </a>
+
+                            <form th:if="${employee.active}"
+                                  th:action="@{/admin/employees/{id}/status(id=${employee.id})}"
+                                  method="post"
+                                  class="status-form">
+
+                                <input type="hidden"
+                                       name="active"
+                                       value="false">
+
+                                <button type="submit"
+                                        class="status-toggle-button deactivate-button"
+                                        onclick="return confirm('آیا از غیرفعال‌کردن این کارمند مطمئن هستید؟')">
+
+                                    غیرفعال‌کردن
+                                </button>
+
+                            </form>
+
+                            <form th:unless="${employee.active}"
+                                  th:action="@{/admin/employees/{id}/status(id=${employee.id})}"
+                                  method="post"
+                                  class="status-form">
+
+                                <input type="hidden"
+                                       name="active"
+                                       value="true">
+
+                                <button type="submit"
+                                        class="status-toggle-button activate-button">
+
+                                    فعال‌کردن
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(employees)}"
+                    class="empty-row">
+
+                    <td colspan="10">
+                        هنوز هیچ کارمندی در سامانه ثبت نشده است.
+                    </td>
+
+                </tr>
+
+                <tr id="noSearchResult"
+                    class="empty-row"
+                    style="display: none">
+
+                    <td colspan="10">
+                        کارمندی با این مشخصات پیدا نشد.
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+    const searchInput =
+        document.getElementById("employeeSearch");
+
+    const employeeRows =
+        document.querySelectorAll(".employee-data-row");
+
+    const noSearchResult =
+        document.getElementById("noSearchResult");
+
+    searchInput.addEventListener("input", function () {
+        const searchValue =
+            this.value.trim().toLowerCase();
+
+        let visibleRows = 0;
+
+        employeeRows.forEach(function (row) {
+            const rowText =
+                row.textContent.toLowerCase();
+
+            const matched =
+                rowText.includes(searchValue);
+
+            row.style.display =
+                matched ? "" : "none";
+
+            if (matched) {
+                visibleRows++;
+            }
+        });
+
+        noSearchResult.style.display =
+            employeeRows.length > 0 && visibleRows === 0
+                ? ""
+                : "none";
+    });
+</script>
+
+</body>
+</html>
+<body class="internal-section-page employee-section-page">

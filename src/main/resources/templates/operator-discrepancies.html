@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>مدیریت مغایرت‌های تردد | اپراتور</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                مغایرت‌های ورود و خروج
+            </span>
+
+            <h1>
+                مدیریت مغایرت‌های تردد
+            </h1>
+
+            <p>
+                روزهایی که فقط ورود یا فقط خروج ثبت شده است.
+            </p>
+        </div>
+
+        <div class="portal-role-box warning-box">
+            <strong th:text="${discrepancyCount}">0</strong>
+            <span>مغایرت</span>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('discrepancies')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <form method="get"
+              th:action="@{/operator/discrepancies}"
+              class="portal-filter">
+
+            <div class="portal-field">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate"
+                       name="fromDate"
+                       type="date"
+                       th:value="${fromDate}"
+                       required>
+            </div>
+
+            <div class="portal-field">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate"
+                       name="toDate"
+                       type="date"
+                       th:value="${toDate}"
+                       required>
+            </div>
+
+            <div class="portal-filter-actions">
+                <button class="portal-button primary"
+                        type="submit">
+                    نمایش مغایرت‌ها
+                </button>
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>موارد نیازمند اصلاح</h2>
+                <p>
+                    پس از بررسی دستگاه، رکورد جاافتاده را دستی ثبت کنید.
+                </p>
+            </div>
+        </div>
+
+        <div class="portal-table-wrapper">
+
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>تاریخ</th>
+                    <th>کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>واحد</th>
+                    <th>ورود</th>
+                    <th>خروج</th>
+                    <th>مغایرت</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row : ${discrepancyRows}">
+
+                    <td th:text="${#temporals.format(row.reportDate, 'yyyy/MM/dd')}">
+                        -
+                    </td>
+
+                    <td th:text="|${row.employee.firstName} ${row.employee.lastName}|">
+                        کارمند
+                    </td>
+
+                    <td th:text="${row.employee.personnelCode}">
+                        EMP
+                    </td>
+
+                    <td th:text="${row.employee.department != null
+                    ? row.employee.department.name
+                    : '—'}">
+                        واحد
+                    </td>
+
+                    <td th:text="${row.firstCheckIn != null
+                    ? #temporals.format(row.firstCheckIn, 'HH:mm')
+                    : '—'}">
+                        -
+                    </td>
+
+                    <td th:text="${row.lastCheckOut != null
+                    ? #temporals.format(row.lastCheckOut, 'HH:mm')
+                    : '—'}">
+                        -
+                    </td>
+
+                    <td>
+                        <span class="portal-badge warning"
+                              th:text="${row.firstCheckIn == null
+                              ? 'ورود ثبت نشده'
+                              : 'خروج ثبت نشده'}">
+                            مغایرت
+                        </span>
+                    </td>
+
+                    <td>
+                        <a class="portal-mini-button"
+                           th:href="@{/operator/attendance/new(employeeId=${row.employee.id})}">
+                            ثبت رکورد جاافتاده
+                        </a>
+                    </td>
+
+                </tr>
+
+                <tr th:if="${discrepancyRows == null or discrepancyRows.isEmpty()}">
+                    <td colspan="8"
+                        class="portal-empty success-text">
+                        در بازه انتخاب‌شده تردد ناقصی وجود ندارد.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

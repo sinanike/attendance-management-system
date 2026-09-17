@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+    <title>برنامه هفتگی شیفت</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-dashboard.css(v=15)}">
+
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+</head>
+
+<body class="section-ui-page weekly-schedule-page">
+
+<main class="weekly-schedule-container">
+
+    <header class="section-page-header weekly-schedule-header">
+
+        <div>
+            <h1>برنامه هفتگی شیفت</h1>
+
+            <p>
+                تنظیم روزهای کاری و ساعت‌های شیفت
+
+                <strong th:text="${shift.name}">
+                    شیفت صبح
+                </strong>
+            </p>
+        </div>
+
+        <a class="shift-back-button"
+           th:href="@{/admin/shifts}">
+            بازگشت به مدیریت شیفت‌ها
+        </a>
+
+    </header>
+
+    <div class="success-alert"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
+
+    <div class="assignment-error-alert"
+         th:if="${errorMessage}"
+         th:text="${errorMessage}">
+    </div>
+
+    <section class="weekly-schedule-card">
+
+        <div class="weekly-schedule-intro">
+
+            <div>
+                <h2 th:text="${shift.name + ' — ' + shift.shiftCode}">
+                    شیفت صبح
+                </h2>
+
+                <p>
+                    هر روز را فعال یا تعطیل کن و جزئیات همان
+                    روز را جداگانه وارد کن.
+                </p>
+            </div>
+
+            <span>
+                پایان کمتر از شروع = شیفت شب
+            </span>
+
+        </div>
+
+        <form method="post"
+              th:action="@{/admin/shifts/{id}/weekly-schedule(id=${shift.id})}"
+              th:object="${scheduleForm}">
+
+            <div class="weekly-schedule-table-wrapper">
+
+                <table class="weekly-schedule-table">
+
+                    <thead>
+                    <tr>
+                        <th>روز هفته</th>
+                        <th>وضعیت</th>
+                        <th>شروع</th>
+                        <th>پایان</th>
+                        <th>استراحت</th>
+                        <th>تأخیر مجاز</th>
+                        <th>خروج زودتر مجاز</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="day, stat : *{days}"
+                        class="schedule-day-row">
+
+                        <td>
+                            <strong th:text="${day.workDay.persianTitle}">
+                                شنبه
+                            </strong>
+
+                            <input type="hidden"
+                                   th:field="*{days[__${stat.index}__].workDay}">
+                        </td>
+
+                        <td>
+                            <label class="schedule-day-toggle">
+
+                                <input type="checkbox"
+                                       class="working-day-checkbox"
+                                       th:field="*{days[__${stat.index}__].workingDay}">
+
+                                <span>روز کاری</span>
+                            </label>
+                        </td>
+
+                        <td>
+                            <input class="schedule-dependent"
+                                   type="time"
+                                   th:field="*{days[__${stat.index}__].startTime}">
+                        </td>
+
+                        <td>
+                            <input class="schedule-dependent"
+                                   type="time"
+                                   th:field="*{days[__${stat.index}__].endTime}">
+                        </td>
+
+                        <td>
+                            <div class="schedule-number">
+
+                                <input class="schedule-dependent"
+                                       type="number"
+                                       min="0"
+                                       max="480"
+                                       th:field="*{days[__${stat.index}__].breakMinutes}">
+
+                                <span>دقیقه</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="schedule-number">
+
+                                <input class="schedule-dependent"
+                                       type="number"
+                                       min="0"
+                                       max="180"
+                                       th:field="*{days[__${stat.index}__].lateGraceMinutes}">
+
+                                <span>دقیقه</span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="schedule-number">
+
+                                <input class="schedule-dependent"
+                                       type="number"
+                                       min="0"
+                                       max="180"
+                                       th:field="*{days[__${stat.index}__].earlyLeaveGraceMinutes}">
+
+                                <span>دقیقه</span>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="shift-form-actions">
+
+                <button type="submit"
+                        class="shift-submit-button">
+                    ذخیره برنامه هفتگی
+                </button>
+
+                <a class="shift-cancel-button"
+                   th:href="@{/admin/shifts}">
+                    انصراف
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<script>
+    document.querySelectorAll('.schedule-day-row')
+        .forEach(function (row) {
+            const checkbox = row.querySelector(
+                '.working-day-checkbox'
+            );
+
+            const fields = row.querySelectorAll(
+                '.schedule-dependent'
+            );
+
+            function updateRow() {
+                row.classList.toggle(
+                    'day-off',
+                    !checkbox.checked
+                );
+
+                fields.forEach(function (field) {
+                    field.disabled = !checkbox.checked;
+                });
+            }
+
+            checkbox.addEventListener(
+                'change',
+                updateRow
+            );
+
+            updateRow();
+        });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${editing
+    ? 'ویرایش اصلاح تردد'
+    : 'ثبت اصلاح تردد'}">
+        اصلاح تردد
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell narrow">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                اصلاح ورود و خروج ثبت‌نشده
+            </span>
+
+            <h1 th:text="${editing
+            ? 'ویرایش اصلاح دستی تردد'
+            : 'ثبت اصلاح دستی تردد'}">
+                اصلاح تردد
+            </h1>
+
+            <p>
+                این رکورد با منبع «ثبت دستی» ذخیره می‌شود.
+            </p>
+        </div>
+
+        <a th:href="@{/operator/attendance}"
+           class="portal-button secondary">
+            بازگشت
+        </a>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('attendance')}"></div>
+
+    <section class="portal-panel">
+
+        <form method="post"
+              th:action="${editing}
+              ? @{/operator/attendance/{id}(id=${recordId})}
+              : @{/operator/attendance}"
+              th:object="${form}"
+              class="portal-form">
+
+            <div th:if="${#fields.hasGlobalErrors()}"
+                 class="portal-alert danger">
+
+                <p th:each="error : ${#fields.globalErrors()}"
+                   th:text="${error}">
+                    خطا
+                </p>
+
+            </div>
+
+            <div class="portal-form-grid">
+
+                <div class="portal-field full">
+                    <label for="employeeId">
+                        کارمند
+                    </label>
+
+                    <select id="employeeId"
+                            th:field="*{employeeId}">
+
+                        <option value="">
+                            کارمند را انتخاب کنید
+                        </option>
+
+                        <option th:each="employee : ${employees}"
+                                th:value="${employee.id}"
+                                th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">
+                            کارمند
+                        </option>
+
+                    </select>
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('employeeId')}"
+                          th:errors="*{employeeId}">
+                        خطا
+                    </span>
+                </div>
+
+                <div class="portal-field">
+                    <label for="eventTime">
+                        تاریخ و ساعت
+                    </label>
+
+                    <input id="eventTime"
+                           type="datetime-local"
+                           th:field="*{eventTime}">
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('eventTime')}"
+                          th:errors="*{eventTime}">
+                        خطا
+                    </span>
+                </div>
+
+                <div class="portal-field">
+                    <label for="attendanceType">
+                        نوع تردد
+                    </label>
+
+                    <select id="attendanceType"
+                            th:field="*{attendanceType}">
+
+                        <option value="">
+                            نوع تردد را انتخاب کنید
+                        </option>
+
+                        <option th:each="type : ${attendanceTypes}"
+                                th:value="${type}"
+                                th:text="${type.displayName}">
+                            ورود
+                        </option>
+
+                    </select>
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('attendanceType')}"
+                          th:errors="*{attendanceType}">
+                        خطا
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="portal-note">
+                <strong>قانون فعلی:</strong>
+
+                <span th:if="${settings.manualCorrectionEnabled}">
+                    اصلاح دستی فعال است و حداکثر
+                    <b th:text="${settings.maxCorrectionDays}">30</b>
+                    روز گذشته قابل اصلاح است.
+                </span>
+
+                <span th:unless="${settings.manualCorrectionEnabled}">
+                    اصلاح دستی در تنظیمات سامانه غیرفعال است.
+                </span>
+            </div>
+
+            <div class="portal-form-actions">
+
+                <button type="submit"
+                        class="portal-button primary"
+                        th:text="${editing
+                        ? 'ذخیره تغییرات'
+                        : 'ثبت اصلاح'}">
+                    ثبت
+                </button>
+
+                <a th:href="@{/operator/attendance}"
+                   class="portal-button secondary">
+                    انصراف
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

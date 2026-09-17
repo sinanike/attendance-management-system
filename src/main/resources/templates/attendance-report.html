@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>گزارش حضور و غیاب کارکنان</title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=6"
+          th:href="@{/css/admin-dashboard.css(v=6)}">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+</head>
+
+<body class="section-ui-page attendance-report-page">
+
+<main class="attendance-page">
+
+    <header class="attendance-header section-page-header">
+
+        <div>
+            <h1>گزارش حضور و غیاب کارکنان</h1>
+
+            <p>
+                تحلیل ورود و خروج، کارکرد، تأخیر و خروج زودهنگام کارکنان در بازه انتخابی
+            </p>
+        </div>
+
+        <a th:href="@{/admin/attendance}"
+           class="dashboard-link">
+            بازگشت به مدیریت ترددها
+        </a>
+
+    </header>
+
+    <section class="report-filter-card">
+
+        <form th:action="@{/admin/reports/attendance}"
+              method="get"
+              class="report-filter-form">
+
+            <div class="form-group">
+
+                <label for="fromDate">
+                    از تاریخ
+                </label>
+
+                <input id="fromDate"
+                       name="fromDate"
+                       type="date"
+                       th:value="${fromDate}"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="toDate">
+                    تا تاریخ
+                </label>
+
+                <input id="toDate"
+                       name="toDate"
+                       type="date"
+                       th:value="${toDate}"
+                       required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="employeeId">
+                    کارمند
+                </label>
+
+                <select id="employeeId"
+                        name="employeeId">
+
+                    <option value="">
+                        همه کارکنان
+                    </option>
+
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:selected="${selectedEmployeeId != null
+                            and selectedEmployeeId == employee.id}"
+                            th:text="${employee.firstName
+                            + ' '
+                            + employee.lastName
+                            + ' — '
+                            + employee.personnelCode}">
+
+                        علی رضایی
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button type="submit"
+                    class="save-attendance-button">
+
+                نمایش گزارش
+            </button>
+
+        </form>
+
+    </section>
+
+    <div th:if="${reportError}"
+         th:text="${reportError}"
+         class="form-error-message">
+    </div>
+
+    <section class="report-summary-grid">
+
+        <div class="report-summary-card">
+
+            <strong th:text="${recordCount}">
+                0
+            </strong>
+
+            <span>کل ترددها</span>
+
+        </div>
+
+        <div class="report-summary-card report-check-in">
+
+            <strong th:text="${checkInCount}">
+                0
+            </strong>
+
+            <span>تعداد ورودها</span>
+
+        </div>
+
+        <div class="report-summary-card report-check-out">
+
+            <strong th:text="${checkOutCount}">
+                0
+            </strong>
+
+            <span>تعداد خروج‌ها</span>
+
+        </div>
+
+    </section>
+
+    <section class="attendance-table-card">
+
+        <div class="table-heading">
+            <h2>گزارش روزانه حضور و غیاب</h2>
+        </div>
+
+        <div class="attendance-table-wrapper">
+
+            <table class="attendance-table">
+
+                <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>تاریخ</th>
+                    <th>نام کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>شیفت</th>
+                    <th>اولین ورود</th>
+                    <th>آخرین خروج</th>
+                    <th>مدت حضور</th>
+                    <th>تأخیر</th>
+                    <th>خروج زودهنگام</th>
+                    <th>وضعیت</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row, state : ${dailyReportRows}">
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+                    <td th:text="${row.reportDate}">
+                        2026-07-29
+                    </td>
+
+                    <td th:text="${row.employee.firstName
+                    + ' '
+                    + row.employee.lastName}">
+
+                        علی رضایی
+                    </td>
+
+                    <td th:text="${row.employee.personnelCode}">
+                        EMP-1001
+                    </td>
+
+                    <td th:text="${row.shift != null
+                    ? row.shift.name
+                    : 'تعیین نشده'}">
+
+                        شیفت صبح
+                    </td>
+
+                    <td th:text="${row.firstCheckIn != null
+                    ? row.firstCheckIn.toLocalTime()
+                    : '—'}">
+
+                        08:00
+                    </td>
+
+                    <td th:text="${row.lastCheckOut != null
+                    ? row.lastCheckOut.toLocalTime()
+                    : '—'}">
+
+                        16:00
+                    </td>
+
+                    <td th:text="${row.workedTimeText}">
+                        8 ساعت و 0 دقیقه
+                    </td>
+
+                    <td th:text="${row.lateMinutes > 0
+                    ? row.lateMinutes + ' دقیقه'
+                    : 'بدون تأخیر'}">
+
+                        بدون تأخیر
+                    </td>
+
+                    <td th:text="${row.earlyLeaveMinutes > 0
+                    ? row.earlyLeaveMinutes + ' دقیقه'
+                    : 'ندارد'}">
+
+                        ندارد
+                    </td>
+
+                    <td>
+
+                        <span th:if="${row.status.name() == 'PRESENT'}"
+                              class="attendance-badge check-in-badge">
+                            حاضر
+                        </span>
+
+                        <span th:if="${row.status.name() == 'ABSENT'}"
+                              class="attendance-badge check-out-badge">
+                            غایب
+                        </span>
+
+                        <span th:if="${row.status.name() == 'INCOMPLETE'}"
+                              class="attendance-badge">
+                            تردد ناقص
+                        </span>
+
+                        <span th:if="${row.status.name() == 'NO_SHIFT'}"
+                              class="attendance-badge">
+                            بدون شیفت
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(dailyReportRows)}"
+                    class="empty-row">
+
+                    <td colspan="11">
+                        گزارشی در این بازه پیدا نشد.
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

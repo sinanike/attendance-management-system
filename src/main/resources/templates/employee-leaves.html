@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        درخواست‌های مرخصی من
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/employee-portal.css?v=2"
+          th:href="@{/css/employee-portal.css(v=2)}">
+
+</head>
+
+
+<body class="employee-portal-page">
+
+
+<main class="employee-layout">
+
+
+    <!-- ==========================================
+         Header
+         ========================================== -->
+
+    <header class="employee-topbar">
+
+
+        <div class="employee-heading">
+
+            <h1>
+                درخواست مرخصی
+            </h1>
+
+            <p>
+                ثبت درخواست جدید و مشاهده نتیجه بررسی درخواست‌های قبلی
+            </p>
+
+        </div>
+
+
+        <div class="employee-user-box">
+
+
+            <div class="employee-avatar"
+                 th:text="${employee.firstName != null
+                 and !employee.firstName.isEmpty()
+                 ? employee.firstName.substring(0,1)
+                 : 'ک'}">
+
+                ک
+
+            </div>
+
+
+            <div>
+
+                <div class="employee-user-name"
+                     th:text="|${employee.firstName} ${employee.lastName}|">
+
+                    نام کارمند
+
+                </div>
+
+                <div class="employee-user-code"
+                     th:text="|کد پرسنلی: ${employee.personnelCode}|">
+
+                    کد پرسنلی
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==========================================
+         Navigation
+         ========================================== -->
+
+    <nav class="employee-navigation">
+
+
+        <a th:href="@{/employee/dashboard}">
+            داشبورد
+        </a>
+
+
+        <a th:href="@{/employee/attendance}">
+            کارکرد و تردد من
+        </a>
+
+
+        <a th:href="@{/employee/leaves}"
+           class="active">
+
+            درخواست مرخصی
+
+        </a>
+
+
+        <a th:href="@{/employee/missions}">
+            درخواست مأموریت
+        </a>
+
+
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit"
+                    class="logout-button">
+
+                خروج از حساب
+
+            </button>
+
+        </form>
+
+
+    </nav>
+
+
+    <!-- ==========================================
+         پیام موفقیت
+         ========================================== -->
+
+    <div th:if="${successMessage}"
+         class="message message-success"
+         th:text="${successMessage}">
+    </div>
+
+
+    <!-- ==========================================
+         پیام خطا
+         ========================================== -->
+
+    <div th:if="${errorMessage}"
+         class="message message-error"
+         th:text="${errorMessage}">
+    </div>
+
+
+    <!-- ==========================================
+         آمار درخواست‌ها
+         ========================================== -->
+
+    <section class="request-summary-grid">
+
+
+        <article class="request-summary-card">
+
+            <span>
+                همه درخواست‌ها
+            </span>
+
+            <strong th:text="${totalCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                در انتظار بررسی
+            </span>
+
+            <strong th:text="${pendingCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                تأییدشده
+            </span>
+
+            <strong th:text="${approvedCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                ردشده
+            </span>
+
+            <strong th:text="${rejectedCount}">
+                0
+            </strong>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         فرم مرخصی
+         ========================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    ثبت درخواست مرخصی جدید
+                </h2>
+
+                <p>
+                    درخواست پس از ثبت برای مدیر امور اداری ارسال می‌شود.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <form method="post"
+              th:action="@{/employee/leaves}"
+              th:object="${leaveForm}"
+              class="request-form">
+
+
+            <!-- نوع مرخصی -->
+
+            <div class="form-field">
+
+                <label for="leaveType">
+                    نوع مرخصی
+                </label>
+
+                <select id="leaveType"
+                        th:field="*{leaveType}"
+                        required>
+
+
+                    <option value="">
+                        انتخاب نوع مرخصی
+                    </option>
+
+
+                    <option value="DAILY">
+                        مرخصی روزانه
+                    </option>
+
+
+                    <option value="HOURLY">
+                        مرخصی ساعتی
+                    </option>
+
+
+                    <option value="SICK">
+                        مرخصی استعلاجی
+                    </option>
+
+
+                    <option value="OTHER">
+                        سایر
+                    </option>
+
+
+                </select>
+
+            </div>
+
+
+            <!-- تاریخ شروع -->
+
+            <div class="form-field">
+
+                <label for="startDate">
+                    از تاریخ
+                </label>
+
+                <input id="startDate"
+                       type="date"
+                       th:field="*{startDate}"
+                       required>
+
+            </div>
+
+
+            <!-- تاریخ پایان -->
+
+            <div class="form-field">
+
+                <label for="endDate">
+                    تا تاریخ
+                </label>
+
+                <input id="endDate"
+                       type="date"
+                       th:field="*{endDate}"
+                       required>
+
+            </div>
+
+
+            <!-- ساعت شروع -->
+
+            <div class="form-field hourly-field">
+
+                <label for="startTime">
+                    ساعت شروع
+                </label>
+
+                <input id="startTime"
+                       type="time"
+                       th:field="*{startTime}">
+
+                <small class="form-help">
+                    فقط برای مرخصی ساعتی
+                </small>
+
+            </div>
+
+
+            <!-- ساعت پایان -->
+
+            <div class="form-field hourly-field">
+
+                <label for="endTime">
+                    ساعت پایان
+                </label>
+
+                <input id="endTime"
+                       type="time"
+                       th:field="*{endTime}">
+
+                <small class="form-help">
+                    فقط برای مرخصی ساعتی
+                </small>
+
+            </div>
+
+
+            <!-- دلیل -->
+
+            <div class="form-field form-field-full">
+
+                <label for="reason">
+                    دلیل درخواست
+                </label>
+
+                <textarea id="reason"
+                          th:field="*{reason}"
+                          maxlength="1000"
+                          placeholder="در صورت نیاز توضیحات درخواست را وارد کنید..."></textarea>
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="button button-primary">
+
+                    ثبت درخواست مرخصی
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         سوابق درخواست‌ها
+         ========================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    سوابق درخواست‌های من
+                </h2>
+
+                <p>
+                    نتیجه بررسی مدیر و امکان لغو درخواست‌های در انتظار
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+
+            <table class="employee-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>نوع مرخصی</th>
+
+                    <th>از تاریخ</th>
+
+                    <th>تا تاریخ</th>
+
+                    <th>ساعت</th>
+
+                    <th>دلیل</th>
+
+                    <th>وضعیت</th>
+
+                    <th>تاریخ ثبت</th>
+
+                    <th>پاسخ مدیر</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="leave, state : ${leaveRequests}">
+
+
+                    <!-- ردیف -->
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+
+                    <!-- نوع -->
+
+                    <td th:text="${
+                    leave.leaveType.name() == 'DAILY'
+                    ? 'مرخصی روزانه'
+                    :
+                    leave.leaveType.name() == 'HOURLY'
+                    ? 'مرخصی ساعتی'
+                    :
+                    leave.leaveType.name() == 'SICK'
+                    ? 'مرخصی استعلاجی'
+                    :
+                    'سایر'
+                    }">
+
+                        مرخصی
+
+                    </td>
+
+
+                    <!-- تاریخ شروع -->
+
+                    <td th:text="${leave.startDate != null
+                    ? #temporals.format(
+                    leave.startDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- تاریخ پایان -->
+
+                    <td th:text="${leave.endDate != null
+                    ? #temporals.format(
+                    leave.endDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- ساعت -->
+
+                    <td>
+
+
+                        <span th:if="${leave.startTime != null
+                        and leave.endTime != null}"
+                              th:text="|${leave.startTime} تا ${leave.endTime}|">
+
+                            —
+
+                        </span>
+
+
+                        <span th:unless="${leave.startTime != null
+                        and leave.endTime != null}">
+
+                            —
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- دلیل -->
+
+                    <td class="description-cell"
+                        th:text="${leave.reason != null
+                        and !#strings.isEmpty(leave.reason)
+                        ? leave.reason
+                        : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- وضعیت و لغو -->
+
+                    <td>
+
+
+                        <div class="request-status-actions">
+
+
+                            <span th:if="${leave.pending}"
+                                  class="status-badge status-pending">
+
+                                در انتظار بررسی
+
+                            </span>
+
+
+                            <span th:if="${leave.approved}"
+                                  class="status-badge status-approved">
+
+                                تأیید شده
+
+                            </span>
+
+
+                            <span th:if="${leave.rejected}"
+                                  class="status-badge status-rejected">
+
+                                رد شده
+
+                            </span>
+
+
+                            <!-- فقط درخواست Pending -->
+
+                            <form th:if="${leave.pending}"
+                                  method="post"
+                                  th:action="@{/employee/leaves/{id}/cancel(id=${leave.id})}"
+                                  class="employee-cancel-form"
+
+                                  onsubmit="return confirm(
+                                  'آیا از لغو این درخواست مرخصی مطمئن هستید؟'
+                                  );">
+
+
+                                <button type="submit"
+                                        class="employee-cancel-button">
+
+                                    لغو درخواست
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                    <!-- تاریخ ثبت -->
+
+                    <td th:text="${leave.createdAt != null
+                    ? #temporals.format(
+                    leave.createdAt,
+                    'yyyy/MM/dd HH:mm'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- پاسخ مدیر -->
+
+                    <td class="review-note-box"
+                        th:text="${leave.reviewNote != null
+                        and !#strings.isEmpty(leave.reviewNote)
+                        ? leave.reviewNote
+                        : 'هنوز یادداشتی ثبت نشده است.'}">
+
+                        —
+
+                    </td>
+
+
+                </tr>
+
+
+                <!-- Empty -->
+
+                <tr th:if="${leaveRequests == null
+                or leaveRequests.isEmpty()}">
+
+
+                    <td colspan="9"
+                        class="empty-state">
+
+                        تاکنون درخواست مرخصی ثبت نکرده‌اید.
+
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const type =
+                document.getElementById(
+                    "leaveType"
+                );
+
+            const hourlyFields =
+                document.querySelectorAll(
+                    ".hourly-field"
+                );
+
+            const startTime =
+                document.getElementById(
+                    "startTime"
+                );
+
+            const endTime =
+                document.getElementById(
+                    "endTime"
+                );
+
+            const startDate =
+                document.getElementById(
+                    "startDate"
+                );
+
+            const endDate =
+                document.getElementById(
+                    "endDate"
+                );
+
+
+            function updateLeaveFields() {
+
+                const hourly =
+                    type.value === "HOURLY";
+
+
+                hourlyFields.forEach(
+                    field => {
+
+                        field.style.display =
+                            hourly
+                                ? "flex"
+                                : "none";
+
+                    }
+                );
+
+
+                startTime.required =
+                    hourly;
+
+                endTime.required =
+                    hourly;
+
+
+                if (!hourly) {
+
+                    startTime.value =
+                        "";
+
+                    endTime.value =
+                        "";
+                }
+
+            }
+
+
+            function syncHourlyDate() {
+
+                if (
+                    type.value === "HOURLY"
+                    &&
+                    startDate.value
+                ) {
+
+                    endDate.value =
+                        startDate.value;
+
+                }
+
+            }
+
+
+            type.addEventListener(
+                "change",
+                updateLeaveFields
+            );
+
+
+            type.addEventListener(
+                "change",
+                syncHourlyDate
+            );
+
+
+            startDate.addEventListener(
+                "change",
+                syncHourlyDate
+            );
+
+
+            updateLeaveFields();
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

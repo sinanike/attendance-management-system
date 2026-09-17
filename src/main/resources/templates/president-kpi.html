@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>شاخص‌های کلیدی منابع انسانی | ریاست دانشگاه</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page president-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar president-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                KPI منابع انسانی
+            </span>
+
+            <h1>
+                شاخص‌های کلیدی عملکرد
+            </h1>
+
+            <p>
+                شاخص‌های محاسبه‌شده از داده‌های حضور و غیاب
+            </p>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/president-nav :: presidentNav('kpi')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <form method="get"
+              th:action="@{/president/kpi}"
+              class="portal-filter">
+
+            <div class="portal-field">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate"
+                       name="fromDate"
+                       type="date"
+                       th:value="${fromDate}"
+                       required>
+            </div>
+
+            <div class="portal-field">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate"
+                       name="toDate"
+                       type="date"
+                       th:value="${toDate}"
+                       required>
+            </div>
+
+            <div class="portal-filter-actions">
+                <button class="portal-button primary"
+                        type="submit">
+                    محاسبه KPI
+                </button>
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="portal-stat-grid kpi-grid">
+
+        <article class="portal-stat-card success">
+            <span>نرخ حضور</span>
+            <strong th:text="|${attendanceRate}%|">0%</strong>
+            <small>
+                حاضر ÷ روزهای ارزیابی
+            </small>
+        </article>
+
+        <article class="portal-stat-card danger">
+            <span>نرخ غیبت</span>
+            <strong th:text="|${absenceRate}%|">0%</strong>
+            <small>
+                غیبت ÷ روزهای ارزیابی
+            </small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>نرخ تردد ناقص</span>
+            <strong th:text="|${incompleteRate}%|">0%</strong>
+            <small>
+                ناقص ÷ روزهای ارزیابی
+            </small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>متوسط کارکرد</span>
+            <strong th:text="|${averageWorkedHours} ساعت|">
+                0
+            </strong>
+            <small>
+                به ازای هر روز حضور
+            </small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>متوسط تأخیر</span>
+            <strong th:text="|${averageLateMinutes} دقیقه|">
+                0
+            </strong>
+            <small>
+                به ازای هر روز حضور
+            </small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>متوسط خروج زودهنگام</span>
+            <strong th:text="|${averageEarlyLeaveMinutes} دقیقه|">
+                0
+            </strong>
+            <small>
+                به ازای هر روز حضور
+            </small>
+        </article>
+
+        <article class="portal-stat-card">
+            <span>روزهای ارزیابی</span>
+            <strong th:text="${evaluationDays}">
+                0
+            </strong>
+            <small>
+                حضور + غیبت + ناقص
+            </small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>کارکنان در گزارش</span>
+            <strong th:text="${employeeCount}">
+                0
+            </strong>
+            <small>نفر</small>
+        </article>
+
+    </section>
+
+    <section class="portal-note">
+        <strong>تعریف KPI در این پیاده‌سازی:</strong>
+        نرخ‌های حضور، غیبت و تردد ناقص فقط از روزهای مشمول ارزیابی
+        (حاضر + غایب + تردد ناقص) محاسبه می‌شوند؛
+        مرخصی، مأموریت، تعطیل رسمی و بدون شیفت در مخرج قرار نمی‌گیرند.
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>نرخ حضور واحدها</h2>
+                <p>
+                    برای تشخیص سریع اختلاف عملکرد واحدهای سازمانی
+                </p>
+            </div>
+        </div>
+
+        <div class="portal-table-wrapper">
+
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>واحد</th>
+                    <th>کارکنان</th>
+                    <th>نرخ حضور</th>
+                    <th>روزهای غیبت</th>
+                    <th>تردد ناقص</th>
+                    <th>تأخیر</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row : ${departmentRows}">
+
+                    <td th:text="${row.departmentName}">
+                        واحد
+                    </td>
+
+                    <td th:text="${row.employeeCount}">
+                        0
+                    </td>
+
+                    <td>
+                        <span class="portal-badge success"
+                              th:text="|${#numbers.formatDecimal(row.attendanceRate, 1, 1)}%|">
+                            0%
+                        </span>
+                    </td>
+
+                    <td th:text="${row.absentDays}">
+                        0
+                    </td>
+
+                    <td th:text="${row.incompleteDays}">
+                        0
+                    </td>
+
+                    <td th:text="|${row.lateHours}:${#numbers.formatInteger(row.lateRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

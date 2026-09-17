@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اضافه‌کاری | کارمند</title>
+    <link rel="stylesheet" th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+<body class="portal-page">
+<main class="portal-shell narrow">
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">کارکنان خدماتی و پشتیبانی</span>
+            <h1>گزارش اضافه‌کاری من</h1>
+            <p th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">کارمند</p>
+        </div>
+    </header>
+
+    <nav class="portal-nav">
+        <a th:href="@{/employee/dashboard}">داشبورد</a>
+        <a th:href="@{/employee/attendance}">حضور و غیاب</a>
+        <a th:href="@{/employee/leave-balance}">مانده مرخصی</a>
+        <a class="active" th:href="@{/employee/overtime}">اضافه‌کاری</a>
+    </nav>
+
+    <div th:unless="${serviceEmployee}" class="portal-alert warning">
+        محاسبه اضافه‌کاری این صفحه برای کارکنان خدماتی و پشتیبانی طراحی شده است.
+    </div>
+
+    <section class="portal-panel">
+        <form class="portal-filter" method="get" th:action="@{/employee/overtime}">
+            <div class="portal-field">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate" type="date" name="fromDate" th:value="${fromDate}" required>
+            </div>
+            <div class="portal-field">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate" type="date" name="toDate" th:value="${toDate}" required>
+            </div>
+            <div class="portal-filter-actions">
+                <button class="portal-button primary" type="submit">نمایش</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="portal-stat-grid" th:if="${row != null}">
+        <article class="portal-stat-card success">
+            <span>اضافه‌کاری</span>
+            <strong th:text="|${row.overtimeHours}:${#numbers.formatInteger(row.overtimeRemainingMinutes, 2)}|">0:00</strong>
+            <small>ساعت</small>
+        </article>
+        <article class="portal-stat-card info">
+            <span>کارکرد</span>
+            <strong th:text="|${row.workedHours}:${#numbers.formatInteger(row.workedRemainingMinutes, 2)}|">0:00</strong>
+            <small>ساعت</small>
+        </article>
+        <article class="portal-stat-card">
+            <span>نرخ حضور</span>
+            <strong th:text="|${row.attendanceRate}%|">0%</strong>
+            <small>بازه انتخابی</small>
+        </article>
+    </section>
+
+    <div th:if="${row == null}" class="portal-empty">برای این بازه اطلاعاتی وجود ندارد.</div>
+</main>
+</body>
+</html>

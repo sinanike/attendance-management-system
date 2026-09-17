@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        داشبورد مدیر بخش | سامانه حضور و غیاب
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/manager-portal.css?v=2"
+          th:href="@{/css/manager-portal.css(v=2)}">
+
+</head>
+
+
+<body class="manager-portal-page">
+
+
+<main class="manager-layout">
+
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+
+    <header class="manager-topbar">
+
+
+        <div class="manager-heading">
+
+            <span class="manager-eyebrow">
+                پنل مدیریتی واحد سازمانی
+            </span>
+
+            <h1>
+                داشبورد مدیر بخش
+            </h1>
+
+            <p>
+
+                مشاهده وضعیت حضور و غیاب کارکنان واحد
+
+                <strong th:text="${department.name}">
+                    واحد سازمانی
+                </strong>
+
+            </p>
+
+        </div>
+
+
+        <div class="manager-profile">
+
+
+            <div class="manager-avatar"
+                 th:text="${manager.firstName != null
+                 and !manager.firstName.isEmpty()
+                 ? manager.firstName.substring(0,1)
+                 : 'م'}">
+
+                م
+
+            </div>
+
+
+            <div>
+
+                <strong th:text="|${manager.firstName} ${manager.lastName}|">
+                    مدیر بخش
+                </strong>
+
+                <span th:text="|${department.name} - ${manager.personnelCode}|">
+                    واحد سازمانی
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==========================================
+         NAVIGATION مشترک
+         ========================================== -->
+
+    <div th:replace="~{fragments/manager-nav :: managerNav('dashboard')}"></div>
+
+
+    <!-- ==========================================
+         معرفی واحد
+         ========================================== -->
+
+    <section class="manager-welcome-panel">
+
+
+        <div>
+
+            <span class="welcome-label">
+                واحد تحت مدیریت شما
+            </span>
+
+            <h2 th:text="${department.name}">
+                واحد سازمانی
+            </h2>
+
+            <p>
+                اطلاعات این پنل فقط مربوط به کارکنان همین واحد سازمانی است.
+            </p>
+
+        </div>
+
+
+        <div class="welcome-code">
+
+            <span>
+                کد واحد
+            </span>
+
+            <strong th:text="${department.code}">
+                CODE
+            </strong>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         وضعیت امروز
+         ========================================== -->
+
+    <section class="manager-stat-grid">
+
+
+        <article class="manager-stat-card total">
+
+            <span>
+                کارکنان فعال
+            </span>
+
+            <strong th:text="${totalEmployees}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card present">
+
+            <span>
+                حاضر امروز
+            </span>
+
+            <strong th:text="${presentCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card absent">
+
+            <span>
+                غایب امروز
+            </span>
+
+            <strong th:text="${absentCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card incomplete">
+
+            <span>
+                تردد ناقص
+            </span>
+
+            <strong th:text="${incompleteCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card leave">
+
+            <span>
+                مرخصی
+            </span>
+
+            <strong th:text="${leaveCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card mission">
+
+            <span>
+                مأموریت
+            </span>
+
+            <strong th:text="${missionCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card late">
+
+            <span>
+                دارای تأخیر
+            </span>
+
+            <strong th:text="${lateCount}">
+                0
+            </strong>
+
+            <small>
+                نفر
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card rate">
+
+            <span>
+                نرخ حضور
+            </span>
+
+            <strong th:text="|${attendanceRate}%|">
+                0%
+            </strong>
+
+            <small>
+                امروز
+            </small>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         درخواست‌های Pending
+         ========================================== -->
+
+    <section class="manager-stat-grid manager-stat-grid-small">
+
+
+        <article class="manager-stat-card total">
+
+            <span>
+                درخواست منتظر بررسی
+            </span>
+
+            <strong th:text="${pendingRequestCount}">
+                0
+            </strong>
+
+            <small>
+                مورد
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card leave">
+
+            <span>
+                مرخصی در انتظار
+            </span>
+
+            <strong th:text="${pendingLeaveCount}">
+                0
+            </strong>
+
+            <small>
+                درخواست
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card mission">
+
+            <span>
+                مأموریت در انتظار
+            </span>
+
+            <strong th:text="${pendingMissionCount}">
+                0
+            </strong>
+
+            <small>
+                درخواست
+            </small>
+
+        </article>
+
+
+        <article class="manager-stat-card rate">
+
+            <span>
+                وضعیت بررسی
+            </span>
+
+            <strong th:text="${pendingRequestCount == 0
+            ? 'به‌روز'
+            : 'نیازمند بررسی'}">
+
+                به‌روز
+
+            </strong>
+
+            <small>
+                درخواست‌های واحد
+            </small>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         وضعیت امروز
+         ========================================== -->
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    وضعیت امروز کارکنان
+                </h2>
+
+                <p th:text="|وضعیت تردد واحد در تاریخ ${today}|">
+                    گزارش امروز
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/manager/attendance}"
+               class="manager-header-button">
+
+                گزارش کامل
+
+            </a>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>کارمند</th>
+
+                    <th>کد پرسنلی</th>
+
+                    <th>وضعیت</th>
+
+                    <th>ورود</th>
+
+                    <th>خروج</th>
+
+                    <th>کارکرد</th>
+
+                    <th>تأخیر</th>
+
+                    <th>جزئیات</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="row : ${todayRows}">
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${row.employee.firstName} ${row.employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                            <span th:text="${row.employee.employeeType != null
+                            ? row.employee.employeeType.title
+                            : 'تعیین نشده'}">
+                                نوع نیرو
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${row.employee.personnelCode}">
+                        EMP
+                    </td>
+
+
+                    <td>
+
+                        <span class="manager-status-badge"
+
+                              th:text="${row.status.title}"
+
+                              th:classappend="${
+                              row.status.name() == 'PRESENT'
+                              ? ' status-present'
+                              :
+                              row.status.name() == 'ABSENT'
+                              ? ' status-absent'
+                              :
+                              row.status.name() == 'INCOMPLETE'
+                              ? ' status-incomplete'
+                              :
+                              row.status.name() == 'LEAVE'
+                              ? ' status-leave'
+                              :
+                              row.status.name() == 'MISSION'
+                              ? ' status-mission'
+                              :
+                              row.status.name() == 'HOLIDAY'
+                              ? ' status-holiday'
+                              :
+                              ' status-no-shift'
+                              }">
+
+                            وضعیت
+
+                        </span>
+
+                    </td>
+
+
+                    <td th:text="${row.firstCheckIn != null
+                    ? #temporals.format(row.firstCheckIn,'HH:mm')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${row.lastCheckOut != null
+                    ? #temporals.format(row.lastCheckOut,'HH:mm')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${row.workedTimeText}">
+                        —
+                    </td>
+
+
+                    <td>
+
+                        <span th:if="${row.lateMinutes > 0}"
+                              class="manager-late-value"
+                              th:text="|${row.lateMinutes} دقیقه|">
+                            —
+                        </span>
+
+                        <span th:if="${row.lateMinutes == 0}">
+                            —
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <a class="table-action-link"
+
+                           th:href="@{/manager/attendance(
+                           fromDate=${today},
+                           toDate=${today},
+                           employeeId=${row.employee.id}
+                           )}">
+
+                            مشاهده
+
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${todayRows == null or todayRows.isEmpty()}">
+
+                    <td colspan="8"
+                        class="manager-empty-state">
+
+                        کارمند فعالی برای این واحد وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         مرخصی Pending
+         ========================================== -->
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    مرخصی‌های منتظر بررسی
+                </h2>
+
+                <p>
+                    آخرین درخواست‌های مرخصی کارکنان واحد شما
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/manager/leaves(status='PENDING')}"
+               class="manager-header-button">
+
+                مشاهده همه
+
+            </a>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>کارمند</th>
+
+                    <th>کد پرسنلی</th>
+
+                    <th>نوع مرخصی</th>
+
+                    <th>تاریخ شروع</th>
+
+                    <th>تاریخ پایان</th>
+
+                    <th>بررسی</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="leave : ${recentPendingLeaveRequests}">
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${leave.employee.firstName} ${leave.employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${leave.employee.personnelCode}">
+                        EMP
+                    </td>
+
+
+                    <td th:text="${leave.leaveType != null
+                    ? leave.leaveType.title
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${leave.startDate != null
+                    ? #temporals.format(leave.startDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${leave.endDate != null
+                    ? #temporals.format(leave.endDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+                        <a th:href="@{/manager/leaves(status='PENDING')}"
+                           class="table-action-link">
+
+                            بررسی درخواست
+
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${recentPendingLeaveRequests == null
+                or recentPendingLeaveRequests.isEmpty()}">
+
+                    <td colspan="6"
+                        class="manager-empty-state">
+
+                        درخواست مرخصی در انتظار بررسی وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         مأموریت Pending
+         ========================================== -->
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    مأموریت‌های منتظر بررسی
+                </h2>
+
+                <p>
+                    آخرین درخواست‌های مأموریت کارکنان واحد شما
+                </p>
+
+            </div>
+
+
+            <a th:href="@{/manager/missions(status='PENDING')}"
+               class="manager-header-button">
+
+                مشاهده همه
+
+            </a>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>کارمند</th>
+
+                    <th>کد پرسنلی</th>
+
+                    <th>تاریخ شروع</th>
+
+                    <th>تاریخ پایان</th>
+
+                    <th>مقصد</th>
+
+                    <th>بررسی</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="mission : ${recentPendingMissionRequests}">
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${mission.employee.firstName} ${mission.employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${mission.employee.personnelCode}">
+                        EMP
+                    </td>
+
+
+                    <td th:text="${mission.startDate != null
+                    ? #temporals.format(mission.startDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${mission.endDate != null
+                    ? #temporals.format(mission.endDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${mission.destination != null
+                    and !#strings.isEmpty(mission.destination)
+                    ? mission.destination
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+                        <a th:href="@{/manager/missions(status='PENDING')}"
+                           class="table-action-link">
+
+                            بررسی درخواست
+
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${recentPendingMissionRequests == null
+                or recentPendingMissionRequests.isEmpty()}">
+
+                    <td colspan="6"
+                        class="manager-empty-state">
+
+                        درخواست مأموریت در انتظار بررسی وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

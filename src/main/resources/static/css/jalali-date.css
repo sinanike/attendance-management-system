@@ -1,0 +1,139 @@
+.jalali-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.jalali-date-input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    direction: ltr;
+    text-align: center;
+    font: inherit;
+}
+
+.jalali-calendar-button {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(80, 110, 115, 0.28);
+    border-radius: 10px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.jalali-calendar-button:hover {
+    background: #f3f7f7;
+}
+
+.jalali-original-input {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    inset-inline-start: 0;
+    bottom: 0;
+}
+
+.jalali-picker-popup {
+    position: absolute;
+    z-index: 5000;
+    top: calc(100% + 8px);
+    inset-inline-start: 0;
+    width: min(390px, 94vw);
+    padding: 14px;
+    border: 1px solid rgba(42, 74, 78, 0.18);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 18px 45px rgba(15, 45, 50, 0.18);
+    direction: rtl;
+}
+
+.jalali-picker-popup[hidden] {
+    display: none !important;
+}
+
+.jalali-picker-title {
+    margin-bottom: 12px;
+    font-weight: 800;
+    color: #17383b;
+    text-align: right;
+}
+
+.jalali-picker-fields {
+    display: grid;
+    grid-template-columns: 1.15fr 1.35fr 0.9fr;
+    gap: 8px;
+}
+
+.jalali-picker-fields select,
+.jalali-picker-fields input[type="time"] {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid rgba(80, 110, 115, 0.25);
+    border-radius: 10px;
+    background: #ffffff;
+    color: #24383b;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.jalali-time-input {
+    grid-column: 1 / -1;
+    direction: ltr;
+    text-align: center;
+}
+
+.jalali-picker-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.jalali-picker-actions button {
+    min-height: 38px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.jalali-picker-primary {
+    border: 1px solid #126467;
+    background: #126467;
+    color: #ffffff;
+}
+
+.jalali-picker-secondary {
+    border: 1px solid rgba(80, 110, 115, 0.25);
+    background: #f5f8f8;
+    color: #294649;
+}
+
+.jalali-date-input:invalid {
+    border-color: #ba3f3f;
+}
+
+@media (max-width: 640px) {
+    .jalali-picker-popup {
+        width: min(340px, 92vw);
+    }
+
+    .jalali-picker-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .jalali-time-input {
+        grid-column: auto;
+    }
+}

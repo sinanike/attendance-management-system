@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>گزارش‌های حضور و غیاب | اپراتور</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                استخراج گزارش
+            </span>
+
+            <h1>
+                گزارش حضور و غیاب
+            </h1>
+
+            <p>
+                گزارش بازه‌ای کل دانشگاه یا یک کارمند
+            </p>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('reports')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <form method="get"
+              th:action="@{/operator/reports}"
+              class="portal-filter">
+
+            <div class="portal-field">
+                <label for="fromDate">از تاریخ</label>
+                <input id="fromDate"
+                       type="date"
+                       name="fromDate"
+                       th:value="${fromDate}"
+                       required>
+            </div>
+
+            <div class="portal-field">
+                <label for="toDate">تا تاریخ</label>
+                <input id="toDate"
+                       type="date"
+                       name="toDate"
+                       th:value="${toDate}"
+                       required>
+            </div>
+
+            <div class="portal-field">
+                <label for="employeeId">کارمند</label>
+
+                <select id="employeeId"
+                        name="employeeId">
+                    <option value="">
+                        همه کارکنان
+                    </option>
+
+                    <option th:each="employee : ${employees}"
+                            th:value="${employee.id}"
+                            th:selected="${selectedEmployeeId != null
+                            and selectedEmployeeId == employee.id}"
+                            th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">
+                        کارمند
+                    </option>
+                </select>
+            </div>
+
+            <div class="portal-filter-actions">
+
+                <button type="submit"
+                        class="portal-button primary">
+                    نمایش گزارش
+                </button>
+
+                <a class="portal-button excel"
+                   th:href="@{/operator/reports/excel(
+                   fromDate=${fromDate},
+                   toDate=${toDate},
+                   employeeId=${selectedEmployeeId}
+                   )}">
+                    دریافت Excel
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="portal-stat-grid compact">
+
+        <article class="portal-stat-card success">
+            <span>حضور</span>
+            <strong th:text="${presentCount}">0</strong>
+            <small>نفر-روز</small>
+        </article>
+
+        <article class="portal-stat-card danger">
+            <span>غیبت</span>
+            <strong th:text="${absentCount}">0</strong>
+            <small>نفر-روز</small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>تردد ناقص</span>
+            <strong th:text="${incompleteCount}">0</strong>
+            <small>نفر-روز</small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>مرخصی</span>
+            <strong th:text="${leaveCount}">0</strong>
+            <small>نفر-روز</small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>مأموریت</span>
+            <strong th:text="${missionCount}">0</strong>
+            <small>نفر-روز</small>
+        </article>
+
+        <article class="portal-stat-card">
+            <span>نرخ حضور</span>
+            <strong th:text="|${attendanceRate}%|">0%</strong>
+            <small>روزهای ارزیابی</small>
+        </article>
+
+    </section>
+
+    <section class="portal-time-grid">
+
+        <div>
+            <span>مجموع کارکرد</span>
+            <strong th:text="|${totalWorkedHours} ساعت و ${totalWorkedRemainingMinutes} دقیقه|">
+                0
+            </strong>
+        </div>
+
+        <div>
+            <span>مجموع تأخیر</span>
+            <strong th:text="|${totalLateHours} ساعت و ${totalLateRemainingMinutes} دقیقه|">
+                0
+            </strong>
+        </div>
+
+        <div>
+            <span>خروج زودهنگام</span>
+            <strong th:text="|${totalEarlyLeaveHours} ساعت و ${totalEarlyLeaveRemainingMinutes} دقیقه|">
+                0
+            </strong>
+        </div>
+
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>خلاصه کارکرد کارکنان</h2>
+                <p>
+                    بازه:
+                    <b th:text="${fromDate}">-</b>
+                    تا
+                    <b th:text="${toDate}">-</b>
+                </p>
+            </div>
+        </div>
+
+        <div class="portal-table-wrapper">
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>کارمند</th>
+                    <th>واحد</th>
+                    <th>حضور</th>
+                    <th>غیبت</th>
+                    <th>ناقص</th>
+                    <th>مرخصی</th>
+                    <th>مأموریت</th>
+                    <th>کارکرد</th>
+                    <th>تأخیر</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row : ${summaryRows}">
+
+                    <td>
+                        <strong th:text="|${row.employee.firstName} ${row.employee.lastName}|">
+                            کارمند
+                        </strong>
+                        <small class="portal-block"
+                               th:text="${row.employee.personnelCode}">
+                            EMP
+                        </small>
+                    </td>
+
+                    <td th:text="${row.employee.department != null
+                    ? row.employee.department.name
+                    : '—'}">
+                        واحد
+                    </td>
+
+                    <td th:text="${row.presentDays}">0</td>
+                    <td th:text="${row.absentDays}">0</td>
+                    <td th:text="${row.incompleteDays}">0</td>
+                    <td th:text="${row.leaveDays}">0</td>
+                    <td th:text="${row.missionDays}">0</td>
+
+                    <td th:text="|${row.totalWorkedHours}:${#numbers.formatInteger(row.totalWorkedRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                    <td th:text="|${row.totalLateHours}:${#numbers.formatInteger(row.totalLateRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                </tr>
+
+                <tr th:if="${summaryRows == null or summaryRows.isEmpty()}">
+                    <td colspan="9"
+                        class="portal-empty">
+                        گزارشی برای نمایش وجود ندارد.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

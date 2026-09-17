@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>داشبورد اپراتور حضور و غیاب</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                سامانه حضور و غیاب دانشگاه صنعتی شیراز
+            </span>
+
+            <h1>
+                پنل اپراتور حضور و غیاب
+            </h1>
+
+            <p>
+                اصلاح تردد، مدیریت مغایرت‌ها، گزارش‌گیری،
+                کاربران و تنظیمات سامانه
+            </p>
+        </div>
+
+        <div class="portal-role-box">
+            <strong>OPERATOR</strong>
+            <span th:text="${today}">
+                2026-08-10
+            </span>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('dashboard')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-stat-grid">
+
+        <article class="portal-stat-card">
+            <span>کارکنان فعال</span>
+            <strong th:text="${activeEmployeeCount}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card success">
+            <span>حاضر امروز</span>
+            <strong th:text="${presentCount}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card danger">
+            <span>غایب امروز</span>
+            <strong th:text="${absentCount}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>مغایرت تردد</span>
+            <strong th:text="${incompleteCount}">0</strong>
+            <small>تردد ناقص</small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>تأخیر امروز</span>
+            <strong th:text="${lateCount}">0</strong>
+            <small>مورد</small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>حساب‌های قابل مدیریت</span>
+            <strong th:text="${accountCount}">0</strong>
+            <small>حساب</small>
+        </article>
+
+    </section>
+
+    <section class="portal-quick-grid">
+
+        <a th:href="@{/operator/attendance/new}"
+           class="portal-quick-card">
+            <strong>＋ اصلاح تردد ثبت‌نشده</strong>
+            <span>
+                ثبت ورود یا خروج جاافتاده برای کارکنان
+            </span>
+        </a>
+
+        <a th:href="@{/operator/discrepancies}"
+           class="portal-quick-card">
+            <strong>! مدیریت مغایرت‌ها</strong>
+            <span>
+                مشاهده ترددهای ناقص و رفع مغایرت
+            </span>
+        </a>
+
+        <a th:href="@{/operator/reports}"
+           class="portal-quick-card">
+            <strong>▥ استخراج گزارش</strong>
+            <span>
+                گزارش بازه‌ای و خروجی Excel
+            </span>
+        </a>
+
+        <a th:href="@{/operator/users}"
+           class="portal-quick-card">
+            <strong>👤 کاربران و سطح دسترسی</strong>
+            <span>
+                ایجاد، ویرایش و فعال/غیرفعال‌سازی حساب‌ها
+            </span>
+        </a>
+
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>آخرین ترددهای ثبت‌شده</h2>
+                <p>
+                    آخرین رکوردهای دستگاه و اصلاحات دستی
+                </p>
+            </div>
+
+            <a th:href="@{/operator/attendance}"
+               class="portal-button secondary">
+                مشاهده همه
+            </a>
+        </div>
+
+        <div class="portal-table-wrapper">
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>کارمند</th>
+                    <th>کد پرسنلی</th>
+                    <th>تاریخ و ساعت</th>
+                    <th>نوع</th>
+                    <th>منبع</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="record : ${recentRecords}">
+
+                    <td th:text="|${record.employee.firstName} ${record.employee.lastName}|">
+                        کارمند
+                    </td>
+
+                    <td th:text="${record.employee.personnelCode}">
+                        EMP
+                    </td>
+
+                    <td th:text="${#temporals.format(record.eventTime, 'yyyy/MM/dd HH:mm')}">
+                        -
+                    </td>
+
+                    <td th:text="${record.attendanceType.displayName}">
+                        ورود
+                    </td>
+
+                    <td th:text="${record.attendanceSource.displayName}">
+                        دستی
+                    </td>
+
+                </tr>
+
+                <tr th:if="${recentRecords == null or recentRecords.isEmpty()}">
+                    <td colspan="5"
+                        class="portal-empty">
+                        هنوز ترددی ثبت نشده است.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section class="portal-note">
+        <strong>وضعیت اصلاح دستی:</strong>
+
+        <span th:text="${settings.manualCorrectionEnabled
+        ? 'فعال'
+        : 'غیرفعال'}">
+            فعال
+        </span>
+
+        <span>
+            — بازه مجاز اصلاح:
+        </span>
+
+        <b th:text="|${settings.maxCorrectionDays} روز|">
+            30 روز
+        </b>
+    </section>
+
+</main>
+
+</body>
+</html>

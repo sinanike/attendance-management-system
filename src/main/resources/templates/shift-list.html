@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <script th:src="@{/js/dark-mode.js(v=1)}"
+            defer>
+    </script>
+
+
+    <title>مدیریت شیفت‌ها</title>
+
+    <link rel="stylesheet"
+          href="/css/admin-dashboard.css?v=10"
+          th:href="@{/css/admin-dashboard.css(v=10)}">
+</head>
+
+<body class="section-ui-page shift-management-page">
+
+<main class="shift-list-page">
+
+    <header class="shift-list-header section-page-header">
+
+        <div>
+            <h1>مدیریت شیفت‌های کاری</h1>
+
+            <p>
+                تعریف و کنترل ساعت شروع و پایان، روزهای کاری،
+                بازه مجاز تأخیر و وضعیت شیفت‌های کارکنان
+            </p>
+        </div>
+
+        <div class="shift-header-actions">
+            <a href="/admin/shift-assignments"
+               th:href="@{/admin/shift-assignments}"
+               class="shift-back-button">
+                اختصاص شیفت به کارکنان
+            </a>
+
+            <a href="/admin/dashboard"
+               th:href="@{/admin/dashboard}"
+               class="shift-back-button">
+                بازگشت به داشبورد
+            </a>
+
+            <a href="/admin/shifts/new"
+               th:href="@{/admin/shifts/new}"
+               class="add-shift-button">
+                ثبت شیفت جدید
+            </a>
+
+        </div>
+
+    </header>
+
+    <div class="success-alert"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+        عملیات با موفقیت انجام شد.
+    </div>
+
+    <section class="shift-summary-card">
+
+        <div>
+            <span>تعداد کل شیفت‌ها</span>
+
+            <strong th:text="${shiftCount}">
+                0
+            </strong>
+        </div>
+
+    </section>
+
+    <section class="shift-table-card">
+
+        <div class="shift-table-wrapper"
+             th:unless="${#lists.isEmpty(shifts)}">
+
+            <table class="shift-table">
+
+                <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>کد شیفت</th>
+                    <th>نام شیفت</th>
+                    <th>ساعت شروع</th>
+                    <th>ساعت پایان</th>
+                    <th>تأخیر مجاز</th>
+                    <th>خروج زودتر مجاز</th>
+                    <th>روزهای کاری</th>
+                    <th>نوع شیفت</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="shift, status : ${shifts}">
+
+                    <td th:text="${status.count}">
+                        1
+                    </td>
+
+                    <td>
+
+                        <span class="shift-code"
+                              th:text="${shift.shiftCode}">
+                            MORNING
+                        </span>
+
+                    </td>
+
+                    <td th:text="${shift.name}">
+                        شیفت صبح
+                    </td>
+
+                    <td th:text="${shift.startTime}">
+                        08:00
+                    </td>
+
+                    <td th:text="${shift.endTime}">
+                        16:00
+                    </td>
+
+                    <td>
+
+                        <span th:text="${shift.lateGraceMinutes}">
+                            0
+                        </span>
+
+                        دقیقه
+
+                    </td>
+
+                    <td>
+
+                        <span th:text="${shift.earlyLeaveGraceMinutes}">
+                            0
+                        </span>
+
+                        دقیقه
+
+                    </td>
+
+                    <td>
+
+                        <div class="shift-work-days-list"
+                             th:if="${shift.workDays != null
+                                     and !shift.workDays.isEmpty()}">
+
+                            <span class="shift-work-day-badge"
+                                  th:each="workDay : ${shift.workDays}"
+                                  th:text="${workDay.persianTitle}">
+                                شنبه
+                            </span>
+
+                        </div>
+
+                        <span class="shift-no-work-days"
+                              th:if="${shift.workDays == null
+                                      or shift.workDays.isEmpty()}">
+                            تعیین نشده
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="shift-type-badge night"
+                              th:if="${shift.crossesMidnight()}">
+                            شبانه
+                        </span>
+
+                        <span class="shift-type-badge daily"
+                              th:unless="${shift.crossesMidnight()}">
+                            روزانه
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span class="shift-status-badge active"
+                              th:if="${shift.active}">
+                            فعال
+                        </span>
+
+                        <span class="shift-status-badge inactive"
+                              th:unless="${shift.active}">
+                            غیرفعال
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="shift-actions">
+                            <a class="shift-edit-button schedule-button"
+                               th:href="@{/admin/shifts/{id}/weekly-schedule(id=${shift.id})}">
+                                برنامه هفتگی
+                            </a>
+
+                            <a class="shift-edit-button"
+                               th:href="@{/admin/shifts/{id}/edit(id=${shift.id})}">
+                                ویرایش
+                            </a>
+
+                            <form th:action="@{/admin/shifts/{id}/status(id=${shift.id})}"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="active"
+                                       th:value="${!shift.active}">
+
+                                <button type="submit"
+                                        class="shift-status-button deactivate"
+                                        th:if="${shift.active}">
+                                    غیرفعال‌کردن
+                                </button>
+
+                                <button type="submit"
+                                        class="shift-status-button activate"
+                                        th:unless="${shift.active}">
+                                    فعال‌کردن
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="shift-empty-state"
+             th:if="${#lists.isEmpty(shifts)}">
+
+            <h2>هنوز شیفتی ثبت نشده است</h2>
+
+            <p>
+                برای شروع، اولین شیفت کاری کارکنان را تعریف کنید.
+            </p>
+
+            <a href="/admin/shifts/new"
+               th:href="@{/admin/shifts/new}">
+                ثبت اولین شیفت
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

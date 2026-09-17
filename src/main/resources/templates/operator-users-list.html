@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>مدیریت کاربران | اپراتور</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                کاربران و سطح دسترسی
+            </span>
+
+            <h1>
+                مدیریت کاربران سامانه
+            </h1>
+
+            <p>
+                ایجاد حساب، تعیین نقش و فعال یا غیرفعال کردن کاربران
+            </p>
+        </div>
+
+        <a th:href="@{/operator/users/new}"
+           class="portal-button primary">
+            + حساب جدید
+        </a>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('users')}"></div>
+
+    <div th:if="${successMessage}"
+         class="portal-alert success"
+         th:text="${successMessage}">
+        موفق
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>حساب‌های قابل مدیریت</h2>
+                <p>
+                    <strong th:text="${accountCount}">0</strong>
+                    حساب
+                </p>
+            </div>
+        </div>
+
+        <div class="portal-table-wrapper">
+
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>نام کاربری</th>
+                    <th>نام نمایشی</th>
+                    <th>نقش</th>
+                    <th>کارمند متصل</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="account : ${accounts}">
+
+                    <td th:text="${account.username}">
+                        username
+                    </td>
+
+                    <td th:text="${account.displayName}">
+                        نام
+                    </td>
+
+                    <td>
+                        <span class="portal-badge info"
+                              th:text="${account.role.displayName}">
+                            نقش
+                        </span>
+                    </td>
+
+                    <td>
+                        <span th:if="${account.employee != null}"
+                              th:text="|${account.employee.firstName} ${account.employee.lastName} — ${account.employee.personnelCode}|">
+                            کارمند
+                        </span>
+
+                        <span th:unless="${account.employee != null}"
+                              class="portal-muted">
+                            بدون اتصال به پرونده کارمند
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="portal-badge"
+                              th:classappend="${account.active}
+                              ? ' success'
+                              : ' danger'"
+                              th:text="${account.active
+                              ? 'فعال'
+                              : 'غیرفعال'}">
+                            فعال
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="portal-actions">
+
+                            <a th:href="@{/operator/users/{id}/edit(id=${account.id})}"
+                               class="portal-mini-button">
+                                ویرایش
+                            </a>
+
+                            <form method="post"
+                                  th:action="@{/operator/users/{id}/status(id=${account.id})}">
+
+                                <input type="hidden"
+                                       name="active"
+                                       th:value="${!account.active}">
+
+                                <button type="submit"
+                                        class="portal-mini-button"
+                                        th:classappend="${account.active}
+                                        ? ' danger'
+                                        : ' success'"
+                                        th:text="${account.active
+                                        ? 'غیرفعال'
+                                        : 'فعال'}">
+                                    تغییر وضعیت
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr th:if="${accounts == null or accounts.isEmpty()}">
+                    <td colspan="6"
+                        class="portal-empty">
+                        حسابی برای مدیریت وجود ندارد.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <section class="portal-note">
+        برای جلوگیری از افزایش غیرمجاز سطح دسترسی،
+        حساب‌های دارای نقش «مدیر امور اداری / ADMIN»
+        در پنل اپراتور نمایش داده و ویرایش نمی‌شوند.
+    </section>
+
+</main>
+
+</body>
+</html>

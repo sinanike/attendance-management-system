@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>کارکرد و تردد من</title>
+
+    <link rel="stylesheet"
+          href="/css/employee-portal.css?v=1"
+          th:href="@{/css/employee-portal.css(v=1)}">
+
+</head>
+
+<body class="employee-portal-page">
+
+<main class="employee-layout">
+
+    <header class="employee-topbar">
+
+        <div class="employee-heading">
+
+            <h1>
+                کارکرد و تردد من
+            </h1>
+
+            <p>
+                مشاهده روزانه وضعیت حضور،
+                ورود، خروج، تأخیر، مرخصی و مأموریت
+            </p>
+
+        </div>
+
+        <div class="employee-user-box">
+
+            <div class="employee-avatar"
+                 th:text="${employee.firstName.substring(0,1)}">
+                ک
+            </div>
+
+            <div>
+
+                <div class="employee-user-name"
+                     th:text="|${employee.firstName} ${employee.lastName}|">
+                    علی رضایی
+                </div>
+
+                <div class="employee-user-code"
+                     th:text="${employee.personnelCode}">
+                    EMP-1001
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <nav class="employee-navigation">
+
+        <a th:href="@{/employee/dashboard}">
+            داشبورد
+        </a>
+
+        <a th:href="@{/employee/attendance}"
+           class="active">
+            کارکرد و تردد من
+        </a>
+
+        <a th:href="@{/employee/leaves}">
+            درخواست مرخصی
+        </a>
+
+        <a th:href="@{/employee/missions}">
+            درخواست مأموریت
+        </a>
+
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit"
+                    class="logout-button">
+                خروج از حساب
+            </button>
+
+        </form>
+
+    </nav>
+
+
+    <div th:if="${errorMessage}"
+         class="message message-error"
+         th:text="${errorMessage}">
+    </div>
+
+
+    <section class="employee-panel">
+
+        <div class="employee-panel-header">
+
+            <div>
+                <h2>
+                    فیلتر بازه گزارش
+                </h2>
+
+                <p>
+                    بازه موردنظر را برای مشاهده کارکرد انتخاب کنید.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form method="get"
+              th:action="@{/employee/attendance}"
+              class="filter-form">
+
+            <div class="form-field">
+
+                <label for="fromDate">
+                    از تاریخ
+                </label>
+
+                <input id="fromDate"
+                       type="date"
+                       name="fromDate"
+                       th:value="${fromDate}">
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label for="toDate">
+                    تا تاریخ
+                </label>
+
+                <input id="toDate"
+                       type="date"
+                       name="toDate"
+                       th:value="${toDate}">
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="button button-primary">
+                    نمایش گزارش
+                </button>
+
+                <a th:href="@{/employee/attendance}"
+                   class="button button-secondary">
+                    ماه جاری
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <section class="employee-card-grid">
+
+        <article class="employee-stat-card present">
+            <span class="employee-stat-label">
+                حاضر
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${presentCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card absent">
+            <span class="employee-stat-label">
+                غایب
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${absentCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card warning">
+            <span class="employee-stat-label">
+                تردد ناقص
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${incompleteCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card leave">
+            <span class="employee-stat-label">
+                مرخصی
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${leaveCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card mission">
+            <span class="employee-stat-label">
+                مأموریت
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${missionCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card gold">
+            <span class="employee-stat-label">
+                تعطیل رسمی
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${holidayCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card">
+            <span class="employee-stat-label">
+                بدون شیفت
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="${noShiftCount}">
+                0
+            </strong>
+        </article>
+
+        <article class="employee-stat-card present">
+            <span class="employee-stat-label">
+                مجموع کارکرد
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="|${workedHours}:${workedRemainingMinutes}|">
+                0:0
+            </strong>
+        </article>
+
+    </section>
+
+
+    <section class="employee-card-grid">
+
+        <article class="employee-stat-card warning">
+
+            <span class="employee-stat-label">
+                مجموع تأخیر
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="|${lateHours}:${lateRemainingMinutes}|">
+                0:0
+            </strong>
+
+            <div class="employee-stat-note">
+                ساعت : دقیقه
+            </div>
+
+        </article>
+
+
+        <article class="employee-stat-card absent">
+
+            <span class="employee-stat-label">
+                خروج زودهنگام
+            </span>
+
+            <strong class="employee-stat-value"
+                    th:text="|${earlyLeaveHours}:${earlyLeaveRemainingMinutes}|">
+                0:0
+            </strong>
+
+            <div class="employee-stat-note">
+                ساعت : دقیقه
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="employee-panel">
+
+        <div class="employee-panel-header">
+
+            <div>
+
+                <h2>
+                    جزئیات روزانه
+                </h2>
+
+                <p th:text="|از ${fromDate} تا ${toDate}|">
+                    بازه گزارش
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="employee-table">
+
+                <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>تاریخ</th>
+                    <th>وضعیت</th>
+                    <th>شروع موظفی</th>
+                    <th>پایان موظفی</th>
+                    <th>ورود</th>
+                    <th>خروج</th>
+                    <th>کارکرد</th>
+                    <th>تأخیر</th>
+                    <th>خروج زودهنگام</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row, state : ${reportRows}">
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+                    <td th:text="${#temporals.format(
+                    row.reportDate,
+                    'yyyy/MM/dd'
+                    )}">
+                        2026/08/09
+                    </td>
+
+
+                    <td>
+
+                        <span class="status-badge"
+                              th:text="${row.status.title}"
+                              th:classappend="${
+                              row.status.name() == 'PRESENT'
+                              ? ' status-present'
+                              : row.status.name() == 'ABSENT'
+                              ? ' status-absent'
+                              : row.status.name() == 'INCOMPLETE'
+                              ? ' status-incomplete'
+                              : row.status.name() == 'LEAVE'
+                              ? ' status-leave'
+                              : row.status.name() == 'MISSION'
+                              ? ' status-mission'
+                              : row.status.name() == 'HOLIDAY'
+                              ? ' status-holiday'
+                              : ' status-no-shift'
+                              }">
+
+                            حاضر
+                        </span>
+
+                    </td>
+
+
+                    <td th:text="${row.scheduledStart != null
+                    ? #temporals.format(
+                    row.scheduledStart,
+                    'HH:mm'
+                    )
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${row.scheduledEnd != null
+                    ? #temporals.format(
+                    row.scheduledEnd,
+                    'HH:mm'
+                    )
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${row.firstCheckIn != null
+                    ? #temporals.format(
+                    row.firstCheckIn,
+                    'HH:mm'
+                    )
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${row.lastCheckOut != null
+                    ? #temporals.format(
+                    row.lastCheckOut,
+                    'HH:mm'
+                    )
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="|${row.workedMinutes / 60}:${row.workedMinutes % 60}|">
+                        0:0
+                    </td>
+
+
+                    <td th:text="|${row.lateMinutes} دقیقه|">
+                        0 دقیقه
+                    </td>
+
+
+                    <td th:text="|${row.earlyLeaveMinutes} دقیقه|">
+                        0 دقیقه
+                    </td>
+
+                </tr>
+
+
+                <tr th:if="${reportRows == null
+                or reportRows.isEmpty()}">
+
+                    <td colspan="10"
+                        class="empty-state">
+
+                        گزارشی برای بازه انتخاب‌شده وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

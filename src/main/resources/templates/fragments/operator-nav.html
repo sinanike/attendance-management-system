@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav class="portal-nav"
+     th:fragment="operatorNav(activePage)">
+
+    <a th:href="@{/operator/dashboard}"
+       th:classappend="${activePage == 'dashboard'} ? ' active' : ''">
+        داشبورد
+    </a>
+
+    <a th:href="@{/operator/attendance}"
+       th:classappend="${activePage == 'attendance'} ? ' active' : ''">
+        اصلاح تردد
+    </a>
+
+    <a th:href="@{/operator/discrepancies}"
+       th:classappend="${activePage == 'discrepancies'} ? ' active' : ''">
+        مغایرت‌ها
+    </a>
+
+    <a th:href="@{/operator/reports}"
+       th:classappend="${activePage == 'reports'} ? ' active' : ''">
+        گزارش‌ها
+    </a>
+
+    <a th:href="@{/operator/users}"
+       th:classappend="${activePage == 'users'} ? ' active' : ''">
+        کاربران و دسترسی
+    </a>
+
+    <a th:href="@{/operator/settings}"
+       th:classappend="${activePage == 'settings'} ? ' active' : ''">
+        تنظیمات
+    </a>
+
+    <form th:action="@{/logout}"
+          method="post"
+          class="portal-logout-form">
+        <button type="submit"
+                class="portal-logout-button">
+            خروج
+        </button>
+    </form>
+
+</nav>
+
+</body>
+</html>

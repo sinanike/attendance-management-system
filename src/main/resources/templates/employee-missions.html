@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        درخواست‌های مأموریت من
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/employee-portal.css?v=2"
+          th:href="@{/css/employee-portal.css(v=2)}">
+
+</head>
+
+
+<body class="employee-portal-page">
+
+
+<main class="employee-layout">
+
+
+    <!-- ==========================================
+         Header
+         ========================================== -->
+
+    <header class="employee-topbar">
+
+
+        <div class="employee-heading">
+
+            <h1>
+                درخواست مأموریت
+            </h1>
+
+            <p>
+                ثبت مأموریت جدید و مشاهده نتیجه بررسی درخواست‌های قبلی
+            </p>
+
+        </div>
+
+
+        <div class="employee-user-box">
+
+
+            <div class="employee-avatar"
+                 th:text="${employee.firstName != null
+                 and !employee.firstName.isEmpty()
+                 ? employee.firstName.substring(0,1)
+                 : 'ک'}">
+
+                ک
+
+            </div>
+
+
+            <div>
+
+                <div class="employee-user-name"
+                     th:text="|${employee.firstName} ${employee.lastName}|">
+
+                    نام کارمند
+
+                </div>
+
+
+                <div class="employee-user-code"
+                     th:text="|کد پرسنلی: ${employee.personnelCode}|">
+
+                    کد پرسنلی
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- ==========================================
+         Navigation
+         ========================================== -->
+
+    <nav class="employee-navigation">
+
+
+        <a th:href="@{/employee/dashboard}">
+            داشبورد
+        </a>
+
+
+        <a th:href="@{/employee/attendance}">
+            کارکرد و تردد من
+        </a>
+
+
+        <a th:href="@{/employee/leaves}">
+            درخواست مرخصی
+        </a>
+
+
+        <a th:href="@{/employee/missions}"
+           class="active">
+
+            درخواست مأموریت
+
+        </a>
+
+
+        <form th:action="@{/logout}"
+              method="post">
+
+            <button type="submit"
+                    class="logout-button">
+
+                خروج از حساب
+
+            </button>
+
+        </form>
+
+
+    </nav>
+
+
+    <!-- ==========================================
+         پیام‌ها
+         ========================================== -->
+
+    <div th:if="${successMessage}"
+         class="message message-success"
+         th:text="${successMessage}">
+    </div>
+
+
+    <div th:if="${errorMessage}"
+         class="message message-error"
+         th:text="${errorMessage}">
+    </div>
+
+
+    <!-- ==========================================
+         آمار
+         ========================================== -->
+
+    <section class="request-summary-grid">
+
+
+        <article class="request-summary-card">
+
+            <span>
+                همه درخواست‌ها
+            </span>
+
+            <strong th:text="${totalCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                در انتظار بررسی
+            </span>
+
+            <strong th:text="${pendingCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                تأییدشده
+            </span>
+
+            <strong th:text="${approvedCount}">
+                0
+            </strong>
+
+        </article>
+
+
+        <article class="request-summary-card">
+
+            <span>
+                ردشده
+            </span>
+
+            <strong th:text="${rejectedCount}">
+                0
+            </strong>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         فرم مأموریت
+         ========================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    ثبت درخواست مأموریت جدید
+                </h2>
+
+                <p>
+                    درخواست پس از ثبت برای بررسی مدیر ارسال خواهد شد.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <form method="post"
+              th:action="@{/employee/missions}"
+              th:object="${missionForm}"
+              class="request-form">
+
+
+            <!-- شروع -->
+
+            <div class="form-field">
+
+                <label for="startDate">
+                    تاریخ شروع
+                </label>
+
+                <input id="startDate"
+                       type="date"
+                       th:field="*{startDate}"
+                       required>
+
+            </div>
+
+
+            <!-- پایان -->
+
+            <div class="form-field">
+
+                <label for="endDate">
+                    تاریخ پایان
+                </label>
+
+                <input id="endDate"
+                       type="date"
+                       th:field="*{endDate}"
+                       required>
+
+            </div>
+
+
+            <!-- مقصد -->
+
+            <div class="form-field">
+
+                <label for="destination">
+                    مقصد مأموریت
+                </label>
+
+                <input id="destination"
+                       type="text"
+                       th:field="*{destination}"
+                       maxlength="200"
+                       placeholder="مثلاً تهران"
+                       required>
+
+            </div>
+
+
+            <!-- توضیحات -->
+
+            <div class="form-field form-field-full">
+
+                <label for="purpose">
+                    شرح مأموریت
+                </label>
+
+                <textarea id="purpose"
+                          th:field="*{purpose}"
+                          maxlength="1000"
+                          placeholder="هدف و توضیحات مأموریت را وارد کنید..."
+                          required></textarea>
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="button button-primary">
+
+                    ثبت درخواست مأموریت
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         سوابق مأموریت
+         ========================================== -->
+
+    <section class="employee-panel">
+
+
+        <div class="employee-panel-header">
+
+
+            <div>
+
+                <h2>
+                    سوابق مأموریت‌های من
+                </h2>
+
+                <p>
+                    نتیجه بررسی مدیر و امکان لغو درخواست‌های در انتظار
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+
+            <table class="employee-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>از تاریخ</th>
+
+                    <th>تا تاریخ</th>
+
+                    <th>مقصد</th>
+
+                    <th>شرح مأموریت</th>
+
+                    <th>وضعیت</th>
+
+                    <th>تاریخ ثبت</th>
+
+                    <th>پاسخ مدیر</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="mission, state : ${missionRequests}">
+
+
+                    <!-- ردیف -->
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+
+                    <!-- شروع -->
+
+                    <td th:text="${mission.startDate != null
+                    ? #temporals.format(
+                    mission.startDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- پایان -->
+
+                    <td th:text="${mission.endDate != null
+                    ? #temporals.format(
+                    mission.endDate,
+                    'yyyy/MM/dd'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- مقصد -->
+
+                    <td th:text="${mission.destination != null
+                    ? mission.destination
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- شرح -->
+
+                    <td class="description-cell"
+                        th:text="${mission.purpose != null
+                        and !#strings.isEmpty(mission.purpose)
+                        ? mission.purpose
+                        : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- وضعیت -->
+
+                    <td>
+
+
+                        <div class="request-status-actions">
+
+
+                            <span th:if="${mission.pending}"
+                                  class="status-badge status-pending">
+
+                                در انتظار بررسی
+
+                            </span>
+
+
+                            <span th:if="${mission.approved}"
+                                  class="status-badge status-approved">
+
+                                تأیید شده
+
+                            </span>
+
+
+                            <span th:if="${mission.rejected}"
+                                  class="status-badge status-rejected">
+
+                                رد شده
+
+                            </span>
+
+
+                            <!-- فقط Pending -->
+
+                            <form th:if="${mission.pending}"
+                                  method="post"
+                                  th:action="@{/employee/missions/{id}/cancel(id=${mission.id})}"
+                                  class="employee-cancel-form"
+
+                                  onsubmit="return confirm(
+                                  'آیا از لغو این درخواست مأموریت مطمئن هستید؟'
+                                  );">
+
+
+                                <button type="submit"
+                                        class="employee-cancel-button">
+
+                                    لغو درخواست
+
+                                </button>
+
+
+                            </form>
+
+
+                        </div>
+
+
+                    </td>
+
+
+                    <!-- تاریخ ثبت -->
+
+                    <td th:text="${mission.createdAt != null
+                    ? #temporals.format(
+                    mission.createdAt,
+                    'yyyy/MM/dd HH:mm'
+                    )
+                    : '—'}">
+
+                        —
+
+                    </td>
+
+
+                    <!-- پاسخ مدیر -->
+
+                    <td class="review-note-box"
+                        th:text="${mission.reviewNote != null
+                        and !#strings.isEmpty(mission.reviewNote)
+                        ? mission.reviewNote
+                        : 'هنوز یادداشتی ثبت نشده است.'}">
+
+                        —
+
+                    </td>
+
+
+                </tr>
+
+
+                <!-- Empty -->
+
+                <tr th:if="${missionRequests == null
+                or missionRequests.isEmpty()}">
+
+
+                    <td colspan="8"
+                        class="empty-state">
+
+                        تاکنون درخواست مأموریتی ثبت نکرده‌اید.
+
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

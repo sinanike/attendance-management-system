@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        درخواست‌های مأموریت | مدیر بخش
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/manager-portal.css?v=2"
+          th:href="@{/css/manager-portal.css(v=2)}">
+
+</head>
+
+
+<body class="manager-portal-page">
+
+
+<main class="manager-layout">
+
+
+    <header class="manager-topbar">
+
+
+        <div class="manager-heading">
+
+            <span class="manager-eyebrow">
+                بررسی درخواست‌های کارکنان
+            </span>
+
+            <h1>
+                درخواست‌های مأموریت
+            </h1>
+
+            <p>
+
+                بررسی مأموریت کارکنان واحد
+
+                <strong th:text="${department.name}">
+                    واحد سازمانی
+                </strong>
+
+            </p>
+
+        </div>
+
+
+        <div class="manager-profile">
+
+
+            <div class="manager-avatar"
+                 th:text="${manager.firstName != null
+                 and !manager.firstName.isEmpty()
+                 ? manager.firstName.substring(0,1)
+                 : 'م'}">
+
+                م
+
+            </div>
+
+
+            <div>
+
+                <strong th:text="|${manager.firstName} ${manager.lastName}|">
+                    مدیر بخش
+                </strong>
+
+                <span th:text="|${department.name} - ${manager.personnelCode}|">
+                    واحد
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- منوی مشترک -->
+
+    <div th:replace="~{fragments/manager-nav :: managerNav('missions')}"></div>
+
+
+    <div th:if="${successMessage}"
+         class="manager-message manager-message-success"
+         th:text="${successMessage}">
+        موفق
+    </div>
+
+
+    <div th:if="${errorMessage}"
+         class="manager-message manager-message-error"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+
+    <section class="manager-stat-grid manager-stat-grid-small">
+
+
+        <article class="manager-stat-card total">
+
+            <span>کل درخواست‌ها</span>
+
+            <strong th:text="${totalCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card incomplete">
+
+            <span>در انتظار بررسی</span>
+
+            <strong th:text="${pendingCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card present">
+
+            <span>تأیید شده</span>
+
+            <strong th:text="${approvedCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card absent">
+
+            <span>رد شده</span>
+
+            <strong th:text="${rejectedCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+    </section>
+
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    درخواست‌های مأموریت
+                </h2>
+
+                <p>
+                    فقط مأموریت کارکنان واحد تحت مدیریت شما نمایش داده می‌شود.
+                </p>
+
+            </div>
+
+
+            <div class="manager-request-filters">
+
+
+                <a th:href="@{/manager/missions}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'ALL'} ? ' active' : ''">
+
+                    <span>
+                        همه
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${totalCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/missions(status='PENDING')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'PENDING'} ? ' active' : ''">
+
+                    <span>
+                        در انتظار
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${pendingCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/missions(status='APPROVED')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'APPROVED'} ? ' active' : ''">
+
+                    <span>
+                        تأیید شده
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${approvedCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/missions(status='REJECTED')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'REJECTED'} ? ' active' : ''">
+
+                    <span>
+                        رد شده
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${rejectedCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table manager-request-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>کارمند</th>
+
+                    <th>شروع</th>
+
+                    <th>پایان</th>
+
+                    <th>مقصد</th>
+
+                    <th>شرح مأموریت</th>
+
+                    <th>وضعیت</th>
+
+                    <th>بررسی</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="mission, state : ${missionRequests}">
+
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${mission.employee.firstName} ${mission.employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                            <span th:text="${mission.employee.personnelCode}">
+                                EMP
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${mission.startDate != null
+                    ? #temporals.format(mission.startDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${mission.endDate != null
+                    ? #temporals.format(mission.endDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${mission.destination != null
+                    and !#strings.isEmpty(mission.destination)
+                    ? mission.destination
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${mission.purpose != null
+                    and !#strings.isEmpty(mission.purpose)
+                    ? mission.purpose
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+
+                        <span th:if="${mission.pending}"
+                              class="manager-status-badge status-incomplete">
+                            در انتظار
+                        </span>
+
+                        <span th:if="${mission.approved}"
+                              class="manager-status-badge status-present">
+                            تأیید شده
+                        </span>
+
+                        <span th:if="${mission.rejected}"
+                              class="manager-status-badge status-absent">
+                            رد شده
+                        </span>
+
+
+                    </td>
+
+
+                    <td>
+
+
+                        <div th:if="${mission.pending}"
+                             class="manager-review-box">
+
+
+                            <form method="post"
+                                  th:action="@{/manager/missions/{id}/approve(id=${mission.id})}">
+
+                                <textarea name="reviewNote"
+                                          class="manager-review-note"
+                                          placeholder="یادداشت تأیید - اختیاری"></textarea>
+
+                                <button type="submit"
+                                        class="manager-request-button manager-approve-button"
+                                        onclick="return confirm('این درخواست مأموریت تأیید شود؟');">
+
+                                    تأیید
+
+                                </button>
+
+                            </form>
+
+
+                            <form method="post"
+                                  th:action="@{/manager/missions/{id}/reject(id=${mission.id})}">
+
+                                <textarea name="reviewNote"
+                                          class="manager-review-note"
+                                          placeholder="علت رد درخواست"></textarea>
+
+                                <button type="submit"
+                                        class="manager-request-button manager-reject-button"
+                                        onclick="return confirm('این درخواست مأموریت رد شود؟');">
+
+                                    رد
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                        <div th:unless="${mission.pending}"
+                             class="manager-reviewed-box">
+
+                            <strong>
+                                یادداشت بررسی
+                            </strong>
+
+                            <span th:text="${mission.reviewNote != null
+                            and !#strings.isEmpty(mission.reviewNote)
+                            ? mission.reviewNote
+                            : 'بدون یادداشت'}">
+                                —
+                            </span>
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${missionRequests == null or missionRequests.isEmpty()}">
+
+                    <td colspan="8"
+                        class="manager-empty-state">
+
+                        درخواست مأموریتی با این وضعیت وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

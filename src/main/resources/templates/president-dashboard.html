@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>داشبورد ریاست دانشگاه</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page president-page">
+
+<main class="portal-shell">
+
+    <header class="portal-topbar president-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                داشبورد مدیریتی کل دانشگاه
+            </span>
+
+            <h1>
+                پنل ریاست دانشگاه
+            </h1>
+
+            <p>
+                نمای کلان حضور و غیاب، مقایسه واحدها و شاخص‌های منابع انسانی
+            </p>
+        </div>
+
+        <div class="portal-role-box">
+            <strong>PRESIDENT</strong>
+            <span th:text="${today}">
+                2026-08-10
+            </span>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/president-nav :: presidentNav('dashboard')}"></div>
+
+    <div th:if="${errorMessage}"
+         class="portal-alert danger"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+    <section class="portal-stat-grid">
+
+        <article class="portal-stat-card info">
+            <span>کارکنان فعال</span>
+            <strong th:text="${activeEmployeeCount}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card success">
+            <span>حاضر امروز</span>
+            <strong th:text="${presentToday}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card danger">
+            <span>غایب امروز</span>
+            <strong th:text="${absentToday}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card warning">
+            <span>تردد ناقص امروز</span>
+            <strong th:text="${incompleteToday}">0</strong>
+            <small>نفر</small>
+        </article>
+
+        <article class="portal-stat-card">
+            <span>نرخ حضور امروز</span>
+            <strong th:text="|${todayAttendanceRate}%|">0%</strong>
+            <small>روزهای مشمول ارزیابی</small>
+        </article>
+
+        <article class="portal-stat-card info">
+            <span>واحدهای فعال</span>
+            <strong th:text="${departmentCount}">0</strong>
+            <small>بخش</small>
+        </article>
+
+    </section>
+
+    <section class="portal-time-grid">
+
+        <div>
+            <span>نرخ حضور ماه جاری</span>
+            <strong th:text="|${attendanceRate}%|">
+                0%
+            </strong>
+        </div>
+
+        <div>
+            <span>کارکرد ماه جاری</span>
+            <strong th:text="|${totalWorkedHours} ساعت و ${totalWorkedRemainingMinutes} دقیقه|">
+                0
+            </strong>
+        </div>
+
+        <div>
+            <span>تأخیر ماه جاری</span>
+            <strong th:text="|${totalLateHours} ساعت و ${totalLateRemainingMinutes} دقیقه|">
+                0
+            </strong>
+        </div>
+
+    </section>
+
+    <section class="portal-quick-grid">
+
+        <a th:href="@{/president/reports}"
+           class="portal-quick-card">
+            <strong>گزارش آماری دانشگاه</strong>
+            <span>
+                آمار حضور، غیبت، مرخصی، مأموریت و کارکرد
+            </span>
+        </a>
+
+        <a th:href="@{/president/departments}"
+           class="portal-quick-card">
+            <strong>مقایسه عملکرد بخش‌ها</strong>
+            <span>
+                مقایسه نرخ حضور و شاخص‌های واحدهای سازمانی
+            </span>
+        </a>
+
+        <a th:href="@{/president/kpi}"
+           class="portal-quick-card">
+            <strong>شاخص‌های کلیدی منابع انسانی</strong>
+            <span>
+                نرخ حضور، غیبت، تردد ناقص و متوسط کارکرد
+            </span>
+        </a>
+
+    </section>
+
+    <section class="portal-panel">
+
+        <div class="portal-panel-header">
+            <div>
+                <h2>مقایسه واحدها در ماه جاری</h2>
+                <p>
+                    از
+                    <strong th:text="${monthStart}">-</strong>
+                    تا
+                    <strong th:text="${today}">-</strong>
+                </p>
+            </div>
+
+            <a th:href="@{/president/departments}"
+               class="portal-button secondary">
+                گزارش کامل
+            </a>
+        </div>
+
+        <div class="portal-table-wrapper">
+            <table class="portal-table">
+
+                <thead>
+                <tr>
+                    <th>واحد</th>
+                    <th>کارکنان</th>
+                    <th>حضور</th>
+                    <th>غیبت</th>
+                    <th>ناقص</th>
+                    <th>نرخ حضور</th>
+                    <th>تأخیر</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="row : ${departmentRows}">
+
+                    <td>
+                        <strong th:text="${row.departmentName}">
+                            واحد
+                        </strong>
+                        <small class="portal-block"
+                               th:text="${row.departmentCode}">
+                            CODE
+                        </small>
+                    </td>
+
+                    <td th:text="${row.employeeCount}">0</td>
+                    <td th:text="${row.presentDays}">0</td>
+                    <td th:text="${row.absentDays}">0</td>
+                    <td th:text="${row.incompleteDays}">0</td>
+
+                    <td>
+                        <span class="portal-badge success"
+                              th:text="|${#numbers.formatDecimal(row.attendanceRate, 1, 1)}%|">
+                            0%
+                        </span>
+                    </td>
+
+                    <td th:text="|${row.lateHours}:${#numbers.formatInteger(row.lateRemainingMinutes, 2)}|">
+                        0:00
+                    </td>
+
+                </tr>
+
+                <tr th:if="${departmentRows == null or departmentRows.isEmpty()}">
+                    <td colspan="7"
+                        class="portal-empty">
+                        اطلاعات واحدها موجود نیست.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

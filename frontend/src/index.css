@@ -1,0 +1,65 @@
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("./assets/fonts/IRANSansXFaNum-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("./assets/fonts/IRANSansXFaNum-Medium.woff2") format("woff2");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansXFaNum";
+  src: url("./assets/fonts/IRANSansXFaNum-Bold.woff2") format("woff2");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  direction: rtl;
+  background: #f3f6f8;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "IRANSansXFaNum", Tahoma, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f3f6f8;
+  color: #17364f;
+  font-variant-numeric: normal;
+}
+
+button,
+select,
+input,
+textarea {
+  font: inherit;
+  font-family: "IRANSansXFaNum", Tahoma, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Force the Persian font on Recharts labels, ticks, legends and tooltips. */
+.recharts-wrapper,
+.recharts-wrapper text,
+.recharts-cartesian-axis-tick-value,
+.recharts-label,
+.recharts-legend-item-text,
+.recharts-tooltip-wrapper,
+.recharts-tooltip-wrapper * {
+  font-family: "IRANSansXFaNum", Tahoma, sans-serif !important;
+}

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        درخواست‌های مرخصی | مدیر بخش
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/manager-portal.css?v=2"
+          th:href="@{/css/manager-portal.css(v=2)}">
+
+</head>
+
+
+<body class="manager-portal-page">
+
+
+<main class="manager-layout">
+
+
+    <header class="manager-topbar">
+
+
+        <div class="manager-heading">
+
+            <span class="manager-eyebrow">
+                بررسی درخواست‌های کارکنان
+            </span>
+
+            <h1>
+                درخواست‌های مرخصی
+            </h1>
+
+            <p>
+
+                بررسی مرخصی کارکنان واحد
+
+                <strong th:text="${department.name}">
+                    واحد سازمانی
+                </strong>
+
+            </p>
+
+        </div>
+
+
+        <div class="manager-profile">
+
+
+            <div class="manager-avatar"
+                 th:text="${manager.firstName != null
+                 and !manager.firstName.isEmpty()
+                 ? manager.firstName.substring(0,1)
+                 : 'م'}">
+
+                م
+
+            </div>
+
+
+            <div>
+
+                <strong th:text="|${manager.firstName} ${manager.lastName}|">
+                    مدیر بخش
+                </strong>
+
+                <span th:text="|${department.name} - ${manager.personnelCode}|">
+                    واحد
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </header>
+
+
+    <!-- منوی مشترک -->
+
+    <div th:replace="~{fragments/manager-nav :: managerNav('leaves')}"></div>
+
+
+    <div th:if="${successMessage}"
+         class="manager-message manager-message-success"
+         th:text="${successMessage}">
+        موفق
+    </div>
+
+
+    <div th:if="${errorMessage}"
+         class="manager-message manager-message-error"
+         th:text="${errorMessage}">
+        خطا
+    </div>
+
+
+    <section class="manager-stat-grid manager-stat-grid-small">
+
+
+        <article class="manager-stat-card total">
+
+            <span>کل درخواست‌ها</span>
+
+            <strong th:text="${totalCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card incomplete">
+
+            <span>در انتظار بررسی</span>
+
+            <strong th:text="${pendingCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card present">
+
+            <span>تأیید شده</span>
+
+            <strong th:text="${approvedCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+        <article class="manager-stat-card absent">
+
+            <span>رد شده</span>
+
+            <strong th:text="${rejectedCount}">
+                0
+            </strong>
+
+            <small>درخواست</small>
+
+        </article>
+
+
+    </section>
+
+
+    <section class="manager-panel">
+
+
+        <div class="manager-panel-header">
+
+
+            <div>
+
+                <h2>
+                    درخواست‌های مرخصی
+                </h2>
+
+                <p>
+                    فقط درخواست‌های کارکنان واحد تحت مدیریت شما نمایش داده می‌شود.
+                </p>
+
+            </div>
+
+
+            <div class="manager-request-filters">
+
+
+                <a th:href="@{/manager/leaves}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'ALL'} ? ' active' : ''">
+
+                    <span>
+                        همه
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${totalCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/leaves(status='PENDING')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'PENDING'} ? ' active' : ''">
+
+                    <span>
+                        در انتظار
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${pendingCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/leaves(status='APPROVED')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'APPROVED'} ? ' active' : ''">
+
+                    <span>
+                        تأیید شده
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${approvedCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+                <a th:href="@{/manager/leaves(status='REJECTED')}"
+                   class="manager-request-filter"
+                   th:classappend="${selectedStatus == 'REJECTED'} ? ' active' : ''">
+
+                    <span>
+                        رد شده
+                    </span>
+
+                    <span class="manager-request-filter-count"
+                          th:text="${rejectedCount}">
+                        0
+                    </span>
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="manager-table-wrapper">
+
+
+            <table class="manager-table manager-request-table">
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ردیف</th>
+
+                    <th>کارمند</th>
+
+                    <th>نوع مرخصی</th>
+
+                    <th>شروع</th>
+
+                    <th>پایان</th>
+
+                    <th>ساعت</th>
+
+                    <th>دلیل</th>
+
+                    <th>وضعیت</th>
+
+                    <th>بررسی</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="leave, state : ${leaveRequests}">
+
+
+                    <td th:text="${state.count}">
+                        1
+                    </td>
+
+
+                    <td>
+
+                        <div class="employee-name-cell">
+
+                            <strong th:text="|${leave.employee.firstName} ${leave.employee.lastName}|">
+                                کارمند
+                            </strong>
+
+                            <span th:text="${leave.employee.personnelCode}">
+                                EMP
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td th:text="${leave.leaveType != null
+                    ? leave.leaveType.title
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${leave.startDate != null
+                    ? #temporals.format(leave.startDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td th:text="${leave.endDate != null
+                    ? #temporals.format(leave.endDate,'yyyy/MM/dd')
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+                        <span th:if="${leave.startTime != null
+                        and leave.endTime != null}"
+                              th:text="|${#temporals.format(leave.startTime,'HH:mm')} تا ${#temporals.format(leave.endTime,'HH:mm')}|">
+                            ساعت
+                        </span>
+
+                        <span th:unless="${leave.startTime != null
+                        and leave.endTime != null}">
+                            —
+                        </span>
+
+                    </td>
+
+
+                    <td th:text="${leave.reason != null
+                    and !#strings.isEmpty(leave.reason)
+                    ? leave.reason
+                    : '—'}">
+                        —
+                    </td>
+
+
+                    <td>
+
+
+                        <span th:if="${leave.pending}"
+                              class="manager-status-badge status-incomplete">
+                            در انتظار
+                        </span>
+
+                        <span th:if="${leave.approved}"
+                              class="manager-status-badge status-present">
+                            تأیید شده
+                        </span>
+
+                        <span th:if="${leave.rejected}"
+                              class="manager-status-badge status-absent">
+                            رد شده
+                        </span>
+
+
+                    </td>
+
+
+                    <td>
+
+
+                        <div th:if="${leave.pending}"
+                             class="manager-review-box">
+
+
+                            <form method="post"
+                                  th:action="@{/manager/leaves/{id}/approve(id=${leave.id})}">
+
+                                <textarea name="reviewNote"
+                                          class="manager-review-note"
+                                          placeholder="یادداشت تأیید - اختیاری"></textarea>
+
+                                <button type="submit"
+                                        class="manager-request-button manager-approve-button"
+                                        onclick="return confirm('این درخواست مرخصی تأیید شود؟');">
+
+                                    تأیید
+
+                                </button>
+
+                            </form>
+
+
+                            <form method="post"
+                                  th:action="@{/manager/leaves/{id}/reject(id=${leave.id})}">
+
+                                <textarea name="reviewNote"
+                                          class="manager-review-note"
+                                          placeholder="علت رد درخواست"></textarea>
+
+                                <button type="submit"
+                                        class="manager-request-button manager-reject-button"
+                                        onclick="return confirm('این درخواست مرخصی رد شود؟');">
+
+                                    رد
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                        <div th:unless="${leave.pending}"
+                             class="manager-reviewed-box">
+
+                            <strong>
+                                یادداشت بررسی
+                            </strong>
+
+                            <span th:text="${leave.reviewNote != null
+                            and !#strings.isEmpty(leave.reviewNote)
+                            ? leave.reviewNote
+                            : 'بدون یادداشت'}">
+                                —
+                            </span>
+
+                        </div>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr th:if="${leaveRequests == null or leaveRequests.isEmpty()}">
+
+                    <td colspan="9"
+                        class="manager-empty-state">
+
+                        درخواست مرخصی با این وضعیت وجود ندارد.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

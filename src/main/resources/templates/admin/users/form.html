@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${editing} ? 'ویرایش حساب کاربری' : 'ساخت حساب کاربری'">
+        حساب کاربری
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-dashboard.css(v=14)}">
+</head>
+
+<body class="section-ui-page users-page users-form-page">
+
+<main>
+
+    <!-- هدر تصویری -->
+    <header class="section-page-header">
+        <div>
+            <h1 th:text="${editing} ? 'ویرایش حساب کاربری' : 'ساخت حساب کاربری جدید'">
+                حساب کاربری
+            </h1>
+            <p>اطلاعات ورود و سطح دسترسی کاربر را مشخص کنید</p>
+        </div>
+
+        <a th:href="@{/admin/users}" class="dashboard-link">
+            بازگشت به فهرست
+        </a>
+    </header>
+
+    <!-- فرم -->
+    <section class="form-card">
+
+        <form th:object="${form}"
+              th:action="${editing}
+                    ? @{/admin/users/{id}(id=${accountId})}
+                    : @{/admin/users}"
+              method="post"
+              class="account-form">
+
+            <div th:if="${#fields.hasGlobalErrors()}"
+                 class="error-message">
+                <p th:each="err : ${#fields.globalErrors()}"
+                   th:text="${err}">
+                    خطا
+                </p>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="username">
+                        نام کاربری <span class="required-mark">*</span>
+                    </label>
+                    <input id="username"
+                           type="text"
+                           th:field="*{username}"
+                           autocomplete="username"
+                           placeholder="فقط حروف انگلیسی، عدد، نقطه، خط تیره">
+                    <p class="field-help">
+                        فقط حروف انگلیسی، عدد، نقطه، خط تیره و زیرخط
+                    </p>
+                    <p th:if="${#fields.hasErrors('username')}"
+                       th:errors="*{username}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <span th:text="${editing} ? 'رمز عبور جدید' : 'رمز عبور'">
+                            رمز عبور
+                        </span>
+                        <span th:unless="${editing}" class="required-mark">*</span>
+                    </label>
+                    <input id="password"
+                           type="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"
+                           placeholder="حداقل ۸ کاراکتر">
+                    <p class="field-help"
+                       th:text="${editing}
+                            ? 'برای حفظ رمز فعلی، این قسمت را خالی بگذارید.'
+                            : 'حداقل ۸ کاراکتر'">
+                    </p>
+                    <p th:if="${#fields.hasErrors('password')}"
+                       th:errors="*{password}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">
+                        سطح دسترسی <span class="required-mark">*</span>
+                    </label>
+                    <select id="role" th:field="*{role}">
+                        <option value="">انتخاب کنید</option>
+                        <option th:each="roleItem : ${roles}"
+                                th:value="${roleItem}"
+                                th:text="${roleItem.displayName}">
+                            نقش
+                        </option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('role')}"
+                       th:errors="*{role}"
+                       class="field-error">
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeId">کارمند مرتبط</label>
+                    <select id="employeeId" th:field="*{employeeId}">
+                        <option value="">بدون اتصال به کارمند</option>
+                        <option th:each="employee : ${employees}"
+                                th:value="${employee.id}"
+                                th:text="${employee.firstName + ' ' + employee.lastName}">
+                            نام کارمند
+                        </option>
+                    </select>
+                    <p class="field-help">
+                        برای نقش مدیر بخش و کارمند، انتخاب کارمند الزامی است.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="checkbox-group">
+                <input id="active"
+                       type="checkbox"
+                       th:field="*{active}">
+                <label for="active">این حساب فعال باشد</label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit"
+                        class="shift-submit-button"
+                        th:text="${editing} ? 'ذخیره تغییرات' : 'ساخت حساب'">
+                    ذخیره
+                </button>
+
+                <a th:href="@{/admin/users}"
+                   class="shift-cancel-button">
+                    انصراف
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

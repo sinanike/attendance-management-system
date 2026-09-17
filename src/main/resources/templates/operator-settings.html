@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>تنظیمات حضور و غیاب | اپراتور</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell narrow">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                تنظیمات عملیاتی
+            </span>
+
+            <h1>
+                تنظیمات سامانه حضور و غیاب
+            </h1>
+
+            <p>
+                سیاست اصلاح دستی رکوردهای تردد
+            </p>
+        </div>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('settings')}"></div>
+
+    <div th:if="${successMessage}"
+         class="portal-alert success"
+         th:text="${successMessage}">
+        موفق
+    </div>
+
+    <section class="portal-panel">
+
+        <form method="post"
+              th:action="@{/operator/settings}"
+              th:object="${form}"
+              class="portal-form">
+
+            <div class="portal-form-grid">
+
+                <div class="portal-field full">
+                    <label class="portal-checkbox">
+                        <input type="checkbox"
+                               th:field="*{manualCorrectionEnabled}">
+                        <span>
+                            اصلاح دستی تردد فعال باشد
+                        </span>
+                    </label>
+                </div>
+
+                <div class="portal-field">
+                    <label for="maxCorrectionDays">
+                        حداکثر روزهای مجاز برای اصلاح
+                    </label>
+
+                    <input id="maxCorrectionDays"
+                           type="number"
+                           min="0"
+                           max="365"
+                           th:field="*{maxCorrectionDays}">
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('maxCorrectionDays')}"
+                          th:errors="*{maxCorrectionDays}">
+                        خطا
+                    </span>
+                </div>
+
+                <div class="portal-field">
+                    <label class="portal-checkbox checkbox-spaced">
+                        <input type="checkbox"
+                               th:field="*{allowManualRecordDeletion}">
+                        <span>
+                            حذف اصلاحات دستی مجاز باشد
+                        </span>
+                    </label>
+                </div>
+
+                <div class="portal-field full">
+                    <label for="note">
+                        توضیحات سیاست اپراتور
+                    </label>
+
+                    <textarea id="note"
+                              rows="5"
+                              maxlength="500"
+                              th:field="*{note}"
+                              placeholder="مثلاً: اصلاح بیشتر از ۳۰ روز فقط با تأیید مدیر امور اداری انجام شود."></textarea>
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('note')}"
+                          th:errors="*{note}">
+                        خطا
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="portal-form-actions">
+
+                <button type="submit"
+                        class="portal-button primary">
+                    ذخیره تنظیمات
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="portal-note"
+             th:if="${settings.updatedAt != null}">
+
+        آخرین بروزرسانی:
+        <strong th:text="${#temporals.format(settings.updatedAt, 'yyyy/MM/dd HH:mm')}">
+            -
+        </strong>
+
+    </section>
+
+</main>
+
+</body>
+</html>

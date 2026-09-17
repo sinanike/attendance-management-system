@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${editing
+    ? 'ویرایش حساب کاربری'
+    : 'حساب کاربری جدید'}">
+        حساب کاربری
+    </title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/executive-portal.css(v=1)}">
+</head>
+
+<body class="portal-page operator-page">
+
+<main class="portal-shell narrow">
+
+    <header class="portal-topbar">
+        <div>
+            <span class="portal-eyebrow">
+                مدیریت سطح دسترسی
+            </span>
+
+            <h1 th:text="${editing
+            ? 'ویرایش حساب کاربری'
+            : 'ایجاد حساب کاربری'}">
+                حساب
+            </h1>
+
+            <p>
+                نقش و وضعیت دسترسی کاربر را تعیین کنید.
+            </p>
+        </div>
+
+        <a th:href="@{/operator/users}"
+           class="portal-button secondary">
+            بازگشت
+        </a>
+    </header>
+
+    <div th:replace="~{fragments/operator-nav :: operatorNav('users')}"></div>
+
+    <section class="portal-panel">
+
+        <form method="post"
+              th:action="${editing}
+              ? @{/operator/users/{id}(id=${accountId})}
+              : @{/operator/users}"
+              th:object="${form}"
+              class="portal-form">
+
+            <div th:if="${#fields.hasGlobalErrors()}"
+                 class="portal-alert danger">
+
+                <p th:each="error : ${#fields.globalErrors()}"
+                   th:text="${error}">
+                    خطا
+                </p>
+
+            </div>
+
+            <div class="portal-form-grid">
+
+                <div class="portal-field">
+                    <label for="username">
+                        نام کاربری
+                    </label>
+
+                    <input id="username"
+                           type="text"
+                           th:field="*{username}"
+                           autocomplete="off">
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('username')}"
+                          th:errors="*{username}">
+                        خطا
+                    </span>
+                </div>
+
+                <div class="portal-field">
+                    <label for="password">
+                        رمز عبور
+                    </label>
+
+                    <input id="password"
+                           type="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"
+                           th:placeholder="${editing
+                           ? 'برای عدم تغییر، خالی بگذارید'
+                           : 'حداقل ۸ کاراکتر'}">
+                </div>
+
+                <div class="portal-field">
+                    <label for="role">
+                        سطح دسترسی
+                    </label>
+
+                    <select id="role"
+                            th:field="*{role}">
+
+                        <option value="">
+                            نقش را انتخاب کنید
+                        </option>
+
+                        <option th:each="role : ${roles}"
+                                th:value="${role}"
+                                th:text="${role.displayName}">
+                            نقش
+                        </option>
+
+                    </select>
+
+                    <span class="portal-field-error"
+                          th:if="${#fields.hasErrors('role')}"
+                          th:errors="*{role}">
+                        خطا
+                    </span>
+                </div>
+
+                <div class="portal-field">
+                    <label for="employeeId">
+                        اتصال به کارمند
+                    </label>
+
+                    <select id="employeeId"
+                            th:field="*{employeeId}">
+
+                        <option value="">
+                            بدون اتصال
+                        </option>
+
+                        <option th:each="employee : ${employees}"
+                                th:value="${employee.id}"
+                                th:text="|${employee.firstName} ${employee.lastName} — ${employee.personnelCode}|">
+                            کارمند
+                        </option>
+
+                    </select>
+
+                    <small class="portal-help">
+                        برای نقش‌های «مدیر بخش» و «کارمند» انتخاب کارمند الزامی است.
+                        برای اپراتور و ریاست دانشگاه اختیاری است.
+                    </small>
+                </div>
+
+                <div class="portal-field full">
+                    <label class="portal-checkbox">
+                        <input type="checkbox"
+                               th:field="*{active}">
+                        <span>حساب فعال باشد</span>
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="portal-form-actions">
+
+                <button type="submit"
+                        class="portal-button primary"
+                        th:text="${editing
+                        ? 'ذخیره تغییرات'
+                        : 'ساخت حساب'}">
+                    ذخیره
+                </button>
+
+                <a th:href="@{/operator/users}"
+                   class="portal-button secondary">
+                    انصراف
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

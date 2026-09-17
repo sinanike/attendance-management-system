@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fa"
+      dir="rtl"
+      class="dashboard-boot-loading">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="theme-color"
+    content="#0b1f3a"
+  />
+
+  <title>
+    داشبورد مدیر امور اداری | دانشگاه صنعتی شیراز
+  </title>
+
+  <style>
+    html.dashboard-boot-loading body,
+    html.dashboard-return-loading body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #f3f6f8;
+    }
+
+    html.dashboard-boot-loading body::before,
+    html.dashboard-return-loading body::before {
+      content: "در حال دریافت آخرین اطلاعات داشبورد...";
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
+
+      background: #f3f6f8;
+      color: #17364f;
+
+      font-family:
+        Tahoma,
+        "Segoe UI",
+        sans-serif;
+
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    html.dashboard-boot-loading #root,
+    html.dashboard-return-loading #root {
+      visibility: hidden;
+    }
+  </style>
+
+  <script>
+    /*
+     * این اسکریپت قبل از React اجرا می‌شود.
+     *
+     * هنگام خروج از داشبورد، Snapshot مرورگر
+     * بدون آمار قبلی داخل BFCache ذخیره می‌شود.
+     */
+    window.addEventListener(
+      'pagehide',
+      function () {
+
+        document.documentElement
+          .classList
+          .add('dashboard-return-loading')
+      },
+    )
+
+    window.addEventListener(
+      'pageshow',
+      function (event) {
+
+        if (event.persisted) {
+
+          /*
+           * اگر صفحه از Back/Forward Cache برگشت،
+           * یک بار Reload واقعی انجام می‌دهیم تا
+           * داده تازه از Backend خوانده شود.
+           */
+          window.location.reload()
+        }
+      },
+    )
+  </script>
+
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script
+    type="module"
+    src="/src/main.jsx"
+  ></script>
+
+</body>
+
+</html>
